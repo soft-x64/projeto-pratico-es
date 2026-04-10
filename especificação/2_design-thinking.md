@@ -1,5 +1,7 @@
+<!-- <img width="300" height="168" alt="image" src="https://github.com/user-attachments/assets/cec51d42-54b9-4ecd-8520-4caa7f924395" /> -->
+
 <p align="center">
-  <img src="COLE_O_LINK_AQUI" width="100%">
+  <img src="https://github.com/user-attachments/assets/cec51d42-54b9-4ecd-8520-4caa7f924395" width="100%">
 </p>
 
 ## Golden Circle
