@@ -1,2 +1,3 @@
 # Análise SWOT 
-![SWOT](../../swot.png.png)
+
+![SWOT](../../assets/swot.png.png)
