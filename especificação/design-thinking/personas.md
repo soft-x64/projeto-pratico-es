@@ -2,8 +2,17 @@
 
 As personas são personagens fictícios criados para representar os diferentes tipos de utilizadores que podem interagir com o sistema. Elas ajudam a equipa a compreender as necessidades, comportamentos e objetivos reais de quem irá utilizar o TrainerX64.
 
+## Técnica utilizada para a elaboração das Personas: PATHY 
+A técnica PATHY é um framework de Design Thinking e UX focado na criação de personas ultra-humanizadas, substituindo a frieza dos dados demográficos por uma análise profunda da psicologia do usuário. Estruturada sobre o acrônimo de Propósito, Atividades, Pensamentos, Hábitos e Resultados (Yields), a metodologia mapeia desde as motivações existenciais e rotinas diárias até os medos internos e as expectativas de sucesso do cliente, permitindo que marcas e produtos entreguem soluções que ressoem com a verdadeira realidade emocional e comportamental de quem os utiliza.
+
+* Quem (Dados Pessoais);
+* Contexto;
+* Experiências Prévias/Preferências;
+* Problemas/Necessidades/Desejos;
+* Soluções Existentes.
+
 ### Persona 1: Personal
-<img width="658" height="684" alt="Captura de tela 2025-11-12 210836" src="https://github.com/user-attachments/assets/2b23f622-2003-4073-8bc7-d3cda424869f" />
+<p align="center"><img width="658" height="684" alt="Captura de tela 2025-11-12 210836" src="https://github.com/user-attachments/assets/2b23f622-2003-4073-8bc7-d3cda424869f" /></p>
 
 
 **Descrição:** Rafael tem 32 anos, mora em Manaus e é um personal trainer autónomo formado em Educação Física. É um profissional moderno e proativo, que utiliza smartphone Android e notebook para gerir os seus cerca de 20 alunos (presenciais e online). Procura ferramentas digitais que otimizem o seu tempo e permitam um acompanhamento mais estruturado e visual do progresso dos seus clientes.
