@@ -11,11 +11,11 @@
 
 <div align="center">
 </div>
----
 
-## 📌 Resumo SWOT
+##  Resumo SWOT
 
 - **Forças:** Recursos internos positivos do sistema.  
 - **Fraquezas:** Limitações que precisam melhorar.  
 - **Oportunidades:** Tendências e chances de crescimento.  
 - **Ameaças:** Fatores externos que podem prejudicar.  
+---
