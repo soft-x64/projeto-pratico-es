@@ -1,8 +1,6 @@
 # Análise SWOT 
 ![SWOT](../../assets/swot.png.png)
 
-# 📊 Análise SWOT
-
 | 🟩 **FORÇAS** | 🟦 **OPORTUNIDADES** |
 |---|---|
 | • Busca rápida por aluno <br> • Histórico de treinos <br> • Informações centralizadas <br> • Interface simples <br> • Notificações automáticas <br> • Acessibilidade incluída | • Crescimento de apps fitness <br> • Treinos personalizados <br> • Integração com smartwatch <br> • Uso de vídeos explicativos <br> • Mercado de saúde em alta <br> • Gestão multiacademia <br> • Acessibilidade como diferencial |
@@ -13,7 +11,6 @@
 
 <div align="center">
 
-# SWOT
 
 </div>
 
