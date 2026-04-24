@@ -20,13 +20,13 @@
 - **Oportunidades:** Tendências e chances de crescimento.  
 - **Ameaças:** Fatores externos que podem prejudicar.  
 ---
-# 📊 Exploração do Mercado – Identificação Visual de Soluções Existentes
+# Exploração do Mercado – Identificação Visual de Soluções Existentes
 
 Nesta etapa, foram analisadas soluções já existentes no mercado que possuem relação com a proposta do nosso sistema de gerenciamento de academia. O objetivo foi observar funcionalidades, público-alvo, organização visual e recursos que possam servir de referência para o desenvolvimento do projeto.
 
 ---
 
-# 🏋️ Gym WP
+# Gym WP
 
 ![Gym WP](COLE_AQUI_O_LINK_DA_IMAGEM)
 
@@ -40,7 +40,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# 💪 Hevy
+# Hevy
 
 ![Hevy](COLE_AQUI_O_LINK_DA_IMAGEM)
 
@@ -54,7 +54,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# 🏢 NextFit
+# NextFit
 
 ![NextFit](COLE_AQUI_O_LINK_DA_IMAGEM)
 
@@ -68,7 +68,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# 👨‍🏫 MFIT Personal
+# MFIT Personal
 
 ![MFIT Personal](COLE_AQUI_O_LINK_DA_IMAGEM)
 
@@ -81,7 +81,3 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 **O que inspirou no projeto:** gestão de alunos, acompanhamento individual e praticidade para o personal trainer.
 
 ---
-
-# ✅ Conclusão Geral
-
-Após a análise das soluções Gym WP, Hevy, NextFit e MFIT Personal, foi possível identificar tendências importantes no mercado fitness digital, como interfaces intuitivas, acompanhamento de desempenho, integração entre alunos e academias e gestão simplificada. Essas referências serviram como base para definir funcionalidades e ideias para o desenvolvimento do nosso sistema de gerenciamento de academia.
