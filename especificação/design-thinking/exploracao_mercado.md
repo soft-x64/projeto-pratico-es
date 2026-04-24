@@ -27,8 +27,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 ---
 
 # Gym WP
-
-(../../assets/gwm imp.png)
+![Gym WP](../../assets/gwm imp.png)
 
 **Público-alvo:** praticantes de musculação, academias e personal trainers.  
 
@@ -42,7 +41,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # Hevy
 
-![Hevy](COLE_AQUI_O_LINK_DA_IMAGEM)
+![Hevy](../../assets/hevy.png)
 
 **Público-alvo:** usuários de academia e praticantes de musculação.  
 
@@ -56,7 +55,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # NextFit
 
-![NextFit](COLE_AQUI_O_LINK_DA_IMAGEM)
+![NextFit](../../assets/nextfit.png)
 
 **Público-alvo:** academias, estúdios, boxes e alunos.  
 
@@ -70,7 +69,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # MFIT Personal
 
-![MFIT Personal](COLE_AQUI_O_LINK_DA_IMAGEM)
+![MFIT](../../assets/Mfit.png)
 
 **Público-alvo:** personal trainers, educadores físicos e alunos.  
 
