@@ -11,7 +11,8 @@
 
 <div align="center">
 </div>
----
+
+
 ##  Resumo SWOT
 
 - **Forças:** Recursos internos positivos do sistema.  
