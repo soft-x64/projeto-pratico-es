@@ -1,5 +1,5 @@
 # Análise SWOT 
-![SWOT](../../assets/swot.png.png)
+![SWOT](../assets/swot.png.png)
 ---
 | 🟦 **FORÇAS** | 🟨 **OPORTUNIDADES** |
 |---|---|
@@ -27,7 +27,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 ---
 
 # Gym WP
-![Gym WP](../especificação/assets/gwm1.png) 
+![GWM](../assets/gwm1.png)
 
 **Público-alvo:** praticantes de musculação, academias e personal trainers.  
 
@@ -41,7 +41,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # Hevy
 
-![Hevy](../../assets/hevy1.png)
+![Hevy](../assets/hevy1.png)
 
 **Público-alvo:** usuários de academia e praticantes de musculação.  
 
@@ -55,7 +55,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # NextFit
 
-![NextFit](../../assets/nextfit1.png)
+![Nextfit](../assets/nextfit1.png)
 
 **Público-alvo:** academias, estúdios, boxes e alunos.  
 
@@ -69,7 +69,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # MFIT Personal
 
-![MFIT](../../assets/Mfit1.png)
+![Mfit](../assets/Mfit1.png)
 
 **Público-alvo:** personal trainers, educadores físicos e alunos.  
 
