@@ -46,4 +46,4 @@ Essa organização permitiu:
 
 O quadro completo com todas as tarefas, responsáveis e status pode ser acessado no link abaixo:
 
-👉 [Backlog do Sprint no GitHub Projects]
+👉 [Backlog do Sprint no GitHub Projects](https://github.com/orgs/soft-x64/projects/1)
