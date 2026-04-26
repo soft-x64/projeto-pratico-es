@@ -41,7 +41,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # Hevy
 
-![Hevy](../../assets/hevy.png)
+![Hevy](../../assets/hevy1.png)
 
 **Público-alvo:** usuários de academia e praticantes de musculação.  
 
@@ -55,7 +55,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # NextFit
 
-![NextFit](../../assets/nextfit.png)
+![NextFit](../../assets/nextfit1.png)
 
 **Público-alvo:** academias, estúdios, boxes e alunos.  
 
@@ -69,7 +69,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 # MFIT Personal
 
-![MFIT](../../assets/Mfit.png)
+![MFIT](../../assets/Mfit1.png)
 
 **Público-alvo:** personal trainers, educadores físicos e alunos.  
 
