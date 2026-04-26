@@ -75,18 +75,6 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 **Funcionalidade principal:** gestão de alunos, prescrição de treinos e acompanhamento individual.  
 
----
-
-# Tabela Comparativo de Soluções
-
-| Critérios / Soluções | Solução A (GYM WP) | Solução B (Hevy) | Solução C (NEXTFIT APP) | Solução D (MFIT Personal) | Nossa Solução |
-|---|---|---|---|---|---|
-| Modelo de Negócio | SaaS (Assinatura mensal/anual) | Freemium (Premium p/ estatísticas) | B2B (Foco em donos de academia) | B2B (Foco em personal trainers) | Freemium + Assinatura |
-| Tecnologia Utilizada | Web / Mobile (App) | Mobile (Foco em iOS/Android) | Web (Gestão) + Mobile (Aluno) | Web (Dashboard) + Mobile | Web/Mobile (App) |
-| Público-Alvo | Academias de médio porte | Praticantes de musculação | Donos/Gestores de academias | Personal Trainers e Consultores | Personal trainers e Alunos |
-| Pontos Fortes | Integração total com gestão | Comunidade, rastreio de treinos | Gestão financeira e automação | Facilidade para o personal | Controle de alunos, treinos e comunicação |
-| Pontos Fracos / Limitações | Interface pode ser complexa | Focado em uso individual | Custo elevado para pequenos | Focado na marca do personal | Dependência de internet |
-
 **Descrição:** O MFIT Personal é voltado para profissionais de educação física que desejam organizar treinos, avaliações e comunicação com seus alunos. O sistema facilita o atendimento personalizado e melhora a relação entre treinador e cliente.  
 
 **O que inspirou no projeto:** gestão de alunos, acompanhamento individual e praticidade para o personal trainer.
