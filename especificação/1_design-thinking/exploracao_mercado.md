@@ -85,7 +85,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 | Critérios / Soluções | Solução A (GYM WP) | Solução B (Hevy) | Solução C (NEXTFIT APP) | Solução D (MFIT Personal) | Nossa Solução |
 |---|---|---|---|---|---|
-| Modelo de Negócio | SaaS (Assinatura mensal/anual) | Freemium (Premium p/ estatísticas) | B2B (Foco em donos de academia) | B2B (Foco em personal trainers) | Freemium + Assinatura |
+| Modelo de Negócio | SaaS (Assinatura mensal/anual) | Freemium (Premium p/ estatísticas) | B2B (Foco em donos de academia) | B2B (Foco em personal trainers) | Freemium + SaaS (Assinatura mensal/anual) |
 | Tecnologia Utilizada | Web / Mobile (App) | Mobile (Foco em iOS/Android) | Web (Gestão) + Mobile (Aluno) | Web (Dashboard) + Mobile | Web/Mobile (App) |
 | Público-Alvo | Academias de médio porte | Praticantes de musculação | Donos/Gestores de academias | Personal Trainers e Consultores | Personal trainers e Alunos |
 | Pontos Fortes | Integração total com gestão | Comunidade, rastreio de treinos | Gestão financeira e automação | Facilidade para o personal | Controle de alunos, treinos e comunicação |
