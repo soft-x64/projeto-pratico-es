@@ -53,4 +53,4 @@ As **Regras de Negócio** estabelecem restrições e comportamentos do sistema, 
 
 O backlog detalhado, contendo todas as histórias, critérios de aceitação e organização do fluxo, pode ser acessado no link abaixo:
 
-👉 [Backlog do Produto no GitHub Projects](#)
+👉 [[Backlog do Produto no GitHub Projects](https://github.com/orgs/soft-x64/projects/4)](#)
