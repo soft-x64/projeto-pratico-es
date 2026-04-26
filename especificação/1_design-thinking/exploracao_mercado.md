@@ -81,7 +81,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# Quadro Comparativo de Soluções 
+# Quadro Comparativo de Soluções Existente
 
 | Critérios / Soluções | Solução A (GYM WP) | Solução B (Hevy) | Solução C (NEXTFIT APP) | Solução D (MFIT Personal) | Nossa Solução |
 |---|---|---|---|---|---|
