@@ -27,7 +27,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 ---
 
 # Gym WP
-![Gym WP](../../assets/gwm1.png) 
+![Gym WP](../especificação/assets/gwm1.png) 
 
 **Público-alvo:** praticantes de musculação, academias e personal trainers.  
 
