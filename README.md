@@ -31,7 +31,7 @@ O projeto foi estruturado com base em:
 ## 📂 Estrutura do Projeto
 
 ### 🔹 Design Thinking
-- 📄 [Enquadramento do Problema](./especificação/01-design-thinking/enquadramento_problema.md)
+- 📄 [Enquadramento do Problema](especificação/01-design-thinking/enquadramento_problema.md)
 - 📄 [Exploração de Mercado](./especificação/01-design-thinking/exploracao_mercado.md)
 - 📄 [Ideação (Brainstorming)](./especificação/01-design-thinking/ideacao.md)
 - 📄 [Personas](./especificação/01-design-thinking/personas.md)
