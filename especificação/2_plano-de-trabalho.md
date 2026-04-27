@@ -20,14 +20,6 @@
 | 0.8 | Definição da arquitetura do sistema e refinamento do escopo negativo. | Equipe Soft-X64 | 09/04/2026 |
 | 1.0 | Elaboração formal do Plano de Trabalho. | Equipe Soft-X64 | 09/04/2026 |
 
----
-
-## ÍNDICE
-
-1. [Introdução](#1-introdução)
-2. [Informações Gerais](#2-informações-gerais)
-3. [Metodologia de Projeto](#3-metodologia-de-projeto)
-4. [Despesas](#4-despesas)
 
 ---
 
