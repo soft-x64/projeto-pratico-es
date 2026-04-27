@@ -1,5 +1,10 @@
 # Análise SWOT 
 ![SWOT](../imagem/swot.png.png)
+
+<p align="center">
+  <img src="../assets/swot.png.png" width="80%">
+</p>
+
 ---
 | 🟦 **FORÇAS** | 🟨 **OPORTUNIDADES** |
 |---|---|
