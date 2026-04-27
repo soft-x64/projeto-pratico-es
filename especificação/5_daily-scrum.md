@@ -10,8 +10,5 @@ Durante o ***Daily Scrum***, cada membro da equipe responde, de forma objetiva, 
 * O que vou fazer hoje para contribuir com o objetivo do Sprint?
 * Existe algum impedimento no alcance do objetivo?
 
-Como mostra a imagem abaixo:
-<p align="center"><img src="" style="width:100%"/></p>
-
 ## Link para acessar a tabela detalhada no Notion:
 ## - [Daily Scrum](https://www.notion.so/b7e6b4a8653983af88028163c158e0f8?v=91b6b4a865398243ac8b085231f1d244&source=copy_link)
