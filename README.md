@@ -31,26 +31,26 @@ O projeto foi estruturado com base em:
 ## 📂 Estrutura do Projeto
 
 ### 🔹 Design Thinking
-- 📄 [Enquadramento do Problema](especificação/01-design-thinking/enquadramento_problema.md)
-- 📄 [Exploração de Mercado](./especificação/01-design-thinking/exploracao_mercado.md)
-- 📄 [Ideação (Brainstorming)](./especificação/01-design-thinking/ideacao.md)
-- 📄 [Personas](./especificação/01-design-thinking/personas.md)
+- 📄 [Enquadramento do Problema](./especificação/01_design-thinking/enquadramento_problema.md)
+- 📄 [Exploração de Mercado](./especificação/01_design-thinking/exploracao_mercado.md)
+- 📄 [Ideação (Brainstorming)](./especificação/01_design-thinking/ideacao.md)
+- 📄 [Personas](./especificação/01_design-thinking/personas.md)
 
 ---
 
 ### 🔹 Planejamento
-- 📄 [Plano de Trabalho](./especificação/02-plano-de-trabalho.md)
+- 📄 [Plano de Trabalho](./especificação/02_plano-de-trabalho.md)
 
 ---
 
 ### 🔹 Backlogs
-- 📄 [Backlog do Produto](./especificação/03-backlog-do-produto.md)
-- 📄 [Backlog do Sprint](./especificação/04-backlog-do-sprint.md)
+- 📄 [Backlog do Produto](./especificação/03_backlog-do-produto.md)
+- 📄 [Backlog do Sprint](./especificação/04_backlog-do-sprint.md)
 
 ---
 
 ### 🔹 Execução
-- 📄 [Daily Scrum](./especificação/05-daily-scrum.md)
+- 📄 [Daily Scrum](./especificação/05_daily-scrum.md)
 
 ---
 
