@@ -1,38 +1,22 @@
 # Análise SWOT 
-![SWOT](../imagem/swot.png.png)
-
-<p align="center">
-  <img src="../assets/swot.png.png" width="80%">
-</p>
-
----
-| 🟦 **FORÇAS** | 🟨 **OPORTUNIDADES** |
-|---|---|
-| • Busca rápida por aluno <br> • Histórico de treinos <br> • Informações centralizadas <br> • Interface simples <br> • Notificações automáticas <br> • Acessibilidade incluída | • Crescimento de apps fitness <br> • Treinos personalizados <br> • Integração com smartwatch <br> • Uso de vídeos explicativos <br> • Mercado de saúde em alta <br> • Gestão multiacademia <br> • Acessibilidade como diferencial |
-
-| 🟥 **FRAQUEZAS** | 🟩 **AMEAÇAS** |
-|---|---|
-| • Dependência de internet <br> • Falta de gráficos intuitivos <br> • Poucos recursos avançados no início <br> • Resposta do personal pode atrasar <br> • Adaptação inicial dos usuários <br> • Acessibilidade incompleta no começo | • Concorrência de outros apps <br> • Problemas de conexão <br> • Baixo engajamento dos alunos <br> • Dificuldade tecnológica de usuários <br> • Dependência do personal trainer <br> • Preferência pelo WhatsApp |
-
-<div align="center">
-</div>
+![SWOT](../imagens/swot.png.png)
 
 
 ##  Resumo SWOT
 
-- **Forças:** Recursos internos positivos do sistema.  
-- **Fraquezas:** Limitações que precisam melhorar.  
-- **Oportunidades:** Tendências e chances de crescimento.  
-- **Ameaças:** Fatores externos que podem prejudicar.  
+>- **Forças:** Recursos internos positivos do sistema.  
+>- **Fraquezas:** Limitações que precisam melhorar.  
+>- **Oportunidades:** Tendências e chances de crescimento.  
+>- **Ameaças:** Fatores externos que podem prejudicar.  
 ---
-# Exploração do Mercado – Identificação Visual de Soluções Existentes
+## Exploração do Mercado – Identificação Visual de Soluções Existentes
 
 Nesta etapa, foram analisadas soluções já existentes no mercado que possuem relação com a proposta do nosso sistema de gerenciamento de academia. O objetivo foi observar funcionalidades, público-alvo, organização visual e recursos que possam servir de referência para o desenvolvimento do projeto.
 
 ---
 
-# Gym WP
-![GWM](../imagem/gwm1.png)
+## Gym WP
+![GWM](../imagens/gwm1.png)
 
 **Público-alvo:** praticantes de musculação, academias e personal trainers.  
 
@@ -44,9 +28,9 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# Hevy
+## Hevy
 
-![Hevy](../imagem/hevy1.png)
+![Hevy](../imagens/hevy1.png)
 
 **Público-alvo:** usuários de academia e praticantes de musculação.  
 
@@ -58,9 +42,9 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# NextFit
+## NextFit
 
-![Nextfit](../imagem/nextfit1.png)
+![Nextfit](../imagens/nextfit1.png)
 
 **Público-alvo:** academias, estúdios, boxes e alunos.  
 
@@ -72,9 +56,9 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# MFIT Personal
+## MFIT Personal
 
-![Mfit](../imagem/Mfit1.png)
+![Mfit](../imagens/Mfit1.png)
 
 **Público-alvo:** personal trainers, educadores físicos e alunos.  
 
@@ -86,7 +70,7 @@ Nesta etapa, foram analisadas soluções já existentes no mercado que possuem r
 
 ---
 
-# Quadro Comparativo de Soluções Existente
+## Quadro Comparativo de Soluções Existente
 
 | Critérios / Soluções | Solução A (GYM WP) | Solução B (Hevy) | Solução C (NEXTFIT APP) | Solução D (MFIT Personal) | Nossa Solução |
 |---|---|---|---|---|---|
