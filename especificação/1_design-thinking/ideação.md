@@ -1,6 +1,6 @@
 # Ideação
 
-Na etapa de ideação, utilizamos a plataforma Notion para registrar todo o processo. Cada integrante da equipe contribuiu com, no mínimo, duas ideias. Em seguida, realizamos uma discussão em grupo para avaliar as propostas, que foram classificadas nas categorias: **selecionada**, **não selecionada** e **em análise**.
+Na etapa de ideação, utilizamos a plataforma Notion para registrar todo o processo. Cada integrante da equipe contribuiu com, no mínimo, duas ideias. Em seguida, realizamos uma discussão em grupo para avaliar as propostas, que foram classificadas nas categorias: **selecionada** e **não selecionada**.
 
 ## Tabela Geral das Ideias
 
