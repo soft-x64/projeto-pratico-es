@@ -17,27 +17,29 @@
 O TrainerX64 combina **quatro padrões arquiteturais complementares**, cada um atuando em uma camada distinta do sistema. A escolha foi guiada pelos seguintes princípios:
 
 - **Coerência com o domínio:** os padrões foram selecionados a partir das funcionalidades reais do backlog
-- **Adequação ao tamanho do projeto:** evitando complexidade desnecessária (ex: microserviços)
-- **Testabilidade:** cada padrão favorece a separação de responsabilidades e testes independentes
+- **Adequação ao tamanho do projeto:** evitando complexidade desnecessária como microserviços
+- **Testabilidade:** cada padrão favorece separação de responsabilidades e testes independentes
 - **Escalabilidade futura:** a estrutura permite crescimento incremental sem refatoração total
 
-```mermaid
-graph TD
-    A["👤 Personal Trainer / Aluno"] --> B["📱 Frontend — MVVM\nFlutter · React"]
-    B --> C["🖥️ Backend — Monolito Modular\nNode.js + Express"]
-    C --> D["🗄️ Banco de Dados — Repository Pattern\nPostgreSQL · Prisma"]
-    C --> E["🔔 Notificações — Pub/Sub\nFirebase FCM"]
+---
 
-    style A fill:#f0f0f0,stroke:#999
-    style B fill:#E1F5EE,stroke:#0F6E56
-    style C fill:#EEEDFE,stroke:#534AB7
-    style D fill:#FAEEDA,stroke:#854F0B
-    style E fill:#E6F1FB,stroke:#185FA5
-```
+<!-- ===========================================================
+     FIGURA 1 — Mapa geral dos padrões arquiteturais
+     Descrição para o responsável pelo diagrama:
+     Criar um diagrama com 4 blocos representando as camadas:
+       - Frontend → MVVM (Flutter / React)
+       - Backend  → Monolito Modular (Node.js + Express)
+       - Dados    → Repository Pattern (PostgreSQL)
+       - Eventos  → Pub/Sub (Firebase FCM)
+     Setas conectando Frontend → Backend → Dados e Backend → Eventos
+     Salvar em: diagramas/arquitetura/fig1-mapa-geral.png
+=========================================================== -->
 
-> **Figura 1 — Mapa geral dos padrões arquiteturais do TrainerX64.**
-> Cada padrão atua em uma camada distinta sem sobreposição de responsabilidades.
-> *Fonte: elaborado pelos autores.*
+| | |
+|---|---|
+| 📷 | **Figura 1 — Mapa geral dos padrões arquiteturais do TrainerX64** |
+| | *Inserir imagem: `diagramas/arquitetura/fig1-mapa-geral.png`* |
+| | *Legenda: Visão geral dos quatro padrões e em qual camada do sistema cada um atua. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -52,27 +54,16 @@ Diferente de um monolito tradicional — onde todo o código é misturado sem fr
 > ⚠️ **Regra fundamental:** nenhum módulo acessa diretamente o código interno de outro.
 > Toda comunicação ocorre exclusivamente pelas **interfaces públicas** de cada módulo.
 
-**Comparativo entre estilos arquiteturais:**
-
-| Característica | Monolito Tradicional | Monolito Modular | Microserviços |
-|---|:---:|:---:|:---:|
-| Deploy único | ✅ | ✅ | ❌ |
-| Fronteiras entre domínios | ❌ | ✅ | ✅ |
-| Complexidade operacional | 🟢 Baixa | 🟢 Baixa | 🔴 Alta |
-| Escalabilidade independente | ❌ | ❌ | ✅ |
-| Adequado para times pequenos | ✅ | ✅ | ❌ |
-| Evolução para microserviços | ❌ | ✅ | — |
-
-### 1.2 ✅ Justificativa da Escolha
+### 1.2 Justificativa da Escolha
 
 O TrainerX64 possui domínios funcionais claramente distintos — **treinos, alunos, evolução física, relatórios e notificações** — o que torna benéfica a separação modular interna. Ao mesmo tempo, o sistema **não justifica** a complexidade operacional de microserviços: a equipe é pequena, o escopo é bem delimitado e não há requisito de escala independente por serviço nesta etapa.
 
 **Problemas que o Monolito Modular resolve no TrainerX64:**
 
 - ✅ Evita o caos de um monolito sem organização interna
-- ✅ Não exige infraestrutura pesada (Kubernetes, API Gateway, service mesh)
+- ✅ Não exige infraestrutura pesada como Kubernetes ou API Gateway
 - ✅ Permite que cada membro da equipe trabalhe em módulos distintos sem conflito
-- ✅ Serve como **base de evolução natural para microserviços** no futuro, se o sistema crescer
+- ✅ Serve como **base de evolução natural para microserviços** no futuro
 - ✅ Facilita a rastreabilidade entre histórias de usuário e módulos do sistema
 
 ### 1.3 🔧 Aplicação no Sistema
@@ -89,29 +80,28 @@ backend/
 └── 📁 modulo-notificacoes/   → Disparo de alertas e integração com Firebase FCM
 ```
 
-```mermaid
-graph LR
-    subgraph Backend ["🖥️ Backend — Monolito Modular"]
-        direction TB
-        AUTH["🔐 Autenticação"]
-        ALUN["👥 Alunos"]
-        TREIN["🏋️ Treinos"]
-        EVOL["📊 Evolução"]
-        REL["📋 Relatórios"]
-        NOTIF["🔔 Notificações"]
-    end
+Cada módulo expõe apenas uma interface de serviço para os demais. A comunicação direta entre módulos é proibida — toda integração passa pela interface pública de cada um. Essa regra garante que os módulos possam ser evoluídos ou substituídos de forma independente no futuro.
 
-    AUTH -->|"interface pública"| ALUN
-    TREIN -->|"publica evento"| NOTIF
-    EVOL -->|"publica evento"| REL
-    REL -->|"publica evento"| NOTIF
+---
 
-    style Backend fill:#EEEDFE,stroke:#534AB7
-```
+<!-- ===========================================================
+     FIGURA 2 — Estrutura interna do Monolito Modular
+     Descrição para o responsável pelo diagrama:
+     Criar um diagrama com os 6 módulos internos do backend:
+       Autenticação, Alunos, Treinos, Evolução, Relatórios, Notificações
+     Mostrar as interfaces públicas entre os módulos com setas:
+       - Treinos → (evento) → Notificações
+       - Evolução → (evento) → Relatórios
+       - Relatórios → (evento) → Notificações
+     Destacar que a comunicação só ocorre via interface pública
+     Salvar em: diagramas/arquitetura/fig2-monolito-modular.png
+=========================================================== -->
 
-> **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64.**
-> Os módulos se comunicam apenas por interfaces públicas, sem acesso direto ao código interno uns dos outros.
-> *Fonte: elaborado pelos autores.*
+| | |
+|---|---|
+| 📷 | **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64** |
+| | *Inserir imagem: `diagramas/arquitetura/fig2-monolito-modular.png`* |
+| | *Legenda: Os módulos se comunicam apenas por interfaces públicas, sem acesso direto ao código interno uns dos outros. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -159,25 +149,6 @@ O MVC foi criado para servidores que montam páginas HTML e devolvem ao navegado
 
 ### 2.3 🔧 Aplicação no Sistema
 
-```mermaid
-sequenceDiagram
-    participant U as 👤 Usuário
-    participant V as View (tela)
-    participant VM as ViewModel
-    participant API as API REST
-
-    U->>V: Toca em "Registrar Evolução"
-    V->>VM: chama registrarEvolucao(dados)
-    VM->>API: POST /api/evolucao
-    API-->>VM: retorna RegistroEvolucao
-    VM-->>V: atualiza estado da tela
-    V-->>U: exibe confirmação automaticamente
-```
-
-> **Figura 3 — Fluxo MVVM para registro de evolução física no TrainerX64.**
-> A View não contém lógica — ela apenas observa o ViewModel e se atualiza automaticamente.
-> *Fonte: elaborado pelos autores.*
-
 **ViewModels definidos no sistema:**
 
 | ViewModel | Tela correspondente | Responsabilidade principal |
@@ -188,6 +159,29 @@ sequenceDiagram
 | `EvolucaoViewModel` | Registro de evolução | Coleta e envio de medições |
 | `RelatorioViewModel` | Visualização de relatório | Carregamento e formatação de dados |
 | `NotificacaoViewModel` | Central de notificações | Listagem e marcação como lida |
+
+---
+
+<!-- ===========================================================
+     FIGURA 3 — Fluxo MVVM aplicado ao TrainerX64
+     Descrição para o responsável pelo diagrama:
+     Criar um diagrama de sequência com 4 participantes:
+       Usuário → View (tela) → ViewModel → Model (API REST)
+     Fluxo sugerido: registro de evolução física pelo aluno
+       1. Usuário toca em "Registrar Evolução"
+       2. View chama ViewModel.registrarEvolucao(dados)
+       3. ViewModel chama POST /api/evolucao
+       4. API retorna RegistroEvolucao
+       5. ViewModel atualiza estado
+       6. View se atualiza automaticamente
+     Salvar em: diagramas/arquitetura/fig3-mvvm-fluxo.png
+=========================================================== -->
+
+| | |
+|---|---|
+| 📷 | **Figura 3 — Fluxo MVVM para registro de evolução física no TrainerX64** |
+| | *Inserir imagem: `diagramas/arquitetura/fig3-mvvm-fluxo.png`* |
+| | *Legenda: A View não contém lógica — ela apenas observa o ViewModel e se atualiza automaticamente. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -242,26 +236,28 @@ O TrainerX64 define um repositório para cada entidade principal do domínio:
 | `RelatorioRepository` | `gerarPorAluno` · `gerarPorPeriodo` · `buscarUltimo` |
 | `NotificacaoRepository` | `registrar` · `marcarComoLida` · `listarPendentes` |
 
-```mermaid
-graph TD
-    SVC["⚙️ TreinoService\n(lógica de negócio)"]
-    REPO["📦 TreinoRepository\n(interface)"]
-    IMPL["🔷 PrismaTreinoRepository\n(implementação)"]
-    DB["🗄️ PostgreSQL"]
+---
 
-    SVC -->|"usa interface"| REPO
-    REPO -->|"implementado por"| IMPL
-    IMPL -->|"SQL via Prisma"| DB
+<!-- ===========================================================
+     FIGURA 4 — Repository Pattern no TrainerX64
+     Descrição para o responsável pelo diagrama:
+     Criar um diagrama em camadas mostrando:
+       TreinoService (lógica de negócio)
+           ↓ usa interface
+       TreinoRepository (interface)
+           ↓ implementado por
+       PrismaTreinoRepository (implementação concreta)
+           ↓ SQL via Prisma
+       PostgreSQL (banco de dados)
+     Destacar que o Service só conhece a interface, nunca a implementação
+     Salvar em: diagramas/arquitetura/fig4-repository-pattern.png
+=========================================================== -->
 
-    style SVC fill:#EEEDFE,stroke:#534AB7
-    style REPO fill:#E1F5EE,stroke:#0F6E56
-    style IMPL fill:#E6F1FB,stroke:#185FA5
-    style DB fill:#FAEEDA,stroke:#854F0B
-```
-
-> **Figura 4 — Repository Pattern aplicado ao módulo de Treinos do TrainerX64.**
-> O Service conhece apenas a interface do repositório — nunca a implementação concreta ou o banco de dados.
-> *Fonte: elaborado pelos autores.*
+| | |
+|---|---|
+| 📷 | **Figura 4 — Repository Pattern aplicado ao TrainerX64** |
+| | *Inserir imagem: `diagramas/arquitetura/fig4-repository-pattern.png`* |
+| | *Legenda: O Service conhece apenas a interface do repositório — nunca a implementação concreta ou o banco de dados. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -276,11 +272,11 @@ O **Pub/Sub (Publisher/Subscriber)** é um padrão de **comunicação assíncron
 - **Subscriber (assinante):** está inscrito no canal e reage automaticamente quando o evento chega.
 
 ```
-  Publisher ──► [ Canal / Broker ]──► Subscriber A
+  Publisher ──► [ Canal / Broker ] ──► Subscriber A
                        │
-                       ├──────────► Subscriber B
+                       ├─────────────► Subscriber B
                        │
-                       └──────────► Subscriber C
+                       └─────────────► Subscriber C
 ```
 
 > 💡 O desacoplamento é total: quem publica não conhece quem assina, e quem assina não conhece quem publica.
@@ -295,28 +291,9 @@ O TrainerX64 possui funcionalidades que dependem de **comunicação assíncrona 
 | Relatórios automáticos | A geração deve ocorrer em segundo plano após um evento |
 | Comunicação personal → aluno | Mensagens devem ser entregues sem bloquear outras operações |
 
-O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativamente para notificações push, tornando a escolha tecnicamente direta. A rastreabilidade com o backlog é imediata — as funcionalidades de _"notificações automáticas"_ e _"relatórios automáticos"_ listadas no TP1 **não seriam viáveis** sem esse padrão.
+O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativamente para notificações push, tornando a escolha tecnicamente direta. As funcionalidades de _"notificações automáticas"_ e _"relatórios automáticos"_ listadas no backlog do TP1 **não seriam viáveis** sem esse padrão.
 
 ### 4.3 🔧 Aplicação no Sistema
-
-```mermaid
-sequenceDiagram
-    participant P as 👔 Personal
-    participant API as 🖥️ API (Publisher)
-    participant FCM as 🔔 Firebase FCM (Broker)
-    participant APP as 📱 App do Aluno (Subscriber)
-
-    P->>API: Publica treino novo
-    API->>API: Salva treino no banco
-    API->>FCM: Publica evento treino.publicado
-    Note over FCM: Broker processa e distribui
-    FCM-->>APP: Entrega notificação push
-    APP-->>P: ✅ Aluno foi notificado
-```
-
-> **Figura 5 — Fluxo Pub/Sub para publicação de treino no TrainerX64.**
-> O personal publica o treino, a API dispara o evento e o FCM entrega a notificação de forma assíncrona.
-> *Fonte: elaborado pelos autores.*
 
 **Eventos definidos no sistema:**
 
@@ -329,27 +306,29 @@ sequenceDiagram
 
 ---
 
+<!-- ===========================================================
+     FIGURA 5 — Fluxo Pub/Sub no TrainerX64
+     Descrição para o responsável pelo diagrama:
+     Criar um diagrama de sequência com os participantes:
+       Personal → API REST (Publisher) → Firebase FCM (Broker) → App do Aluno (Subscriber)
+     Fluxo sugerido: personal publica treino novo
+       1. Personal publica treino no painel web
+       2. API salva treino no banco
+       3. API publica evento treino.publicado no FCM
+       4. FCM distribui a notificação
+       5. App do aluno recebe a notificação push
+     Salvar em: diagramas/arquitetura/fig5-pubsub-fluxo.png
+=========================================================== -->
+
+| | |
+|---|---|
+| 📷 | **Figura 5 — Fluxo Pub/Sub para publicação de treino no TrainerX64** |
+| | *Inserir imagem: `diagramas/arquitetura/fig5-pubsub-fluxo.png`* |
+| | *Legenda: O personal publica o treino, a API dispara o evento e o FCM entrega a notificação de forma assíncrona. Fonte: elaborado pelos autores.* |
+
+---
+
 ## 📊 Resumo das Decisões Arquiteturais
-
-```mermaid
-graph TB
-    subgraph FE ["📱 Frontend"]
-        MVVM["MVVM\nFlutter · React"]
-    end
-
-    subgraph BE ["🖥️ Backend"]
-        MM["Monolito Modular\nNode.js + Express"]
-        RP["Repository Pattern\nPostgreSQL · Prisma"]
-        PS["Pub/Sub\nFirebase FCM"]
-    end
-
-    MVVM -->|"REST / JSON"| MM
-    MM --> RP
-    MM --> PS
-
-    style FE fill:#E1F5EE,stroke:#0F6E56
-    style BE fill:#EEEDFE,stroke:#534AB7
-```
 
 | Padrão | Camada | Problema que resolve |
 |---|---|---|
@@ -360,17 +339,21 @@ graph TB
 
 ---
 
-## 📚 Referências
+<!-- ===========================================================
+     FIGURA 6 — Diagrama consolidado de todos os padrões
+     Descrição para o responsável pelo diagrama:
+     Criar uma visão única mostrando todos os 4 padrões integrados:
+       [Frontend - MVVM] → [Backend - Monolito Modular]
+                                      ↓                ↓
+                        [Dados - Repository]   [Eventos - Pub/Sub]
+     Pode usar cores diferentes para cada padrão
+     Salvar em: diagramas/arquitetura/fig6-visao-consolidada.png
+=========================================================== -->
 
-- MARTIN, Robert C. *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall, 2017.
-- FOWLER, Martin. *Patterns of Enterprise Application Architecture*. Addison-Wesley, 2002.
-- RICHARDS, Mark. *Software Architecture Patterns*. O'Reilly Media, 2015.
-- Firebase Documentation. *Firebase Cloud Messaging*. Google, 2024. Disponível em: [https://firebase.google.com/docs/cloud-messaging](https://firebase.google.com/docs/cloud-messaging)
+| | |
+|---|---|
+| 📷 | **Figura 6 — Visão consolidada de todos os padrões arquiteturais do TrainerX64** |
+| | *Inserir imagem: `diagramas/arquitetura/fig6-visao-consolidada.png`* |
+| | *Legenda: Mapa completo mostrando como os quatro padrões se integram no sistema. Fonte: elaborado pelos autores.* |
 
 ---
-
-<div align="center">
-
-*Documento elaborado para o Trabalho Prático II — Engenharia de Software I — ICET/UFAM*
-
-</div>
