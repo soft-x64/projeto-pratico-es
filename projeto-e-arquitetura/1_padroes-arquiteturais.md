@@ -144,9 +144,6 @@ O TrainerX64 será desenvolvido com **Flutter** (mobile) e **React.js** (web). A
 > 💡 O MVVM já está presente por natureza nesses frameworks.
 > Declará-lo como padrão é **reconhecer e documentar** o que o Flutter e o React já fazem por design.
 
-**Por que não MVC no frontend?**
-O MVC foi criado para servidores que montam páginas HTML e devolvem ao navegador. O MVVM foi criado para **interfaces reativas** — que é exatamente o modelo do Flutter e do React. Aplicar MVC no frontend seria contrariar a arquitetura natural dos frameworks escolhidos.
-
 ### 2.3 🔧 Aplicação no Sistema
 
 **ViewModels definidos no sistema:**
