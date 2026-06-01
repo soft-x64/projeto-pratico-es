@@ -3,7 +3,8 @@
 A seção de **Tecnologias e Ferramentas Utilizadas (Tech Stack Map)** consiste no mapeamento estruturado de todo o ecossistema de software, frameworks, bibliotecas e serviços de infraestrutura que serão empregados na construção prática do sistema. Organizado de forma visual e analítica por meio de camadas funcionais — como frontend, backend, banco de dados e serviços auxiliares —, esse mapeamento tem como objetivo central justificar tecnicamente a escolha de cada componente com base nos requisitos do projeto, demonstrando de forma clara e explícita como essas ferramentas se conectam e interagem para viabilizar as regras de negócio e os diferenciais da solução proposta.
 
 # Mapa visual (Tech Stack Map):
-<img width="1366" height="2075" alt="Diagrama sem nome drawio (5)" src="https://github.com/user-attachments/assets/5a08eed9-961d-4ff4-aa9b-54729d1ad82d" />
+<img width="1441" height="2121" alt="Diagrama sem nome drawio (6)" src="https://github.com/user-attachments/assets/2c7c8700-ae42-4e78-b5bd-a59d603f6443" />
+
 
 
 
