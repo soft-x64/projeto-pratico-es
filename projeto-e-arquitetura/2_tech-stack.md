@@ -1,12 +1,24 @@
-##  Introdução
+#  Introdução
 
 A seção de **Tecnologias e Ferramentas Utilizadas (Tech Stack Map)** consiste no mapeamento estruturado de todo o ecossistema de software, frameworks, bibliotecas e serviços de infraestrutura que serão empregados na construção prática do sistema. Organizado de forma visual e analítica por meio de camadas funcionais — como frontend, backend, banco de dados e serviços auxiliares —, esse mapeamento tem como objetivo central justificar tecnicamente a escolha de cada componente com base nos requisitos do projeto, demonstrando de forma clara e explícita como essas ferramentas se conectam e interagem para viabilizar as regras de negócio e os diferenciais da solução proposta.
 
-## Mapa visual (Tech Stack Map):
+# Mapa visual (Tech Stack Map):
+<img width="1346" height="1816" alt="Diagrama sem nome drawio (3)" src="https://github.com/user-attachments/assets/1482c7c9-8882-4d6e-9c31-49824ee3c82b" />
 
+### (Caso tenha dificuldade em ler a imagem no repositório, clique nela uma vez, que você será redirecionado para uma página e poderá aplicar zoom na imagem)
+---
 
+# Explicação textual do mapa:
 
-### Explicação textual do mapa:
+O ecossistema do **TrainerX64** foi projetado seguindo um fluxo de integração contínua e assíncrona entre o cliente e o servidor, garantindo baixa latência e alta disponibilidade mesmo em cenários de oscilação de rede.
+
+A jornada dos dados inicia-se nas interfaces de usuário desenvolvidas em **React.js** (painel administrativo do Personal Trainer) e **React Native** (aplicativo mobile do aluno), que consomem e interagem diretamente com o ecossistema nativo do dispositivo para prover acessibilidade completa. Quando o aluno realiza um treino em um ambiente sem conectividade à internet, o aplicativo mobile intercepta as requisições e realiza a persistência e o cache das fichas de exercícios diretamente no **WatermelonDB**. Assim que a conexão é restabelecida, uma rotina de sincronização atualiza o estado da aplicação com a infraestrutura em nuvem.
+
+As requisições HTTP comuns enviadas pelas interfaces são processadas pelo backend em **Python (FastAPI)**, que atua como o motor lógico central do sistema. O FastAPI valida e processa as regras de negócio — como o algoritmo assíncrono de cálculo de progressão de carga — e persiste os dados de maneira estruturada e segura no banco de dados relacional **PostgreSQL**, o qual mantém a integridade referencial rigorosa entre os "Templates Mãe" de treinos e as fichas customizadas de cada aluno. 
+
+Para operações que exigem comunicação instantânea e bidirecional, o fluxo desvia-se das rotas REST tradicionais: o chat interno e o canal de suporte consultivo direto operam por meio de túneis abertos via **WebSockets (Socket.io)**, conectando o personal e o aluno instantaneamente. Paralelamente, o controle de acesso e a segurança das rotas são descentralizados através do **Firebase Authentication**, que valida a identidade dos usuários de forma isolada. 
+
+Por fim, serviços especializados em nuvem cuidam da mídia e do engajamento de forma periférica: enquanto a entrega assíncrona de arquivos pesados (como os vídeos explicativos do catálogo de exercícios) é delegada para a CDN do **Cloudinary** para aliviar o backend, os eventos disparados no servidor (como lembretes de metas de treino pendentes) acionam o **Firebase Cloud Messaging (FCM)** para empurrar notificações do tipo *Push* em tempo real para os dispositivos móveis dos usuários.
 
 
 
