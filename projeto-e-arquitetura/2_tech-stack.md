@@ -32,7 +32,7 @@ Nesse viés, serviços especializados em nuvem cuidam da mídia e do engajamento
 | **Back-end** | Python (FastAPI) | Framework web moderno, assíncrono e de altíssimo desempenho, ideal para rodar com agilidade os algoritmos de cálculo automático e progressão de carga de treino. |
 | **Banco de Dados** | PostgreSQL | Banco relacional robusto que garante total integridade e consistência relacional na modelagem e vínculo dos "Treinos Mãe" com as fichas específicas dos alunos. |
 | **Banco Local** | WatermelonDB | Banco de dados reativo embutido e otimizado para persistência local e cache de dados, permitindo que o aluno acesse suas fichas de treino completamente offline na academia. |
-| **Comunicação** | WebSockets (Socket.io) | Protocolo de comunicação bidirecional de baixa latência, viabilizando o funcionamento fluido do chat interno integrado e o suporte consultivo em tempo real. |
+| **Comunicação** | WebSockets | Protocolo de comunicação bidirecional de baixa latência, viabilizando o funcionamento fluido do chat interno integrado e o suporte consultivo em tempo real. |
 | **Autenticação** | Firebase Auth | Serviço especializado no gerenciamento seguro de identidades e perfis de usuários, simplificando o controle de permissões e privacidade. |
 | **Notificações** | Cloudinary & FCM | O Cloudinary serve os vídeos explicativos de exercícios via CDN sem sobrecarregar o backend, enquanto o FCM entrega os alertas de treinos via notificações Push. |
 | **DevOps / Versionamento** | GitHub & Git | Centraliza o código-fonte do grupo, gerencia as ramificações de desenvolvimento (branches) e serve como base para automações de testes e deploy. |
