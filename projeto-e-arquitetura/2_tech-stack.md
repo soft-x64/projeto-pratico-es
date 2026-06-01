@@ -10,30 +10,26 @@ A seção de **Tecnologias e Ferramentas Utilizadas (Tech Stack Map)** consiste 
 
 # Explicação textual do mapa:
 
-O ecossistema do **TrainerX64** foi projetado seguindo um fluxo de integração contínua e assíncrona entre o cliente e o servidor, garantindo baixa latência e alta disponibilidade mesmo em cenários de oscilação de rede.
+O ecossistema do **TrainerX64** foi projetado seguindo um fluxo de integração contínua e assíncrona entre o cliente e o servidor, garantindo baixa latência e alta disponibilidade mesmo em cenários de oscilação de rede na academia.
 
-A jornada dos dados inicia-se nas interfaces de usuário desenvolvidas em **React.js** (painel administrativo do Personal Trainer) e **React Native** (aplicativo mobile do aluno), que consomem e interagem diretamente com o ecossistema nativo do dispositivo para prover acessibilidade completa. Quando o aluno realiza um treino em um ambiente sem conectividade à internet, o aplicativo mobile intercepta as requisições e realiza a persistência e o cache das fichas de exercícios diretamente no **WatermelonDB**. Assim que a conexão é restabelecida, uma rotina de sincronização atualiza o estado da aplicação com a infraestrutura em nuvem.
+A jornada dos dados inicia-se na interface de usuário desenvolvida inteiramente em **React Native** (aplicativo mobile unificado para Alunos e Personal Trainers), que consome e interage diretamente com o ecossistema nativo do smartphone para prover acessibilidade completa. Quando o aluno realiza um treino em um ambiente sem conectividade à internet, o aplicativo mobile intercepta as requisições e realiza a persistência e o cache das fichas de exercícios diretamente no **WatermelonDB**. Assim que a conexão é restabelecida, uma rotina de sincronização atualiza o estado da aplicação com a infraestrutura em nuvem.
 
-As requisições HTTP comuns enviadas pelas interfaces são processadas pelo backend em **Python (FastAPI)**, que atua como o motor lógico central do sistema. O FastAPI valida e processa as regras de negócio — como o algoritmo assíncrono de cálculo de progressão de carga — e persiste os dados de maneira estruturada e segura no banco de dados relacional **PostgreSQL**, o qual mantém a integridade referencial rigorosa entre os "Templates Mãe" de treinos e as fichas customizadas de cada aluno. 
+As requisições HTTP comuns enviadas pelo aplicativo são processadas pelo backend em **Python (FastAPI)**, que atua como o motor lógico central do sistema. O FastAPI valida e processa as regras de negócio — como o algoritmo assíncrono de cálculo de progressão de carga — e persiste os dados de maneira estruturada e segura no banco de dados relacional **PostgreSQL**, o qual mantém a integridade referencial rigorosa entre os "Templates Mãe" de treinos e as fichas customizadas de cada aluno. 
 
-Para operações que exigem comunicação instantânea e bidirecional, o fluxo desvia-se das rotas REST tradicionais: o chat interno e o canal de suporte consultivo direto operam por meio de túneis abertos via **WebSockets (Socket.io)**, conectando o personal e o aluno instantaneamente. Paralelamente, o controle de acesso e a segurança das rotas são descentralizados através do **Firebase Authentication**, que valida a identidade dos usuários de forma isolada. 
+Para operações que exigem comunicação instantânea e bidirecional, o fluxo desvia-se das rotas REST tradicionais: o chat interno e o canal de suporte consultivo direto operam por meio de túneis abertos via **WebSockets (Socket.io)**, conectando o personal e o aluno instantaneamente no ambiente mobile. Paralelamente, o controle de acesso e a segurança das rotas são descentralizados através do **Firebase Authentication**, que valida a identidade dos usuários de forma isolada. 
 
 Por fim, serviços especializados em nuvem cuidam da mídia e do engajamento de forma periférica: enquanto a entrega assíncrona de arquivos pesados (como os vídeos explicativos do catálogo de exercícios) é delegada para a CDN do **Cloudinary** para aliviar o backend, os eventos disparados no servidor (como lembretes de metas de treino pendentes) acionam o **Firebase Cloud Messaging (FCM)** para empurrar notificações do tipo *Push* em tempo real para os dispositivos móveis dos usuários.
 
 
 
 ## Tabela detalhada: 
-| Camada | Nome da Tecnologia | Justificativa de Uso |
+
+| Camada do Sistema | Nome da Tecnologia | Justificativa de uso |
 | :--- | :--- | :--- |
-| **Frontend Web** | **React.js** | Constrói o painel do Personal Trainer. Fornece suporte ideal para renderizar os painéis complexos de métricas de frequência, metas concluídas e rendimento geral através da biblioteca **Recharts**. |
-| **Frontend Mobile** | **React Native** | Essencial para desenvolvimento multiplataforma focado na experiência de treino do aluno na academia. Possui APIs nativas excelentes para manipulação do *Cronômetro/Temporizador* de descanso em background. |
-| **Banco Local (Offline)** | **WatermelonDB / Redux Persist** | Garante que o aluno consiga acessar suas fichas de treinos salvas no dispositivo mesmo em locais sem conectividade com a internet (*Modo Offline*). |
-| **Comunicação Real-time** | **WebSockets (Socket.io)** | Provê o canal de comunicação de baixa latência necessário para o funcionamento do *Chat interno* e das ferramentas de consultoria online em tempo real. |
-| **Backend** | **Python (FastAPI)** | Escolhido devido à alta velocidade de processamento e facilidade de implementação matemática para os algoritmos de *cálculo automático de carga progressiva* com base nos testes de força inseridos pelo aluno. |
-| **Banco de Dados Relacional** | **PostgreSQL** | Garante consistência de dados para o relacionamento complexo de *Templates de Treino ("Treinos Mãe")* que são associados a múltiplos perfis de alunos com variáveis de ajuste individuais. |
-| **Acessibilidade Nativa** | **React Native Accessibility API & i18next** | Permite o mapeamento de rótulos para *leitores de tela (TalkBack/VoiceOver)*, suporte a fontes dinâmicas, alto contraste e cuida do motor de *internacionalização (tradução de idiomas, moedas e unidades de medida)*. |
-| **Mídia e Streaming** | **Cloudinary (CDN)** | Hospeda e entrega de forma otimizada os *vídeos explicativos do catálogo de exercícios*, adaptando a qualidade do streaming conforme a velocidade da conexão do usuário. |
-| **Autenticação** | **Firebase Authentication** | Resolve a segurança de dados, login simplificado e fornece os mecanismos necessários para o *Controle de visibilidade de perfil e gerenciamento de permissões* de compartilhamento. |
-| **Notificações Push** | **Firebase Cloud Messaging (FCM)** | Dispara os *Alertas de treinos, avaliações físicas pendentes e lembretes de metas diárias* diretamente no smartphone do usuário. |
-| **Controle de Versão** | **Git + GitHub** | Versionamento e controle rígido do repositório da equipe sob a gerência técnica do projeto. |
-| **Gerenciamento de Tarefas** | **GitHub Projects** | Utilizado para rastrear o fluxo de desenvolvimento das histórias de usuário geradas a partir destas ideações. |
+| **Front-end** | React Native | Permite construir o aplicativo móvel unificado (para Alunos e Personal Trainers) com alto desempenho e suporte nativo a componentes de acessibilidade (leitores de tela, fontes dinâmicas e alto contraste). |
+| **Back-end** | Python (FastAPI) | Framework web moderno, assíncrono e de altíssimo desempenho, ideal para rodar com agilidade os algoritmos de cálculo automático e progressão de carga de treino. |
+| **Banco de Dados** | PostgreSQL | Banco relacional robusto que garante total integridade e consistência relacional na modelagem e vínculo dos "Treinos Mãe" com as fichas específicas dos alunos. |
+| **Banco Local** | WatermelonDB | Banco de dados reativo embutido e otimizado para persistência local e cache de dados, permitindo que o aluno acesse suas fichas de treino completamente offline na academia. |
+| **Comunicação** | WebSockets (Socket.io) | Protocolo de comunicação bidirecional de baixa latência, viabilizando o funcionamento fluido do chat interno integrado e o suporte consultivo em tempo real. |
+| **Autenticação** | Firebase Auth | Serviço especializado no gerenciamento seguro de identidades e perfis de usuários, simplificando o controle de permissões e privacidade. |
+| **Notificações** | Cloudinary & FCM | O Cloudinary serve os vídeos explicativos de exercícios via CDN sem sobrecarregar o backend, enquanto o FCM entrega os alertas de treinos via notificações Push. |
