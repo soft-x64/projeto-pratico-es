@@ -44,7 +44,7 @@ O TrainerX64 combina **quatro padrões arquiteturais complementares**, cada um a
      FIGURA 1 — Mapa geral dos padrões arquiteturais
      Descrição para o responsável pelo diagrama:
      Criar um diagrama com 4 blocos representando as camadas:
-       - Frontend → MVVM (Flutter / React)
+       - Frontend → MVVM (React Native)
        - Backend  → Monolito Modular (Node.js + Express)
        - Dados    → Repository Pattern (PostgreSQL)
        - Eventos  → Pub/Sub (Firebase FCM)
@@ -84,7 +84,7 @@ Diferente de um monolito tradicional — onde todo o código é misturado sem fr
 
 ### 1.2 ✅ Justificativa da Escolha
 
-O TrainerX64 possui domínios funcionais claramente distintos, o que torna obrigatória a separação modular interna. O Personal Trainer opera em seis grandes domínios: gerenciamento de alunos, criação de treinos, acompanhamento de evolução, organização de agenda, controle de cobranças e comunicação. O Aluno e o Aluno com Acessibilidade operam em domínios complementares: acesso ao sistema, execução de treinos, registro de evolução e comunicação.
+O TrainerX64 possui domínios funcionais claramente distintos, o que torna obrigatória a separação modular interna. O Personal Trainer opera em seis grandes domínios: gerenciamento de alunos, criação de treinos, acompanhamento de evolução, organização de agenda, controle financeiro e comunicação. O Aluno e o Aluno com Acessibilidade operam em domínios complementares: acesso ao sistema, execução de treinos, registro de evolução e comunicação.
 
 Ao mesmo tempo, o sistema **não justifica** a complexidade operacional de microserviços: a equipe é pequena, o escopo é bem delimitado e não há requisito de escala independente por serviço nesta etapa.
 
@@ -205,10 +205,13 @@ O mecanismo central do MVVM é o **data binding reativo**: quando os dados no Vi
 
 ### 2.2 ✅ Justificativa da Escolha
 
-O TrainerX64 será desenvolvido com **Flutter** (mobile) e **React.js** (web). Ambos os frameworks foram construídos sobre o conceito de **estado reativo** — quando um dado muda, a interface é reconstruída automaticamente. Declarar o MVVM como padrão arquitetural do frontend é reconhecer e documentar o que esses frameworks já fazem por design.
+O TrainerX64 será desenvolvido com **React Native** — framework mobile unificado baseado em JavaScript/TypeScript que permite construir o aplicativo para iOS e Android a partir de um único codebase. O React Native foi construído sobre o conceito de **estado reativo**: quando um dado muda, a interface é reconstruída automaticamente. Declarar o MVVM como padrão arquitetural do frontend é reconhecer e documentar o que esse framework já faz por design.
 
 **Por que não MVC no frontend?**
-O MVC foi criado para servidores que montam páginas HTML e devolvem ao navegador. O MVVM foi criado para **interfaces reativas** — que é exatamente o modelo do Flutter e do React. Aplicar MVC no frontend seria contrariar a arquitetura natural dos frameworks escolhidos.
+O MVC foi criado para servidores que montam páginas HTML e devolvem ao navegador. O MVVM foi criado para **interfaces reativas** — que é exatamente o modelo do React Native. Aplicar MVC no frontend seria contrariar a arquitetura natural do framework escolhido.
+
+**Por que React Native e não Flutter?**
+Flutter exigiria que a equipe aprendesse Dart, uma linguagem fora do ecossistema do projeto. Com React Native, o frontend e o backend (Node.js + Express) compartilham a mesma linguagem — TypeScript —, reduzindo a curva de aprendizado, o atrito entre as camadas e o número de ambientes de desenvolvimento que a equipe precisa dominar.
 
 #### ♿ Acessibilidade como requisito arquitetural do frontend
 
@@ -218,7 +221,7 @@ O MVVM suporta esse requisito de forma natural:
 
 | Recurso de acessibilidade | Como o MVVM suporta |
 |---|---|
-| **Leitura por voz** | A View é declarativa — o Flutter e o React permitem adicionar `Semantics` e `aria-label` em qualquer componente sem alterar o ViewModel |
+| **Leitura por voz** | A View é declarativa — o React Native permite adicionar `accessibilityLabel` e `AccessibilityInfo` em qualquer componente sem alterar o ViewModel |
 | **Alto contraste** | O tema de alto contraste é um estado do ViewModel — quando ativado, toda a View que o observa se atualiza automaticamente |
 | **Textos ampliados** | O tamanho de fonte é controlado via estado reativo — um único ViewModel de configuração propaga a mudança para todas as telas |
 | **Navegação simplificada** | A separação entre View e ViewModel permite criar Views alternativas mais simples para o perfil AA, reaproveitando o mesmo ViewModel |
@@ -374,7 +377,7 @@ O **Pub/Sub (Publisher/Subscriber)** é um padrão de **comunicação assíncron
 
 ### 4.2 ✅ Justificativa da Escolha
 
-O sistema identificou que tanto o Aluno (A) quanto o Aluno com Acessibilidade (AA) possuem o objetivo **"Notificações e Consistência"** — lembretes, avisos do personal e motivação para manter a regularidade dos treinos. Além disso, o Personal Trainer depende de comunicação assíncrona para enviar avisos e feedbacks sem interromper o fluxo principal do sistema.
+Tanto o Aluno (A) quanto o Aluno com Acessibilidade (AA) possuem o objetivo **"Notificações e Consistência"** — lembretes, avisos do personal e motivação para manter a regularidade dos treinos. Além disso, o Personal Trainer depende de comunicação assíncrona para enviar avisos e feedbacks sem interromper o fluxo principal do sistema.
 
 | Funcionalidade | Por que precisa de Pub/Sub |
 |---|---|
@@ -433,7 +436,7 @@ O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativament
 | Padrão | Camada | Problema que resolve | Personas atendidas |
 |---|---|---|---|
 | **Monolito Modular** | Backend — estrutura geral | Organização por domínio sem complexidade de microserviços | PT · A · AA |
-| **MVVM** | Frontend — interface | Interface reativa, testável e acessível no Flutter e React | PT · A · AA |
+| **MVVM** | Frontend — interface | Interface reativa, testável e acessível no React Native | PT · A · AA |
 | **Repository Pattern** | Backend — acesso a dados | Operações de banco centralizadas e desacopladas por entidade | PT · A · AA |
 | **Pub/Sub** | Backend — eventos | Comunicação assíncrona para notificações, relatórios e agenda | PT · A · AA |
 
@@ -448,6 +451,7 @@ O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativament
                         [Dados - Repository]   [Eventos - Pub/Sub]
      Indicar os 3 perfis (PT, A, AA) como usuários do frontend
      Destacar o AcessibilidadeViewModel como componente especial do MVVM
+     Frontend usa React Native (mobile unificado iOS/Android)
      Pode usar cores diferentes para cada padrão
      Salvar em: diagramas/arquitetura/fig6-visao-consolidada.png
 =========================================================== -->
