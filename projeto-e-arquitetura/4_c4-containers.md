@@ -225,18 +225,3 @@ Todos os três atores interagem exclusivamente com o **App Mobile** — não há
 | Firebase FCM | App Mobile | Push Notification | → |
 
 ---
-
-## 📚 Referências
-
-- BROWN, Simon. *The C4 Model for Visualising Software Architecture*. Disponível em: [https://c4model.com](https://c4model.com)
-- MARTIN, Robert C. *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall, 2017.
-- Prisma Documentation. *Prisma ORM*. Prisma, 2024. Disponível em: [https://www.prisma.io/docs](https://www.prisma.io/docs)
-- Firebase Documentation. *Firebase Cloud Messaging* e *Firebase Authentication*. Google, 2024. Disponível em: [https://firebase.google.com/docs](https://firebase.google.com/docs)
-
----
-
-<div align="center">
-
-*Documento elaborado para o Trabalho Prático II — Engenharia de Software I — ICET/UFAM*
-
-</div>
