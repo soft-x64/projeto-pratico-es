@@ -1,9 +1,4 @@
 # 📦 C4 — Nível 2: Containers — TrainerX64
-
-> **Disciplina:** Engenharia de Software I — ICET/UFAM
-> **Professor:** Dr. Andrey Rodrigues
-> **Documento:** TP2 — Diagrama de Containers (C4 Model)
-
 ---
 
 ## 📋 Sumário
