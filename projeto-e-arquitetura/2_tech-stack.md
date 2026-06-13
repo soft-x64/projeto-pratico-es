@@ -196,6 +196,8 @@ Git é o sistema de controle de versão distribuído padrão da indústria. GitH
 
 ## 🗺️ Mapa Visual — Tech Stack
 
+<img width="2821" height="2111" alt="Diagrama sem nome drawio (7)" src="https://github.com/user-attachments/assets/67b10180-2588-49f6-980c-5661ea0dab46" />
+
 
 
 ```
