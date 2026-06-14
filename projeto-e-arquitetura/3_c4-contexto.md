@@ -77,7 +77,7 @@ Esta matriz consolida a malha de comunicações macros que compõe o Nível 1 do
 | Aluno (A) | Sistema TrainerX64 | WebSockets (Socket.io) | Bidirecional | ↔ | Envia e recebe mensagens instantâneas no chat. |
 | Aluno com Acessibilidade (AA) | Sistema TrainerX64 | WebSockets (Socket.io) | Bidirecional | ↔ | Envia e recebe mensagens instantâneas no chat. |
 | Sistema TrainerX64 | Firebase Auth | HTTPS / REST API | Síncrono | → | Valida tokens e autentica as sessões de usuário recebidas. |
-| Sistema TrainerX64 | Firebase FCM | HTTPS / SDK | Síncrono (Disparo) | → | Publica os tópicos e eventos que geram notificações. |
+| Sistema TrainerX64 | Firebase FCM | HTTPS / SDK | Síncrono  | → | Publica os tópicos e eventos que geram notificações. |
 | Sistema TrainerX64 | Cloudinary CDN | HTTPS / REST API | Síncrono | → | Registra e requisita chaves criptográficas de URLs de vídeo. |
 | Firebase FCM | Personal Trainer (PT) | Push Notification | Assíncrono | → | Notifica em background sobre cobranças e agenda de aulas. |
 | Firebase FCM | Aluno (A) | Push Notification | Assíncrono | → | Entrega avisos imediatos de novos treinos disponíveis. |
