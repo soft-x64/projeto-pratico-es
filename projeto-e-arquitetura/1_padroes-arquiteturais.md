@@ -1,7 +1,7 @@
 # 🏗️ Padrões Arquiteturais — TrainerX64
 ---
 
-## 📋 Sumário
+## Sumário
 
 | # | Padrão | Camada de atuação |
 |---|--------|-------------------|
@@ -12,7 +12,7 @@
 
 ---
 
-## 👥 Perfis do Sistema
+##  Perfis do Sistema
 
 O TrainerX64 foi projetado para atender **três perfis de usuário formais**, identificados durante a etapa de Design de Interação:
 
@@ -22,13 +22,13 @@ O TrainerX64 foi projetado para atender **três perfis de usuário formais**, id
 | **Aluno** | A | Segue treinos, acessa vídeos e instruções, registra execuções, acompanha evolução e se comunica com o personal |
 | **Aluno com Acessibilidade** | AA | Possui todas as funcionalidades do Aluno (A), acrescidas de recursos de acessibilidade: leitura por voz, alto contraste, navegação simplificada, textos ampliados e descrições alternativas |
 
-> ⚠️ **O perfil AA não é um detalhe — é uma persona formal do sistema.**
+>  **O perfil AA não é um detalhe — é uma persona formal do sistema.**
 > A acessibilidade é uma camada estrutural que atravessa todas as funcionalidades,
 > não um recurso isolado adicionado ao final do desenvolvimento.
 
 ---
 
-## 🗺️ Visão Geral da Arquitetura
+##  Visão Geral da Arquitetura
 
 O TrainerX64 combina **quatro padrões arquiteturais complementares**, cada um atuando em uma camada distinta do sistema. A escolha foi guiada pelos seguintes princípios:
 
@@ -62,13 +62,13 @@ O TrainerX64 combina **quatro padrões arquiteturais complementares**, cada um a
 
 ## 1. Monolito Modular
 
-### 1.1 📖 Descrição do Padrão
+### 1.1  Descrição do Padrão
 
 O **Monolito Modular** é um estilo arquitetural no qual o sistema é desenvolvido e implantado como uma **única unidade de software**, mas organizado internamente em **módulos independentes** por domínio de negócio.
 
 Diferente de um monolito tradicional — onde todo o código é misturado sem fronteiras claras —, o Monolito Modular impõe **separação explícita de responsabilidades**: cada módulo representa um domínio funcional e expõe apenas uma interface controlada para comunicação com os demais.
 
-> ⚠️ **Regra fundamental:** nenhum módulo acessa diretamente o código interno de outro.
+>  **Regra fundamental:** nenhum módulo acessa diretamente o código interno de outro.
 > Toda comunicação ocorre exclusivamente pelas **interfaces públicas** de cada módulo.
 
 **Comparativo entre estilos arquiteturais:**
@@ -97,7 +97,7 @@ Ao mesmo tempo, o sistema **não justifica** a complexidade operacional de micro
 - ✅ Facilita a rastreabilidade entre histórias de usuário e módulos do sistema
 - ✅ Cada módulo corresponde diretamente a um grupo de objetivos das personas
 
-### 1.3 🔧 Aplicação no Sistema
+### 1.3  Aplicação no Sistema
 
 O backend do TrainerX64 é organizado nos seguintes módulos internos, cada um correspondendo diretamente a um domínio funcional do sistema:
 
@@ -139,7 +139,7 @@ backend/
                                 Atende: A | AA — objetivo "Notificações e Consistência"
 ```
 
-> 💡 **Nota sobre acessibilidade:** o módulo de autenticação e todos os módulos que
+>  **Nota sobre acessibilidade:** o módulo de autenticação e todos os módulos que
 > retornam dados para o frontend devem suportar respostas compatíveis com leitores de tela,
 > descrições alternativas e estruturas de navegação simplificada — requisitos do perfil AA.
 
@@ -165,7 +165,7 @@ Cada módulo expõe apenas uma interface de serviço para os demais. A comunica�
 
 | | |
 |---|---|
-| 📷 | **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64** |
+|  | **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64** |
 | |  <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/5fc9d740-ebf3-4caa-a889-db86de0635c0" />
  |
 | | *Legenda: Os 9 módulos internos do backend, suas interfaces públicas de comunicação e as personas que cada um atende. Fonte: elaborado pelos autores.* |
@@ -174,7 +174,7 @@ Cada módulo expõe apenas uma interface de serviço para os demais. A comunica�
 
 ## 2. MVVM — Model-View-ViewModel
 
-### 2.1 📖 Descrição do Padrão
+### 2.1  Descrição do Padrão
 
 O **MVVM (Model-View-ViewModel)** é um padrão arquitetural voltado para a **camada de interface do usuário**. Ele divide a interface em três componentes com responsabilidades bem definidas:
 
@@ -214,7 +214,7 @@ O MVC foi criado para servidores que montam páginas HTML e devolvem ao navegado
 **Por que React Native e não Flutter?**
 Flutter exigiria que a equipe aprendesse Dart, uma linguagem fora do ecossistema do projeto. Com React Native, o frontend e o backend (Node.js + Express) compartilham a mesma linguagem — TypeScript —, reduzindo a curva de aprendizado, o atrito entre as camadas e o número de ambientes de desenvolvimento que a equipe precisa dominar.
 
-#### ♿ Acessibilidade como requisito arquitetural do frontend
+####  Acessibilidade como requisito arquitetural do frontend
 
 O **Aluno com Acessibilidade (AA)** é um perfil formal do sistema, com o objetivo estrutural **"Navegar com Autonomia"**. Esse objetivo não é uma funcionalidade isolada — ele é **transversal a todas as telas do sistema**.
 
@@ -232,7 +232,7 @@ O MVVM suporta esse requisito de forma natural:
 > porque permite que os recursos de acessibilidade sejam implementados na View
 > sem contaminar a lógica de negócio — mantendo o sistema limpo e testável.
 
-### 2.3 🔧 Aplicação no Sistema
+### 2.3  Aplicação no Sistema
 
 **ViewModels definidos no sistema:**
 
@@ -248,7 +248,7 @@ O MVVM suporta esse requisito de forma natural:
 | `FinanceiroViewModel` | Controle de cobranças | PT | Registro de mensalidades, alunos em dia e pendências |
 | `AcessibilidadeViewModel` | Configurações de acessibilidade | AA | Alto contraste, tamanho de fonte, leitura por voz |
 
-> 💡 O `AcessibilidadeViewModel` é o ViewModel responsável por propagar as
+>  O `AcessibilidadeViewModel` é o ViewModel responsável por propagar as
 > preferências de acessibilidade do perfil AA para todas as Views do sistema.
 
 ---
@@ -271,7 +271,7 @@ O MVVM suporta esse requisito de forma natural:
 
 | | |
 |---|---|
-| 📷 | **Figura 3 — Fluxo MVVM para registro de evolução pelo Aluno com Acessibilidade (AA)** |
+|  | **Figura 3 — Fluxo MVVM para registro de evolução pelo Aluno com Acessibilidade (AA)** |
 | | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/70dc2c01-1dd3-40c8-9b56-08aa21b7a593" />
  |
 | | *Legenda: A View acessível observa o mesmo ViewModel do aluno padrão, com recursos de narração e navegação simplificada adicionados na camada de View. Fonte: elaborado pelos autores.* |
@@ -280,7 +280,7 @@ O MVVM suporta esse requisito de forma natural:
 
 ## 3. Repository Pattern
 
-### 3.1 📖 Descrição do Padrão
+### 3.1  Descrição do Padrão
 
 O **Repository Pattern** cria uma **camada de abstração** entre a lógica de negócio e o mecanismo de acesso a dados. Em vez de o código de negócio realizar chamadas diretas ao banco de dados, ele interage com um **repositório** — uma interface que expõe operações padronizadas de leitura e escrita, sem expor os detalhes de implementação do banco.
 
@@ -317,7 +317,7 @@ Sem o Repository Pattern, a lógica de acesso ao banco ficaria **dispersa por to
 - ✅ Os repositórios podem ser substituídos por **mocks** durante os testes automatizados
 - ✅ A troca de banco de dados no futuro afeta apenas a implementação dos repositórios
 
-### 3.3 🔧 Aplicação no Sistema
+### 3.3  Aplicação no Sistema
 
 O TrainerX64 define um repositório para cada entidade principal do domínio, cobrindo todos os módulos do sistema:
 
@@ -351,7 +351,7 @@ O TrainerX64 define um repositório para cada entidade principal do domínio, co
 
 | | |
 |---|---|
-| 📷 | **Figura 4 — Repository Pattern aplicado ao módulo Financeiro do TrainerX64** |
+|  | **Figura 4 — Repository Pattern aplicado ao módulo Financeiro do TrainerX64** |
 | | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/cec868e9-0a2a-4656-a071-49d5fe700668" />
  |
 | | *Legenda: O Service conhece apenas a interface do repositório — nunca a implementação concreta ou o banco de dados. Fonte: elaborado pelos autores.* |
@@ -360,7 +360,7 @@ O TrainerX64 define um repositório para cada entidade principal do domínio, co
 
 ## 4. Pub/Sub — Publisher/Subscriber
 
-### 4.1 📖 Descrição do Padrão
+### 4.1  Descrição do Padrão
 
 O **Pub/Sub (Publisher/Subscriber)** é um padrão de **comunicação assíncrona baseada em eventos**. Os componentes do sistema não se comunicam diretamente — em vez disso:
 
@@ -376,7 +376,7 @@ O **Pub/Sub (Publisher/Subscriber)** é um padrão de **comunicação assíncron
                        └─────────────► Subscriber C
 ```
 
-> 💡 O desacoplamento é total: quem publica não conhece quem assina, e quem assina não conhece quem publica.
+>  O desacoplamento é total: quem publica não conhece quem assina, e quem assina não conhece quem publica.
 
 ### 4.2 ✅ Justificativa da Escolha
 
@@ -392,11 +392,11 @@ Tanto o Aluno (A) quanto o Aluno com Acessibilidade (AA) possuem o objetivo **"N
 
 O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativamente para notificações push, tornando a escolha tecnicamente direta e alinhada ao stack definido.
 
-> ♿ **Para o perfil AA**, as notificações push devem ser compatíveis com leitores de tela
+>  **Para o perfil AA**, as notificações push devem ser compatíveis com leitores de tela
 > e conter descrições alternativas claras no payload — garantindo que o conteúdo
 > seja compreendido via narração de voz, sem depender exclusivamente de elementos visuais.
 
-### 4.3 🔧 Aplicação no Sistema
+### 4.3  Aplicação no Sistema
 
 **Eventos definidos no sistema:**
 
@@ -435,7 +435,7 @@ O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativament
 
 ---
 
-## 📊 Resumo das Decisões Arquiteturais
+##  Resumo das Decisões Arquiteturais
 
 | Padrão | Camada | Problema que resolve | Personas atendidas |
 |---|---|---|---|
