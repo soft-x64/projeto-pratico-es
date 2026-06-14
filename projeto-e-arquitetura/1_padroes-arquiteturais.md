@@ -163,12 +163,11 @@ Cada módulo expõe apenas uma interface de serviço para os demais. A comunica�
      Salvar em: diagramas/arquitetura/fig2-monolito-modular.png
 =========================================================== -->
 
-| | |
-|---|---|
-|  | **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64** |
-| |  <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/5fc9d740-ebf3-4caa-a889-db86de0635c0" />
- |
-| | *Legenda: Os 9 módulos internos do backend, suas interfaces públicas de comunicação e as personas que cada um atende. Fonte: elaborado pelos autores.* |
+| |
+|---|
+ | **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64** |
+ |  <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/5fc9d740-ebf3-4caa-a889-db86de0635c0" /> |
+ | *Legenda: Os 9 módulos internos do backend, suas interfaces públicas de comunicação e as personas que cada um atende. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -269,12 +268,11 @@ O MVVM suporta esse requisito de forma natural:
      Salvar em: diagramas/arquitetura/fig3-mvvm-fluxo.png
 =========================================================== -->
 
-| | |
-|---|---|
-|  | **Figura 3 — Fluxo MVVM para registro de evolução pelo Aluno com Acessibilidade (AA)** |
-| | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/70dc2c01-1dd3-40c8-9b56-08aa21b7a593" />
- |
-| | *Legenda: A View acessível observa o mesmo ViewModel do aluno padrão, com recursos de narração e navegação simplificada adicionados na camada de View. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura 3 — Fluxo MVVM para registro de evolução pelo Aluno com Acessibilidade (AA)** |
+| <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/70dc2c01-1dd3-40c8-9b56-08aa21b7a593" /> |
+| *Legenda: A View acessível observa o mesmo ViewModel do aluno padrão, com recursos de narração e navegação simplificada adicionados na camada de View. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -349,12 +347,12 @@ O TrainerX64 define um repositório para cada entidade principal do domínio, co
      Salvar em: diagramas/arquitetura/fig4-repository-pattern.png
 =========================================================== -->
 
-| | |
-|---|---|
-|  | **Figura 4 — Repository Pattern aplicado ao módulo Financeiro do TrainerX64** |
-| | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/cec868e9-0a2a-4656-a071-49d5fe700668" />
+| |
+|---|
+| **Figura 4 — Repository Pattern aplicado ao módulo Financeiro do TrainerX64** |
+| <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/cec868e9-0a2a-4656-a071-49d5fe700668" />
  |
-| | *Legenda: O Service conhece apenas a interface do repositório — nunca a implementação concreta ou o banco de dados. Fonte: elaborado pelos autores.* |
+| *Legenda: O Service conhece apenas a interface do repositório — nunca a implementação concreta ou o banco de dados. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -426,12 +424,11 @@ O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativament
      Salvar em: diagramas/arquitetura/fig5-pubsub-fluxo.png
 =========================================================== -->
 
-| | |
-|---|---|
-| 📷 | **Figura 5 — Fluxo Pub/Sub para publicação de treino com suporte ao perfil AA** |
-| | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/486a38f4-4bab-4a5b-8ca3-82e3cb012537" />
- |
-| | *Legenda: O payload da notificação inclui descrição textual alternativa compatível com leitores de tela, atendendo ao perfil AA. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura 5 — Fluxo Pub/Sub para publicação de treino com suporte ao perfil AA** |
+| <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/486a38f4-4bab-4a5b-8ca3-82e3cb012537" /> |
+| **Legenda: O payload da notificação inclui descrição textual alternativa compatível com leitores de tela, atendendo ao perfil AA. Fonte: elaborado pelos autores.** |
 
 ---
 
