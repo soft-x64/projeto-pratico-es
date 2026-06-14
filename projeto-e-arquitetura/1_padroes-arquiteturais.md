@@ -429,7 +429,8 @@ O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativament
 | | |
 |---|---|
 | 📷 | **Figura 5 — Fluxo Pub/Sub para publicação de treino com suporte ao perfil AA** |
-| | *Inserir imagem: `diagramas/arquitetura/fig5-pubsub-fluxo.png`* |
+| | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/486a38f4-4bab-4a5b-8ca3-82e3cb012537" />
+ |
 | | *Legenda: O payload da notificação inclui descrição textual alternativa compatível com leitores de tela, atendendo ao perfil AA. Fonte: elaborado pelos autores.* |
 
 ---
