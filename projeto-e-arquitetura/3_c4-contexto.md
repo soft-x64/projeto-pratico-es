@@ -37,7 +37,7 @@ Abaixo está a representação gráfica do ecossistema macro. O diagrama separa 
 | | |
 |---|---|
 | 📷 | **Figura — Diagrama C4 de Contexto do TrainerX64** |
-| ![Diagrama C4 de Contexto](https://i.ibb.co/6R2g9XF0/diagrama-c4-contexto-trainerx64.png) | |
+| |![Diagrama C4 de Contexto](Diagrama%20sem%20t%C3%ADtulo-Modelo%20C4%20-%20Contexto.drawio%20(1).png)| |
 | | *Legenda: Relação de alto nível entre atores, fronteiras do sistema central e integrações. Fonte: elaborado pelos autores.* |
 
 ---
