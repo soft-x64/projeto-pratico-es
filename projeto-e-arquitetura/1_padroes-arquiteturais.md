@@ -166,7 +166,8 @@ Cada módulo expõe apenas uma interface de serviço para os demais. A comunica�
 | | |
 |---|---|
 | 📷 | **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64** |
-| | *Inserir imagem: `diagramas/arquitetura/fig2-monolito-modular.png`* |
+| |  <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/5fc9d740-ebf3-4caa-a889-db86de0635c0" />
+ |
 | | *Legenda: Os 9 módulos internos do backend, suas interfaces públicas de comunicação e as personas que cada um atende. Fonte: elaborado pelos autores.* |
 
 ---
