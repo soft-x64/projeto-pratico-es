@@ -1,7 +1,7 @@
 # 🛠️ Tecnologias e Ferramentas — TrainerX64
 ---
 
-## 📋 Sumário
+## Sumário
 
 | # | Camada | Tecnologia |
 |---|--------|------------|
@@ -17,7 +17,7 @@
 
 ---
 
-## 🧭 Introdução
+## Introdução
 
 A seção de **Tecnologias e Ferramentas Utilizadas (Tech Stack Map)** consiste no mapeamento estruturado de todo o ecossistema de software, frameworks, bibliotecas e serviços de infraestrutura empregados na construção prática do sistema. Organizado por camadas funcionais — frontend, backend, banco de dados e serviços auxiliares —, esse mapeamento tem como objetivo central justificar tecnicamente a escolha de cada componente com base nos requisitos do projeto, demonstrando de forma clara como essas ferramentas se conectam e interagem para viabilizar as regras de negócio e os diferenciais da solução.
 
@@ -177,7 +177,7 @@ Git é o sistema de controle de versão distribuído padrão da indústria. GitH
 
 ---
 
-## 📊 Tabela Resumo — Tech Stack
+##  Tabela Resumo — Tech Stack
 
 | Camada | Tecnologia | Função no sistema |
 |:---|:---|:---|
@@ -194,7 +194,7 @@ Git é o sistema de controle de versão distribuído padrão da indústria. GitH
 
 ---
 
-## 🗺️ Mapa Visual — Tech Stack
+## Mapa Visual — Tech Stack
 
 <img width="2821" height="2111" alt="Diagrama sem nome drawio (7)" src="https://github.com/user-attachments/assets/67b10180-2588-49f6-980c-5661ea0dab46" />
 
