@@ -352,7 +352,8 @@ O TrainerX64 define um repositório para cada entidade principal do domínio, co
 | | |
 |---|---|
 | 📷 | **Figura 4 — Repository Pattern aplicado ao módulo Financeiro do TrainerX64** |
-| | *Inserir imagem: `diagramas/arquitetura/fig4-repository-pattern.png`* |
+| | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/cec868e9-0a2a-4656-a071-49d5fe700668" />
+ |
 | | *Legenda: O Service conhece apenas a interface do repositório — nunca a implementação concreta ou o banco de dados. Fonte: elaborado pelos autores.* |
 
 ---
