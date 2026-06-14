@@ -272,7 +272,8 @@ O MVVM suporta esse requisito de forma natural:
 | | |
 |---|---|
 | 📷 | **Figura 3 — Fluxo MVVM para registro de evolução pelo Aluno com Acessibilidade (AA)** |
-| | *Inserir imagem: `diagramas/arquitetura/fig3-mvvm-fluxo.png`* |
+| | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/70dc2c01-1dd3-40c8-9b56-08aa21b7a593" />
+ |
 | | *Legenda: A View acessível observa o mesmo ViewModel do aluno padrão, com recursos de narração e navegação simplificada adicionados na camada de View. Fonte: elaborado pelos autores.* |
 
 ---
