@@ -43,11 +43,11 @@ O diagrama cobre 18 classes distribuídas em três domínios. As relações entr
 
 ###  Diagrama Geral — Visão Integrada dos Três Domínios
 
-| | |
-|---|---|
-| 📷 | **Figura — Diagrama de Classes UML completo (TrainerX64)** |
-| | *Inserir imagem: `diagramas/uml/fig-classes-geral.png`* |
-| | *Legenda: Visão integrada dos três domínios com todas as classes, atributos, métodos e relações. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura — Diagrama de Classes UML completo (TrainerX64)** |
+| <img width="2372" height="1495" alt="image" src="https://github.com/user-attachments/assets/4db422f8-1160-4e50-863e-742f8ee0aa85" /> |
+| *Legenda: Visão integrada dos três domínios com todas as classes, atributos, métodos e relações. Fonte: elaborado pelos autores.* |
 
 ---
 
