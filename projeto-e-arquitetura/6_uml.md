@@ -270,7 +270,7 @@ Registro de cobrança de um aluno. O módulo financeiro funciona como agenda de 
 
 Concentra a lógica central do produto — criação e execução de treinos, registro de progresso e geração de relatórios. Estruturado em torno do conceito de **TreinoMae** e suas fichas personalizadas por aluno.
 
-### 🖼️ Diagrama — Domínio: Treinos e Evolução
+###  Diagrama — Domínio: Treinos e Evolução
 
 | | |
 |---|---|
