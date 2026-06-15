@@ -78,7 +78,7 @@ O diagrama cobre 18 classes distribuídas em três domínios. As relações entr
 
 Centraliza identidade, autenticação e controle financeiro. É o domínio base do sistema — suas classes são referenciadas pelos outros dois domínios via associação.
 
-### 🖼️ Diagrama — Domínio: Usuários e Acesso
+###  Diagrama — Domínio: Usuários e Acesso
 
 | | |
 |---|---|
