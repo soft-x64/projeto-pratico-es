@@ -55,7 +55,8 @@ O TrainerX64 combina **quatro padrões arquiteturais complementares**, cada um a
 | | |
 |---|---|
 | 📷 | **Figura 1 — Mapa geral dos padrões arquiteturais do TrainerX64** |
-| | *Inserir imagem: `diagramas/arquitetura/fig1-mapa-geral.png`* |
+| | <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/d7e5cd4a-b0e0-4689-bf15-cb0fe28c878a" />
+ |
 | | *Legenda: Visão geral dos quatro padrões e em qual camada do sistema cada um atua. Fonte: elaborado pelos autores.* |
 
 ---
@@ -443,24 +444,4 @@ O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativament
 
 ---
 
-<!-- ===========================================================
-     FIGURA 6 — Diagrama consolidado de todos os padrões
-     Descrição para o responsável pelo diagrama:
-     Criar uma visão única mostrando todos os 4 padrões integrados:
-       [Frontend - MVVM] → [Backend - Monolito Modular]
-                                      ↓                ↓
-                        [Dados - Repository]   [Eventos - Pub/Sub]
-     Indicar os 3 perfis (PT, A, AA) como usuários do frontend
-     Destacar o AcessibilidadeViewModel como componente especial do MVVM
-     Frontend usa React Native (mobile unificado iOS/Android)
-     Pode usar cores diferentes para cada padrão
-     Salvar em: diagramas/arquitetura/fig6-visao-consolidada.png
-=========================================================== -->
 
-| | |
-|---|---|
-| 📷 | **Figura 6 — Visão consolidada de todos os padrões arquiteturais do TrainerX64** |
-| | *Inserir imagem: `diagramas/arquitetura/fig6-visao-consolidada.png`* |
-| | *Legenda: Mapa completo mostrando como os quatro padrões se integram e quais personas são atendidas por cada camada. Fonte: elaborado pelos autores.* |
-
----
