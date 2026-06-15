@@ -165,9 +165,9 @@ Cada módulo expõe apenas uma interface de serviço para os demais. A comunica�
 
 | |
 |---|
- | **Figura 2 — Estrutura interna do Monolito Modular do TrainerX64** |
+ | **Figura 2 — Estrutura do Monolito Modular** |
  |  <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/5fc9d740-ebf3-4caa-a889-db86de0635c0" /> |
- | *Legenda: Os 9 módulos internos do backend, suas interfaces públicas de comunicação e as personas que cada um atende. Fonte: elaborado pelos autores.* |
+ | *Legenda: Representação arquitetura molítica modular. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -270,9 +270,9 @@ O MVVM suporta esse requisito de forma natural:
 
 | |
 |---|
-| **Figura 3 — Fluxo MVVM para registro de evolução pelo Aluno com Acessibilidade (AA)** |
+| **Figura 3 — Fluxo MVVM ** |
 | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/70dc2c01-1dd3-40c8-9b56-08aa21b7a593" /> |
-| *Legenda: A View acessível observa o mesmo ViewModel do aluno padrão, com recursos de narração e navegação simplificada adicionados na camada de View. Fonte: elaborado pelos autores.* |
+| *Legenda: Representação arquitetura MVVM. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -349,10 +349,10 @@ O TrainerX64 define um repositório para cada entidade principal do domínio, co
 
 | |
 |---|
-| **Figura 4 — Repository Pattern aplicado ao módulo Financeiro do TrainerX64** |
+| **Figura 4 — Repository Pattern ** |
 | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/cec868e9-0a2a-4656-a071-49d5fe700668" />
  |
-| *Legenda: O Service conhece apenas a interface do repositório — nunca a implementação concreta ou o banco de dados. Fonte: elaborado pelos autores.* |
+| *Legenda: Representação arquitetura Repository Pattern. Fonte: elaborado pelos autores.* |
 
 ---
 
@@ -426,9 +426,9 @@ O **Firebase Cloud Messaging (FCM)** já implementa o padrão Pub/Sub nativament
 
 | |
 |---|
-| **Figura 5 — Fluxo Pub/Sub para publicação de treino com suporte ao perfil AA** |
+| **Figura 5 — Fluxo Pub/Sub ** |
 | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/486a38f4-4bab-4a5b-8ca3-82e3cb012537" /> |
-| **Legenda: O payload da notificação inclui descrição textual alternativa compatível com leitores de tela, atendendo ao perfil AA. Fonte: elaborado pelos autores.** |
+| **Legenda: Representação Arquitetura Pub/Sub. Fonte: elaborado pelos autores.** |
 
 ---
 
