@@ -273,11 +273,12 @@ Concentra a lógica central do produto — criação e execução de treinos, re
 
 ###  Diagrama — Domínio: Treinos e Evolução
 
-| | |
-|---|---|
+| |
+|---|
 | 📷 | **Figura — Classes do domínio Treinos e Evolução** |
-| | *Inserir imagem: `diagramas/uml/fig-classes-treinos.png`* |
-| | *Legenda: Classes TreinoMae, FichaPersonalizada, Exercicio, SerieExercicio, RegistroEvolucao e Relatorio. Fonte: elaborado pelos autores.* |
+|<img width="1343" height="494" alt="image" src="https://github.com/user-attachments/assets/495c8c30-f982-4e5b-a3a5-af1f9598bd92" />
+ |
+| *Legenda: Classes TreinoMae, FichaPersonalizada, Exercicio, SerieExercicio, RegistroEvolucao e Relatorio. Fonte: elaborado pelos autores.* |
 
 ---
 
