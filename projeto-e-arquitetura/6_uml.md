@@ -80,11 +80,12 @@ Centraliza identidade, autenticação e controle financeiro. É o domínio base 
 
 ###  Diagrama — Domínio: Usuários e Acesso
 
-| | |
-|---|---|
-| 📷 | **Figura — Classes do domínio Usuários e Acesso** |
-| | *Inserir imagem: `diagramas/uml/fig-classes-usuarios.png`* |
-| | *Legenda: Classes Usuario, PersonalTrainer, Aluno, AlunoAcessibilidade, Sessao, Mensalidade e enums. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura — Classes do domínio Usuários e Acesso** |
+| <img width="981" height="918" alt="image" src="https://github.com/user-attachments/assets/0136cd32-3501-430e-9b1f-80067bb22bf5" />
+ |
+| *Legenda: Classes Usuario, PersonalTrainer, Aluno, AlunoAcessibilidade, Sessao, Mensalidade e enums. Fonte: elaborado pelos autores.* |
 
 ---
 
