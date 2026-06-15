@@ -439,7 +439,7 @@ Relatório de progresso gerado automaticamente após evento de evolução regist
 
 Gerencia a comunicação entre PT e Aluno, o planejamento de agenda e o sistema de notificações via Pub/Sub. É o domínio que mais consome referências de outros domínios.
 
-### 🖼️ Diagrama — Domínio: Comunicação e Agenda
+###  Diagrama — Domínio: Comunicação e Agenda
 
 | | |
 |---|---|
