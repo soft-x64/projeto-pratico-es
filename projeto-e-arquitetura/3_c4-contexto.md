@@ -1,7 +1,7 @@
 # 🗺️ C4 — Nível 1: Contexto — TrainerX64
 ---
 
-## 📋 Sumário
+##  Sumário
 
 | # | Elemento | Tipo | Descrição Macro |
 |---|----------|------|-----------------|
@@ -14,13 +14,13 @@
 | 7 | [Cloudinary CDN](#-sistemas-externos-de-terceiros) | Sistema Externo | Armazenamento e streaming otimizado dos vídeos do catálogo de exercícios. |
 
 ---
-## 🧭 Sobre o Nível de Contexto
+##  Sobre o Nível de Contexto
 
 O **nível 1 do C4 Model** estabelece o ponto de partida da arquitetura, definindo o escopo do ecossistema **TrainerX64**. Neste momento, o sistema é tratado estritamente como uma **caixa preta única**, ocultando qualquer detalhe de implementação interna (como linguagens, frameworks ou bancos de dados). O objetivo primordial deste artefato é mapear quem são os usuários do sistema, quais sistemas externos de terceiros são consumidos e como o fluxo de valor transita entre essas fronteiras através de canais síncronos e assíncronos.
 
 ---
 
-## 👥 Atores do Sistema
+##  Atores do Sistema
 
 | Ator | Sigla | Descrição no Contexto de Negócio |
 |---|---|---|
@@ -30,7 +30,7 @@ O **nível 1 do C4 Model** estabelece o ponto de partida da arquitetura, definin
 
 ---
 
-## 🗺️ Diagrama de Contexto
+##  Diagrama de Contexto
 
 Abaixo está a representação gráfica do ecossistema macro. O diagrama separa claramente os limites do software das dependências externas de nuvem, além de evidenciar a presença de conexões persistentes de WebSockets (para o chat) operando paralelamente às requisições tradicionais.
 
@@ -41,7 +41,7 @@ Abaixo está a representação gráfica do ecossistema macro. O diagrama separa 
 | | *Legenda: Relação de alto nível entre atores, fronteiras do sistema central e integrações. Fonte: elaborado pelos autores.* |
 
 ---
-## 🏗️ Sistema Central
+##  Sistema Central
 
 **Identificação:** Sistema TrainerX64
 
@@ -49,7 +49,7 @@ Abaixo está a representação gráfica do ecossistema macro. O diagrama separa 
 
 ---
 
-## ☁️ Sistemas Externos de Terceiros
+##  Sistemas Externos de Terceiros
 
 ### 1. Firebase Auth
 - **Responsabilidade:** Provedor externo de identidade (*Identity Provider*). Isola a complexidade de criptografia de senhas, validações de e-mail e emissão de tokens seguros da aplicação.
@@ -64,7 +64,7 @@ Abaixo está a representação gráfica do ecossistema macro. O diagrama separa 
 
 ---
 
-## 📊 Tabela Geral de Relações de Contexto
+##  Tabela Geral de Relações de Contexto
 
 Esta matriz consolida a malha de comunicações macros que compõe o Nível 1 do C4 Model do sistema TrainerX64.
 
