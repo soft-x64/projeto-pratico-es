@@ -31,8 +31,6 @@ Cada história está estruturada em quatro partes:
 - **Classes e métodos envolvidos** — rastreabilidade até o nível de código
 - **Fluxo arquitetural** — caminho completo da interação pelo sistema
 
->  **Nota sobre destaques visuais:** por limitação de tempo, os destaques de setas e cores nos diagramas draw.io não foram aplicados. O fluxo arquitetural detalhado neste documento cumpre o mesmo objetivo de evidenciar, de forma verificável, o caminho de cada história pelo sistema.
-
 ---
 
 ## H01 — Cadastrar treinos padronizados
