@@ -52,12 +52,11 @@ O TrainerX64 combina **quatro padrões arquiteturais complementares**, cada um a
      Salvar em: diagramas/arquitetura/fig1-mapa-geral.png
 =========================================================== -->
 
-| | |
-|---|---|
-| 📷 | **Figura 1 — Mapa geral dos padrões arquiteturais do TrainerX64** |
-| | <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/d7e5cd4a-b0e0-4689-bf15-cb0fe28c878a" />
- |
-| | *Legenda: Visão geral dos quatro padrões e em qual camada do sistema cada um atua. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura 1 — Mapa geral dos padrões arquiteturais do TrainerX64** |
+| <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/d7e5cd4a-b0e0-4689-bf15-cb0fe28c878a" /> |
+| *Legenda: Visão geral dos quatro padrões e em qual camada do sistema cada um atua. Fonte: elaborado pelos autores.* |
 
 ---
 
