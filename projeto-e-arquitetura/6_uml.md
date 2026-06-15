@@ -442,11 +442,12 @@ Gerencia a comunicação entre PT e Aluno, o planejamento de agenda e o sistema 
 
 ###  Diagrama — Domínio: Comunicação e Agenda
 
-| | |
-|---|---|
-| 📷 | **Figura — Classes do domínio Comunicação e Agenda** |
-| | *Inserir imagem: `diagramas/uml/fig-classes-comunicacao.png`* |
-| | *Legenda: Classes Conversa, Mensagem, Compromisso, LembreteAgenda, Notificacao e EventoPubSub. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura — Classes do domínio Comunicação e Agenda** |
+| <img width="742" height="979" alt="image" src="https://github.com/user-attachments/assets/e160510e-a023-4d9e-8fcf-2e6172f09e27" />
+ |
+| *Legenda: Classes Conversa, Mensagem, Compromisso, LembreteAgenda, Notificacao e EventoPubSub. Fonte: elaborado pelos autores.* |
 
 ---
 
