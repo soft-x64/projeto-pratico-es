@@ -1,9 +1,5 @@
 # 🔗 Rastreabilidade com Histórias de Usuário — TrainerX64
 
-> **Disciplina:** Engenharia de Software I — ICET/UFAM
-> **Professor:** Dr. Andrey Rodrigues
-> **Documento:** TP2 — Rastreabilidade Arquitetural
-
 ---
 
 ##  Sumário
