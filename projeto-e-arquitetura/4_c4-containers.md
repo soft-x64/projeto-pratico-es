@@ -62,11 +62,11 @@ Todos os três atores interagem exclusivamente com o **App Mobile** — não há
      Salvar em: diagramas/c4/fig-containers.png
 =========================================================== -->
 
-| | |
-|---|---|
-| 📷 | **Figura — Diagrama C4 de Containers do TrainerX64** |
-| | *Inserir imagem: `diagramas/c4/fig-containers.png`* |
-| | *Legenda: Visão dos containers internos, sistemas externos e relações de comunicação. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura — Diagrama C4 de Containers do TrainerX64** |
+| <img width="871" height="962" alt="image" src="https://github.com/user-attachments/assets/9f7c4044-5ffa-46ce-ac34-2a1cc700e06a" /> |
+| *Legenda: Visão dos containers internos, sistemas externos e relações de comunicação. Fonte: elaborado pelos autores.* |
 
 ---
 
