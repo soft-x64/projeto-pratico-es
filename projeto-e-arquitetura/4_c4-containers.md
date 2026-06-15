@@ -1,7 +1,7 @@
 # 📦 C4 — Nível 2: Containers — TrainerX64
 ---
 
-## 📋 Sumário
+##  Sumário
 
 | # | Container | Tecnologia |
 |---|-----------|------------|
