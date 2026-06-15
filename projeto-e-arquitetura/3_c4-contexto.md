@@ -34,11 +34,11 @@ O **nível 1 do C4 Model** estabelece o ponto de partida da arquitetura, definin
 
 Abaixo está a representação gráfica do ecossistema macro. O diagrama separa claramente os limites do software das dependências externas de nuvem, além de evidenciar a presença de conexões persistentes de WebSockets (para o chat) operando paralelamente às requisições tradicionais.
 
-| | |
-|---|---|
-| 📷 | **Figura — Diagrama C4 de Contexto do TrainerX64** |
-| |![Diagrama C4 de Contexto](diagramas/c4/ModeloC4-Contexto.png)  |
-| | *Legenda: Relação de alto nível entre atores, fronteiras do sistema central e integrações. Fonte: elaborado pelos autores.* |
+| |
+|---|
+| **Figura — Diagrama C4 de Contexto do TrainerX64** |
+| [Diagrama C4 de Contexto] <img width="1781" height="1291" alt="image" src="https://github.com/user-attachments/assets/eda187f0-4e1b-426b-8525-8b53b28213e8" /> |
+| *Legenda: Relação de alto nível entre atores, fronteiras do sistema central e integrações. Fonte: elaborado pelos autores.* |
 
 ---
 ##  Sistema Central
