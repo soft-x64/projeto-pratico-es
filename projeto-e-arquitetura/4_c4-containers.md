@@ -14,13 +14,13 @@
 
 ---
 
-## 🧭 Sobre o Nível de Containers
+##  Sobre o Nível de Containers
 
 O **nível 2 do C4 Model** amplia o zoom sobre o sistema TrainerX64, revelando os processos e armazenamentos de dados que o compõem. Cada container é uma unidade executável ou armazenável de forma independente — ou seja, um processo separado, um banco de dados ou um aplicativo. O objetivo deste diagrama é mostrar **o que existe**, **qual tecnologia cada parte usa** e **como as partes se comunicam entre si**.
 
 ---
 
-## 👥 Atores do Sistema
+##  Atores do Sistema
 
 | Ator | Sigla | Descrição |
 |---|---|---|
@@ -32,7 +32,7 @@ Todos os três atores interagem exclusivamente com o **App Mobile** — não há
 
 ---
 
-## 🗺️ Diagrama de Containers
+##  Diagrama de Containers
 
 <!-- ===========================================================
      FIGURA — Diagrama C4 de Containers do TrainerX64
@@ -114,7 +114,7 @@ Todos os três atores interagem exclusivamente com o **App Mobile** — não há
 | `modulo-relatorios` | Geração automática de relatórios por aluno e período | PT · A · AA |
 | `modulo-notificacoes` | Disparo de eventos para o FCM e controle de notificações | A · AA |
 
-> ⚠️ **Regra fundamental do Monolito Modular:** nenhum módulo acessa diretamente o código interno de outro. Toda comunicação ocorre pelas interfaces públicas de cada módulo.
+>  **Regra fundamental do Monolito Modular:** nenhum módulo acessa diretamente o código interno de outro. Toda comunicação ocorre pelas interfaces públicas de cada módulo.
 
 **Acesso a dados:** Todos os módulos utilizam o **Repository Pattern** implementado via **Prisma ORM**, que abstrai as operações SQL e garante tipagem TypeScript dos modelos.
 
@@ -182,7 +182,7 @@ Todos os três atores interagem exclusivamente com o **App Mobile** — não há
 | `compromisso.agendado` | PT · A · AA | Lembrete de compromisso na agenda |
 | `cobranca.pendente` | PT | Mensalidade em aberto identificada |
 
-> ♿ **Para o perfil AA**, os payloads das notificações incluem descrições textuais alternativas compatíveis com leitores de tela, garantindo que o conteúdo seja compreendido via narração de voz.
+>  **Para o perfil AA**, os payloads das notificações incluem descrições textuais alternativas compatíveis com leitores de tela, garantindo que o conteúdo seja compreendido via narração de voz.
 
 **Relações:**
 
@@ -210,7 +210,7 @@ Todos os três atores interagem exclusivamente com o **App Mobile** — não há
 
 ---
 
-## 📊 Resumo das Relações
+##  Resumo das Relações
 
 | Origem | Destino | Protocolo | Direção |
 |---|---|---|---|
