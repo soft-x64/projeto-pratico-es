@@ -269,7 +269,7 @@ O MVVM suporta esse requisito de forma natural:
 =========================================================== -->
 
 | |
-|---|
+|----|
 | **Figura 3 — Fluxo MVVM ** |
 | <img width="1600" height="912" alt="image" src="https://github.com/user-attachments/assets/70dc2c01-1dd3-40c8-9b56-08aa21b7a593" /> |
 | *Legenda: Representação arquitetura MVVM. Fonte: elaborado pelos autores.* |
