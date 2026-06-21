@@ -128,9 +128,6 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 
 > H02 - Enquanto personal, desejo visualizar um dashboard centralizado para acompanhar o progresso de todos os meus alunos (presenciais e online).
 
-> [!IMPORTANT]
-> A linha “Nome do Template” aparecia no material original dentro da H02, mas era incompatível com a história de dashboard. Ela foi removida da tabela principal para evitar conflito de rastreabilidade com as classes do filtro.
-
 ###  Critérios de Aceitação
 
 | ID | Critério |
@@ -937,9 +934,6 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 ###  História de Usuário
 
 > H21 - Como personal, quero cadastrar um novo aluno informando nome, contato e objetivo, para iniciar o acompanhamento personalizado.
-
-> [!IMPORTANT]
-> A linha de “Objetivo do aluno” trazia termos de senha no material original. A tabela foi ajustada para objetivo vazio/inválido, mantendo a intenção da história e do Caso 6.
 
 ###  Critérios de Aceitação
 
