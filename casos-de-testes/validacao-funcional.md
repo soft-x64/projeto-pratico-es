@@ -1270,10 +1270,6 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 
 > H27 - Enquanto personal, quero marcar uma mensalidade como recebida, para manter o controle de cobranças atualizado.
 
-> [!IMPORTANT]
-> A condição “Contém apenas letras ou dígitos” aparecia no material original, mas era incompatível com H27. Foi padronizada como “Confirmação do recebimento”, preservando as classes 4, 5 e 6.
-> O Caso 2 da H27 trazia “1abc / Senha inválida” no material original. O caso foi ajustado para a condição financeira correspondente, sem criar nova funcionalidade.
-
 ###  Critérios de Aceitação
 
 | ID | Critério |
