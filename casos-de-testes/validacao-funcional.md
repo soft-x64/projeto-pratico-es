@@ -69,11 +69,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H01` → critérios → regras → `H01-CE01` a `H01-CE09` → `H01-CT01` a `H01-CT06`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H01 - Enquanto personal, desejo cadastrar treinos padronizados: que possuem uma mesma base de exercícios para replicá-los rapidamente entre alunos com objetivos similares que são de mesma categoria.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -82,14 +82,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H01-CA03` | Ao acessar o perfil de um aluno, deve haver uma opção "Importar de Template" que liste os treinos salvos. |
 | `H01-CA04` | Alterações feitas no treino específico de um aluno após a importação não devem afetar o template original e depois de importado alterações feitas no template padrão também não afetam o treino do aluno. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H01-RN01` | Um template só pode ser salvo se possuir, no mínimo, um Nome de Identificação, pelo menos 1 exercício cadastrado com suas respectivas séries e repetições e a categoria determinada, caso não tenha um exercício cadastrado o botão de salvar não estará disponível. |
 | `H01-RN02` | O sistema não deve permitir o cadastro de dois treinos padronizados com o mesmo nome para o mesmo Personal, por exemplo: não permitir dois templates chamados "Iniciante A" apresentando uma mensagem de erro informando que já existe um treino com esse nome. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -103,7 +103,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H01-CE08` | `8` | Detalhes do Exercício | ✅ Válida | Séries e repetições preenchidas | Aceitar / permitir o fluxo. |
 | `H01-CE09` | `9` | Detalhes do Exercício | ❌ Inválida | Exercício cadastrado sem séries ou sem repetições | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -124,14 +124,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H02` → critérios → regras → `H02-CE01` a `H02-CE11` → `H02-CT01` a `H02-CT08`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H02 - Enquanto personal, desejo visualizar um dashboard centralizado para acompanhar o progresso de todos os meus alunos (presenciais e online).
 
 > [!IMPORTANT]
 > A linha “Nome do Template” aparecia no material original dentro da H02, mas era incompatível com a história de dashboard. Ela foi removida da tabela principal para evitar conflito de rastreabilidade com as classes do filtro.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -140,7 +140,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H02-CA03` | Um aluno híbrido deve aparecer no filtro "Híbridos" e não deve aparecer isoladamente nos filtros "Online" ou "Presenciais". |
 | `H02-CA04` | Ao clicar em um aluno, o sistema deve abrir uma visão detalhada com o gráfico de desempenho das últimas 4 semanas referente a categoria optada pelo personal, como: "carga", "repetições", exibindo a modalidade de cada sessão registrada (presencial ou online) quando o aluno for híbrido. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -149,7 +149,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H02-RN03` | O sistema deve processar os dados de execução (cargas e repetições) para gerar indicadores de evolução em tempo real. |
 | `H02-RN04` | O acesso aos dados de cada aluno deve respeitar a privacidade configurada no perfil do usuário. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -165,7 +165,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H02-CE10` | `10` | Configuração de Privacidade | ✅ Válida | Permissão de visualização de dados ativa no perfil do aluno | Aceitar / permitir o fluxo. |
 | `H02-CE11` | `11` | Configuração de Privacidade | ❌ Inválida | Privacidade configurada para ocultar dados do Personal | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -188,11 +188,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H03` → critérios → regras → `H03-CE01` a `H03-CE13` → `H03-CT01` a `H03-CT08`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H03 - Enquanto personal, desejo gerar relatórios automáticos de evolução para apresentar resultados profissionais aos alunos sem usar planilhas externas.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -202,7 +202,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H03-CA04` | Deve permitir exportar o relatório em formato PDF. |
 | `H03-CA05` | Deve atualizar automaticamente os dados conforme novos treinos são registrados. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -210,7 +210,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H03-RN02` | O relatório deve considerar apenas dados já registrados no sistema. |
 | `H03-RN03` | O acesso aos relatórios deve ser restrito ao personal e ao aluno relacionado, onde o personal tem a opção de mandar o relatório ao aluno via app. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -228,7 +228,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H03-CE12` | `12` | Formato de Exportação | ✅ Válida | Exportação solicitada exclusivamente no formato PDF | Aceitar / permitir o fluxo. |
 | `H03-CE13` | `13` | Formato de Exportação | ❌ Inválida | Exportação solicitada em formato não suportado (ex: .xlsx, .csv) | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -251,11 +251,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H05` → critérios → regras → `H05-CE01` a `H05-CE05` → `H05-CT01` a `H05-CT04`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H05 - Como personal, desejo integrar um chat direto no app com o meu respectivo aluno para centralizar a comunicação e evitar a dispersão de informações em redes sociais.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -263,14 +263,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H05-CA02` | O chat só deve transmitir mensagens se o remetente e o destinatário possuírem um vínculo ativo no sistema (Personal-Aluno). |
 | `H05-CA03` | O sistema deve exibir uma mensagem de erro caso o texto não atenda às regras de tamanho. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H05-RN01` | (Limite de tamanho) Mensagens totalmente vazias (0 caracteres) ou que excedam 500 caracteres devem ser rejeitadas pelo sistema. |
 | `H05-RN02` | (Validação de vínculo) Se o plano do aluno estiver cancelado ou o vínculo com o personal inativo no banco de dados, o envio de novas mensagens deve ser bloqueado. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -280,7 +280,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H05-CE04` | `4` | Vínculo entre os usuários | ✅ Válida | Usuários com vínculo ativo | Aceitar / permitir o fluxo. |
 | `H05-CE05` | `5` | Vínculo entre os usuários | ❌ Inválida | Usuários sem vínculo ativo | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -299,11 +299,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H06` → critérios → regras → `H06-CE01` a `H06-CE18` → `H06-CT01` a `H06-CT10`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H06 - Enquanto personal, desejo uma interface visual baseada em ícones e cores para identificar rapidamente o status de cada aluno.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -312,7 +312,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H06-CA03` | O PT deve conseguir identificar o status de um aluno sem precisar abrir o perfil detalhado |
 | `H06-CA04` | O PT deve conseguir alterar o status de um aluno diretamente pela interface |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -321,7 +321,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H06-RN03` | Ao alterar o status manualmente, o sistema deve registrar a data da alteração. |
 | `H06-RN04` | O status é calculado automaticamente pelo sistema, mas pode ser sobrescrito manualmente pelo PT. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -344,7 +344,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H06-CE17` | `17` | Sobrescrita do status automático | ❌ Inválida | Sistema impede alteração manual | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H06-CE18` | `18` | Sobrescrita do status automático | ❌ Inválida | Sistema ignora a alteração manual realizada pelo PT | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -369,11 +369,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT · A · AA`  
 > **Rastreabilidade:** `H07` → critérios → regras → `H07-CE01` a `H07-CE04` → `H07-CT01` a `H07-CT03`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H07 - Como usuário, quero passar por um fluxo de "primeiros passos" (onboarding) ao acessar o sistema pela primeira vez, para aprender a configurá-lo de forma direcionada.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -381,14 +381,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H07-CA02` | O fluxo de onboarding deve conter exatamente 3 telas explicativas em sequência. |
 | `H07-CA03` | O sistema deve fornecer um botão "Pular Tutorial" visível em qualquer uma das etapas. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H07-RN01` | (Controle de acesso) O tutorial só pode ser exibido se a flag primeiro_acesso no banco de dados for igual a true. Assim que finalizado ou pulado, o sistema deve atualizar essa flag para false. |
 | `H07-RN02` | (Sequenciamento de telas) As etapas devem seguir estritamente a ordem (1 - Apresentação, 2 - Configuração Inicial, 3 - Conclusão). O usuário não pode acessar uma tela à frente sem interagir com a atual. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -397,7 +397,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H07-CE03` | `8` | Sequência de navegação | ✅ Válida | Seguir a ordem numérica exata (1 → 2 → 3) | Aceitar / permitir o fluxo. |
 | `H07-CE04` | `9` | Sequência de navegação | ❌ Inválida | Tentar pular para uma tela fora de ordem | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -415,25 +415,25 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H08` → critérios → regras → `H08-CE01` a `H08-CE05` → `H08-CT01` a `H08-CT04`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H08 - Enquanto personal, desejo utilizar atalhos de teclado na versão desktop para agilizar a montagem de cronogramas semanais de treino.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
 | `H08-CA01` | O sistema desktop deve aceitar combinações de teclas para as funções principais de salvar e criar treinos. |
 | `H08-CA02` | O sistema deve ignorar comandos quando o usuário estiver digitando dentro de campos de texto (inputs). |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H08-RN01` | (Mapeamento de teclas) O comando Ctrl + S deve disparar a ação de salvar. O comando Ctrl + N deve disparar a criação de um novo cronograma. |
 | `H08-RN02` | (Isolamento de foco) Se o elemento ativo do DOM for um campo de entrada de texto, a captura global do teclado deve ser suspensa para evitar que o atalho seja disparado acidentalmente. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -443,7 +443,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H08-CE04` | `13` | Foco do ponteiro/cursor do sistema | ✅ Válida | Foco fora de campos de texto editáveis | Aceitar / permitir o fluxo. |
 | `H08-CE05` | `14` | Foco do ponteiro/cursor do sistema | ❌ Inválida | Foco dentro de um input de texto ativo | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -462,24 +462,24 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H09` → critérios → regras → `H09-CE01` a `H09-CE03` → `H09-CT01` a `H09-CT03`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H09 - Enquanto personal, desejo receber alertas no painel quando um aluno faltar a muitos treinos seguidos, para intervir antes de uma possível evasão.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
 | `H09-CA01` | O sistema deve exibir um aviso em destaque no painel do personal indicando quais alunos atingiram o limite de ausência. |
 | `H09-CA02` | O limite de faltas deve ser parametrizável ou fixado por regra de negócio. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H09-RN01` | (Gatilho de evasão) O sistema deve disparar o alerta de forma automatizada assim que o número de dias seguidos sem check-in em treinos for estritamente maior que 14 dias (duas semanas). |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -487,7 +487,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H09-CE02` | `16` | Quantidade de dias consecutivos sem check-in | ❌ Inválida | Número de dias entre 0 e 14 | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H09-CE03` | `17` | Quantidade de dias consecutivos sem check-in | ❌ Inválida | Número negativo de dias | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -505,11 +505,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `A`  
 > **Rastreabilidade:** `H10` → critérios → regras → `H10-CE01` a `H10-CE09` → `H10-CT01` a `H10-CT06`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H10 - Enquanto aluna, desejo acessar vídeos curtos explicativos de cada exercício para garantir a execução correta sem depender do personal.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -517,7 +517,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H10-CA02` | Os vídeos devem ter curta duração (15 a 30 segundos), priorizando o carregamento rápido e foco na técnica. |
 | `H10-CA03` | O vídeo deve ser reproduzido em loop automaticamente enquanto a tela de detalhes do exercício estiver aberta. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -525,7 +525,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H10-RN02` | O sistema não deve permitir que um Personal Trainer publique um treino para o aluno se o exercício selecionado não possuir um vídeo correspondente ou uma imagem técnica alternativa, garantindo que a proposta de "autonomia sem o personal" seja cumprida. |
 | `H10-RN03` | O servidor de streaming deve identificar o tipo de conexão do usuário. Se detectada conexão móvel, a resolução do vídeo deve ser ajustada automaticamente para o patamar mínimo aceitável para garantir a fluidez sem travar a execução do treino. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -539,7 +539,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H10-CE08` | `8` | Controle de Loop da Interface | ✅ Válida | Vídeo reinicia automaticamente enquanto a tela de detalhes está aberta | Aceitar / permitir o fluxo. |
 | `H10-CE09` | `9` | Controle de Loop da Interface | ❌ Inválida | Vídeo para de tocar sozinho após a primeira execução | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -560,11 +560,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `A`  
 > **Rastreabilidade:** `H11` → critérios → regras → `H11-CE01` a `H11-CE10` → `H11-CT01` a `H11-CT07`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H11 - Enquanto aluna, desejo registrar cargas e repetições realizadas para que meu personal ajuste o treino com base no meu desempenho real.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -574,7 +574,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H11-CA04` | Quando a última série planejada do exercício for confirmada, o botão deve mudar para "Próximo Exercício", indicando que o sistema avançará para o exercício seguinte da ficha. |
 | `H11-CA05` | O sistema deve exibir um contador visível do tipo "Série 2 de 4" para que a aluna saiba em que ponto da sequência está. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -582,7 +582,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H11-RN02` | O sistema deve permitir que o usuário altere a carga sugerida pelo personal caso a execução real seja diferente da planejada. |
 | `H11-RN03` | Cada entrada de dado deve ser salva com um registro de data e hora (timestamp). |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -597,7 +597,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H11-CE09` | `9` | Obrigatoriedade de Registro | ✅ Válida | Todas as séries planejadas preenchidas e salvas antes de avançar | Aceitar / permitir o fluxo. |
 | `H11-CE10` | `10` | Obrigatoriedade de Registro | ❌ Inválida | Tentativa de avançar de exercício pulando séries obrigatórias | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -619,24 +619,24 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H12` → critérios → regras → `H12-CE01` a `H12-CE03` → `H12-CT01` a `H12-CT03`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H12 - Como personal, quero receber notificações de lembrete de treino dos alunos do dia, para organizar meus horários de acompanhamento na academia.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
 | `H12-CA01` | O sistema deve enviar um lembrete contendo o resumo da agenda de alunos do dia corrente. |
 | `H12-CA02` | O lembrete deve ser gerado e enviado em um horário fixo programado de forma antecipada. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H12-RN01` | (Disparo por horário) A rotina de notificações deve ser disparada de maneira diária, exatamente às 06:00 (fuso local), varrendo a base em busca de agendamentos para a data. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -644,7 +644,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H12-CE02` | `19` | Horário do sistema para disparo | ❌ Inválida | Horários antes de 06:00 (ex: 05:59) | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H12-CE03` | `20` | Horário do sistema para disparo | ❌ Inválida | Horários depois de 06:00 (ex: 06:01) | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -662,11 +662,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `A`  
 > **Rastreabilidade:** `H13` → critérios → regras → `H13-CE01` a `H13-CE07` → `H13-CT01` a `H13-CT07`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H13 - Enquanto aluna, desejo visualizar gráficos de evolução física para me manter motivada ao ver meus resultados ao longo do tempo.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -675,7 +675,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H13-CA03` | Dado que existam medidas corporais registradas, quando a aluna selecionar uma medida específica, então o sistema deverá exibir sua evolução histórica. |
 | `H13-CA04` | Dado que não existam dados suficientes para uma métrica, quando a aluna tentar visualizar o gráfico correspondente, então o sistema deverá informar a indisponibilidade de dados. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -684,7 +684,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H13-RN03` | Cada métrica deverá possuir histórico próprio para acompanhamento ao longo do tempo. |
 | `H13-RN04` | O dados exibidos deverão considerar apenas informações registradas pela própria aluna ou por profissional autorizado no sistema. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -696,7 +696,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H13-CE06` | `6` | Origem do Registro | ✅ Válida | Dados cadastrados pela própria aluna ou por profissional autorizado | Aceitar / permitir o fluxo. |
 | `H13-CE07` | `7` | Origem do Registro | ❌ Inválida | Dados inseridos por usuários não autorizados no sistema | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -718,11 +718,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `AA`  
 > **Rastreabilidade:** `H16` → critérios → regras → `H16-CE01` a `H16-CE09` → `H16-CT01` a `H16-CT06`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H16 - Enquanto usuário com baixa visão, desejo suporte total a leitores de tela para navegar nos menus de treino com autonomia.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -730,13 +730,13 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H16-CA02` | Deve descrever corretamente botões e ações. |
 | `H16-CA03` | Deve permitir navegação completa sem uso visual. Deve fornecer feedback sonoro das ações. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H16-RN01` | A funcionalidade depende da ativação do leitor de tela no dispositivo. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -750,7 +750,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H16-CE08` | `8` | Feedback de Confirmação | ✅ Válida | Retorno sonoro/vocal imediato após qualquer ação concluída | Aceitar / permitir o fluxo. |
 | `H16-CE09` | `9` | Feedback de Confirmação | ❌ Inválida | Ação executada sem nenhum aviso audível (apenas visual) | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -771,11 +771,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `AA`  
 > **Rastreabilidade:** `H17` → critérios → regras → `H17-CE01` a `H17-CE11` → `H17-CT01` a `H17-CT07`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H17 - Enquanto usuário com baixa visão, desejo configurações de alto contraste e fontes escaláveis para facilitar a leitura das instruções de treino.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -783,7 +783,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H17-CA02` | Ao ativar o modo, a interface deve mudar instantaneamente para fundo preto (#000000) com textos em amarelo (#FFD600) — cor fixa definida pelo time, sem opção de escolha pelo usuário nesta versão. |
 | `H17-CA03` | O sistema deve permitir aumentar o tamanho da fonte das instruções de treino em até 200% através de um seletor deslizante (slider). |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -791,7 +791,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H17-RN02` | O redimensionamento de fontes deve ser aplicado a todos os textos instrucionais e nomes de exercícios. Caso o texto não couber no espaço disponível após o redimensionamento, o sistema deve aplicar quebra de linha (wrap); não deve haver corte de texto (ellipsis) nem rolagem horizontal nos textos instrucionais. |
 | `H17-RN03` | A configuração escolhida deve ser persistente, permanecendo ativa sempre que o usuário fizer login no app. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -807,7 +807,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H17-CE10` | `10` | Persistência das Configurações | ✅ Válida | Preferências de acessibilidade continuam ativas após um novo login | Aceitar / permitir o fluxo. |
 | `H17-CE11` | `11` | Persistência das Configurações | ❌ Inválida | Configurações são resetadas para o padrão de fábrica após o logout | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -829,11 +829,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `AA`  
 > **Rastreabilidade:** `H18` → critérios → regras → `H18-CE01` a `H18-CE07` → `H18-CT01` a `H18-CT07`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H18 - Enquanto usuário com baixa visão, desejo comandos de voz para iniciar e pausar o cronômetro de descanso para manter o foco no exercício físico.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -843,7 +843,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H18-CA04` | Caso o comando de voz não seja reconhecido, o app deve responder com o áudio "Não entendi, repita o comando" e oferecer um botão visual de fallback para pausar/retomar/iniciar manualmente. |
 | `H18-CA05` | Ao chegar a zero, o aplicativo deve anunciar por voz: "Fim do descanso. Próxima série disponível". |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -852,7 +852,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H18-RN03` | O app deve emitir um feedback sonoro obrigatório ao final da contagem para que o usuário não precise olhar para a tela. |
 | `H18-RN04` | Caso o sistema não reconheça o comando de voz após 2 tentativas consecutivas (ruído ambiente, fala incompreensível, etc.), deve emitir o feedback sonoro "Não entendi, repita o comando" e exibir um botão de fallback na tela para controle manual do cronômetro. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -864,7 +864,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H18-CE06` | `6` | Término da Contagem | ✅ Válida | Cronômetro atinge o tempo zero | Aceitar / permitir o fluxo. |
 | `H18-CE07` | `7` | Término da Contagem | ❌ Inválida | Cronômetro trava ou encerra antes de chegar a zero | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -886,11 +886,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `AA`  
 > **Rastreabilidade:** `H20` → critérios → regras → `H20-CE01` a `H20-CE06` → `H20-CT01` a `H20-CT03`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H20 - Enquanto usuário com baixa visão, desejo receber feedback vibratório ao completar uma série para saber que concluí a tarefa sem precisar olhar a tela.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -898,14 +898,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H20-CA02` | O padrão de vibração deve ser claramente distinguível de notificações comuns do sistema (ex.: uma vibração dupla e firme). |
 | `H20-CA03` | O menu de configurações de acessibilidade do aplicativo deve conter um seletor (toggle) para ativar ou desativar o feedback vibratório. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H20-RN01` | A execução da funcionalidade depende do suporte de hardware do dispositivo móvel; caso o aparelho não possua motor de vibração (haptic feedback), o sistema deve ignorar a chamada sem interromper ou travar o fluxo do aplicativo. |
 | `H20-RN02` | O feedback vibratório deve ocorrer de forma síncrona com o feedback sonoro e com o salvamento do timestamp da série concluída. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -916,7 +916,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H20-CE05` | `5` | Ação de Conclusão | ✅ Válida | Clique efetuado no botão "Concluir Série" | Aceitar / permitir o fluxo. |
 | `H20-CE06` | `6` | Ação de Conclusão | ❌ Inválida | Clique fora do botão ou nenhuma ação realizada | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -934,14 +934,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H21` → critérios → regras → `H21-CE01` a `H21-CE18` → `H21-CT01` a `H21-CT09`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H21 - Como personal, quero cadastrar um novo aluno informando nome, contato e objetivo, para iniciar o acompanhamento personalizado.
 
 > [!IMPORTANT]
 > A linha de “Objetivo do aluno” trazia termos de senha no material original. A tabela foi ajustada para objetivo vazio/inválido, mantendo a intenção da história e do Caso 6.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -952,7 +952,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H21-CA05` | Após o cadastro, o aluno deve ficar disponível na lista de alunos. |
 | `H21-CA06` | O sistema deve exibir uma mensagem de confirmação ao concluir o cadastro. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -964,7 +964,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H21-RN06` | Ao cadastrar um novo aluno, o sistema deve registrar a data do cadastro. |
 | `H21-RN07` | Ao ser cadastrado, o aluno deve iniciar com status Ativo. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -987,7 +987,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H21-CE17` | `17` | Registro inicial do aluno | ❌ Inválida | Data de cadastro não registrada | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H21-CE18` | `18` | Registro inicial do aluno | ❌ Inválida | Aluno não aparece na lista após cadastro | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1011,11 +1011,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `A`  
 > **Rastreabilidade:** `H22` → critérios → regras → `H22-CE01` a `H22-CE07` → `H22-CT01` a `H22-CT04`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H22 - Como aluna, quero gerar um relatório semanal ou mensal com meu desempenho, para que eu possa acompanhar minha evolução física e meu histórico de atividades.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -1024,14 +1024,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H22-CA03` | O relatório gerado deve consolidar o histórico de treinos concluídos, a frequência e os dados de evolução física (medidas e peso) coletados no período. |
 | `H22-CA04` | O sistema deve permitir a leitura do relatório diretamente na tela do aplicativo e disponibilizar um botão para exportá-lo em formato PDF. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H22-RN01` | O período "Semanal" compreende os últimos 7 dias corridos e o "Mensal" os últimos 30 dias corridos, contados regressivamente a partir do dia da solicitação. |
 | `H22-RN02` | Caso não existam treinos ou avaliações físicas registrados no intervalo selecionado, a geração deve ser interrompida e o sistema exibirá a mensagem: "Dados insuficientes para o período selecionado". |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -1043,7 +1043,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H22-CE06` | `6` | Formato de Exportação | ✅ Válida | Exportação solicitada estritamente em formato PDF | Aceitar / permitir o fluxo. |
 | `H22-CE07` | `7` | Formato de Exportação | ❌ Inválida | Exportação solicitada em formato não suportado (ex: .xlsx, .csv) | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1062,11 +1062,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `A`  
 > **Rastreabilidade:** `H23` → critérios → regras → `H23-CE01` a `H23-CE07` → `H23-CT01` a `H23-CT04`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H23 - Como aluna, quero visualizar gráficos do meu progresso de cargas, frequência e calorias gastas, para que eu possa analisar minha evolução e manter minha motivação.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -1075,14 +1075,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H23-CA03` | Na aba de "Frequência", o gráfico em formato de barras deve quantificar os dias de treinos realizados por semana ou por mês. |
 | `H23-CA04` | Na aba de "Calorias Gastas", a aluna deve visualizar o somatório estimado do gasto energético diário ou acumulado. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H23-RN01` | Os gráficos devem processar única e exclusivamente dados de sessões e séries marcadas no banco de dados com o status de "Concluído". |
 | `H23-RN02` | O gráfico de calorias gastas deve realizar o cálculo de forma automática cruzando o tempo total de duração do treino com o gasto calórico estimado parametrizado pelo Personal Trainer na ficha de exercícios. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -1094,7 +1094,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H23-CE06` | `6` | Filtro de Exercício (Aba Cargas) | ✅ Válida | Exercício existente e com histórico é selecionado | Aceitar / permitir o fluxo. |
 | `H23-CE07` | `7` | Filtro de Exercício (Aba Cargas) | ❌ Inválida | Nenhum exercício selecionado ao carregar a aba de cargas | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1113,11 +1113,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `A`  
 > **Rastreabilidade:** `H24` → critérios → regras → `H24-CE01` a `H24-CE04` → `H24-CT01` a `H24-CT03`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H24 - Como aluna, quero visualizar minha ficha personalizada do dia, para que eu saiba exatamente qual rotina de treinos foi adaptada aos meus objetivos atuais.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -1125,14 +1125,14 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H24-CA02` | A ficha do dia deve listar em ordem cronológica o nome de todos os exercícios, a quantidade de séries, repetições planejadas e a carga sugerida pelo treinador. |
 | `H24-CA03` | O topo da tela deve destacar visualmente o objetivo macro configurado no perfil (ex.: "Foco Atual: Hipertrofia Avançada"). |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H24-RN01` | Caso o Personal Trainer não tenha publicado ou associado nenhuma ficha de treino ativa para a aluna, o aplicativo deve exibir um bloqueio amigável com o aviso: "Nenhum treino disponível. Solicite sua ficha ao seu Personal Trainer". |
 | `H24-RN02` | A aluna não possui permissão para excluir, adicionar ou alterar a ordem dos exercícios determinados na ficha do dia; ela tem autonomia apenas para preencher e salvar as cargas e repetições reais executadas. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -1141,7 +1141,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H24-CE03` | `3` | Modificação da Estrutura | ✅ Válida | Aluna tenta preencher apenas os campos reais de carga e repetições | Aceitar / permitir o fluxo. |
 | `H24-CE04` | `4` | Modificação da Estrutura | ❌ Inválida | Aluna tenta excluir, adicionar ou alterar a ordem dos exercícios | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1159,31 +1159,31 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `A`  
 > **Rastreabilidade:** `H25` → critérios → regras → `H25-CE01` a `H25-CE02` → `H25-CT01` a `H25-CT02`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H25 - Como aluno, desejo receber notificações de lembrete de treino no meu celular, para manter o foco e a consistência na rotina esportiva.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
 | `H25-CA01` | O sistema deve emitir um lembrete no celular do aluno avisando que ele possui um treino programado para aquele dia. |
 | `H25-CA02` | As notificações não devem ser enviadas se o usuário tiver desativado os lembretes nas configurações da conta. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
 | `H25-RN01` | (Preferência de privacidade) O sistema deve verificar a propriedade notificacoes_ativas no perfil do aluno. Se o valor for falso, o fluxo de envio para o dispositivo móvel correspondente é encerrado. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
 | `H25-CE01` | `21` | Configuração de push no perfil | ✅ Válida | Flag notificacoes_ativas é igual a true | Aceitar / permitir o fluxo. |
 | `H25-CE02` | `22` | Configuração de push no perfil | ❌ Inválida | Flag notificacoes_ativas é igual a false | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1200,11 +1200,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H26` → critérios → regras → `H26-CE01` a `H26-CE18` → `H26-CT01` a `H26-CT08`
 
-### 📖 História de Usuário
+### História de Usuário
 
 > H26 - Enquanto personal, quero visualizar a lista de alunos com mensalidade pendente, para saber quem precisa ser cobrado sem verificar um por um.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -1215,7 +1215,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H26-CA05` | O sistema deve atualizar a lista conforme a situação financeira dos alunos. |
 | `H26-CA06` | O sistema deve informar quando não houver alunos com mensalidade pendente. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -1226,7 +1226,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H26-RN05` | O sistema deve exibir nome e informação da pendência do aluno. |
 | `H26-RN06` | Caso não existam pendências, o sistema deve exibir mensagem informativa ao PT. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -1249,7 +1249,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H26-CE17` | `17` | Ausência de pendências | ❌ Inválida | Mensagem não exibida | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H26-CE18` | `18` | Ausência de pendências | ❌ Inválida | Sistema exibe lista vazia sem explicação | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1272,7 +1272,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT`  
 > **Rastreabilidade:** `H27` → critérios → regras → `H27-CE01` a `H27-CE18` → `H27-CT01` a `H27-CT09`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H27 - Enquanto personal, quero marcar uma mensalidade como recebida, para manter o controle de cobranças atualizado.
 
@@ -1280,7 +1280,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > A condição “Contém apenas letras ou dígitos” aparecia no material original, mas era incompatível com H27. Foi padronizada como “Confirmação do recebimento”, preservando as classes 4, 5 e 6.
 > O Caso 2 da H27 trazia “1abc / Senha inválida” no material original. O caso foi ajustado para a condição financeira correspondente, sem criar nova funcionalidade.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -1291,7 +1291,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H27-CA05` | O sistema deve impedir que uma mensalidade já recebida seja marcada novamente sem necessidade. |
 | `H27-CA06` | O sistema deve exibir uma mensagem de confirmação após a atualização. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -1302,7 +1302,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H27-RN05` | Mensalidades já pagas não devem permanecer como pendentes. |
 | `H27-RN06` | O sistema deve manter o histórico do pagamento registrado.4. Tabela de Classes de Equivalência |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -1325,7 +1325,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H27-CE17` | `17` | Confirmação e histórico | ❌ Inválida | Mensagem de confirmação não exibida | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H27-CE18` | `18` | Confirmação e histórico | ❌ Inválida | Histórico de pagamento não é registrado | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1349,11 +1349,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT · A · AA`  
 > **Rastreabilidade:** `H28` → critérios → regras → `H28-CE01` a `H28-CE18` → `H28-CT01` a `H28-CT09`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H28 - Como usuário, quero fazer login com e-mail e senha, para acessar o sistema com segurança.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -1365,7 +1365,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H28-CA06` | O sistema deve exibir mensagem de erro quando o login não for realizado. |
 | `H28-CA07` | Após login bem-sucedido, o usuário deve ser direcionado para a tela principal do sistema. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -1377,7 +1377,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H28-RN06` | Após autenticação válida, o sistema deve iniciar uma sessão de usuário. |
 | `H28-RN07` | O sistema não deve informar especificamente se o erro foi no e-mail ou na senha, por segurança. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -1400,7 +1400,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H28-CE17` | `17` | Mensagens e redirecionamento | ❌ Inválida | Mensagem de erro não exibida | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H28-CE18` | `18` | Mensagens e redirecionamento | ❌ Inválida | Usuário não redirecionado após login válido | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
@@ -1424,11 +1424,11 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 > **Perfil principal:** `PT · A · AA`  
 > **Rastreabilidade:** `H29` → critérios → regras → `H29-CE01` a `H29-CE18` → `H29-CT01` a `H29-CT09`
 
-### 📖 História de Usuário
+###  História de Usuário
 
 > H29 - Como usuário, quero recuperar minha senha por e-mail, para não perder acesso à conta caso eu a esqueça.
 
-### ✅ Critérios de Aceitação
+###  Critérios de Aceitação
 
 | ID | Critério |
 |---|---|
@@ -1440,7 +1440,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H29-CA06` | O sistema deve exibir mensagens adequadas de sucesso ou erro durante o processo. |
 | `H29-CA07` | Após redefinir a senha, o usuário deve conseguir realizar login com a nova senha. |
 
-### ⚙️ Regras de Negócio
+###  Regras de Negócio
 
 | ID | Regra |
 |---|---|
@@ -1452,7 +1452,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H29-RN06` | A nova senha substitui a senha anterior. |
 | `H29-RN07` | O sistema deve registrar a data da solicitação de recuperação. |
 
-### 🧩 Classes de Equivalência
+###  Classes de Equivalência
 
 | ID | Ref. original | Campo/Condição | Tipo | Classe | Tratamento |
 |---|:---:|---|:---:|---|---|
@@ -1475,7 +1475,7 @@ História de Usuário → Critérios de Aceitação → Regras de Negócio → C
 | `H29-CE17` | `17` | Redefinição da senha | ❌ Inválida | Senha não redefinida | Rejeitar, bloquear ou tratar conforme regra da história. |
 | `H29-CE18` | `18` | Redefinição da senha | ❌ Inválida | Login não funciona com a nova senha | Rejeitar, bloquear ou tratar conforme regra da história. |
 
-### 🧪 Casos de Teste
+###  Casos de Teste
 
 | ID | Caso original | Classes Relacionadas | Entradas | Resultado Esperado |
 |---|---|---|---|---|
