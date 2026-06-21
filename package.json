@@ -1,0 +1,27 @@
+{
+  "name": "projeto-pratico-es",
+  "version": "1.0.0",
+  "description": "Sistema de gestão de treinos voltado para **personal trainers e alunos**, com foco em organização, acompanhamento de evolução e acessibilidade.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soft-x64/projeto-pratico-es.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/soft-x64/projeto-pratico-es/issues"
+  },
+  "homepage": "https://github.com/soft-x64/projeto-pratico-es#readme",
+  "devDependencies": {
+    "jest": "^30.4.2"
+  }
+}
