@@ -62,15 +62,15 @@ As issues foram avaliadas apenas em três categorias finais, mantendo a análise
 
 | Avaliação da Issue | Quantidade |
 |---|---:|
-| ✅ Corrigida | 30 |
+| ✅ Corrigida | 32 |
 | ⚪ Não corrigida | 14 |
-| 🔎 Reavaliada | 4 |
+| 🔎 Reavaliada | 5 |
 
 ### 3.2 Issues por tipo de problema
 
 | Tipo de problema | Quantidade |
 |---|---:|
-| 🔴 Omissão / Incompletude | 22 |
+| 🔴 Omissão / Incompletude | 25 |
 | 🟠 Ambiguidade | 13 |
 | ⚫ Defeito de especificação | 6 |
 | 🟣 Contradição | 6 |
@@ -79,7 +79,7 @@ As issues foram avaliadas apenas em três categorias finais, mantendo a análise
 
 | História | Quantidade de issues |
 |---|---:|
-| H01 | 3 |
+| H01 | 6 |
 | H01/H10 | 1 |
 | H02 | 6 |
 | H03 | 4 |
@@ -109,7 +109,7 @@ Esta seção consolida, por história, o que foi ajustado ou mantido após a ava
 
 | História | Registro de alteração aplicada no backlog | Avaliação predominante |
 |---|---|---|
-| **H01** | Foram detalhados o conceito de treino padrão, a categoria do template, a obrigatoriedade de pelo menos um exercício, o bloqueio do botão salvar sem exercício válido, a mensagem para nome duplicado e a independência entre template original e treino importado para o aluno. | ✅ Corrigida |
+| **H01** | Foram detalhados o conceito de treino padrão, a categoria do template, a obrigatoriedade de pelo menos um exercício, o bloqueio do botão salvar sem exercício válido, a mensagem para nome duplicado, a independência entre template original e treino importado para o aluno e a avaliação do impacto de edição do template em treinos ativos. | ✅ Corrigida |
 | **H02** | Foram definidos os filtros Online, Presenciais e Híbridos; a regra de classificação do aluno híbrido; as métricas de gráfico; a distinção entre histórico de quatro semanas e atualização dinâmica; os estados de atividade; e o limite mensurável para atualização do dashboard. | ✅ Corrigida |
 | **H03** | Foram adicionadas opções de período para relatórios, forma de compartilhamento com o aluno via aplicativo, estratégia de recálculo sob demanda e métricas objetivas para substituir termos subjetivos de desempenho. | ✅ Corrigida |
 | **H04** | A história foi reformulada para indicar que o aplicativo terá português como idioma base e padrão. | ✅ Corrigida |
@@ -119,7 +119,7 @@ Esta seção consolida, por história, o que foi ajustado ou mantido após a ava
 | **H08** | A issue foi avaliada como não corrigida nesta etapa, sem alteração aplicada no backlog. | ⚪ Não corrigida |
 | **H09** | Foi definido critério objetivo para disparo de alerta de ausência, reduzindo a subjetividade do termo “muitos treinos”. A definição do canal de alerta permaneceu fora do escopo desta etapa. | ✅ Corrigida / ⚪ Não corrigida |
 | **H10** | A regra de mídia foi ajustada para alinhar o valor da história: vídeo explicativo como formato principal e imagem como fallback visual. A publicação do treino passou a exigir mídia válida, enquanto o cadastro estrutural do template permanece separado dessa validação. | ✅ Corrigida / 🔎 Reavaliada |
-| **H11** | O botão de confirmação foi dividido em estados distintos: “Concluir Série” e “Próximo Exercício”, com contador de progresso da série. O fluxo de exceção para exercício não realizado e a inconsistência sobre carga sugerida não foram corrigidos nesta etapa. | ✅ Corrigida / ⚪ Não corrigida |
+| **H11** | O botão de confirmação foi dividido em estados distintos: “Concluir Série” e “Próximo Exercício”, com contador de progresso da série. Também foi ajustada a especificação relacionada à carga sugerida pelo personal e à referência da última sessão. O fluxo de exceção para exercício não realizado permaneceu fora da correção nesta etapa. | ✅ Corrigida / ⚪ Não corrigida |
 | **H12** | Foram definidas a origem da configuração dos dias de lembrete, a configuração individual pela aluna, o horário por dia selecionado e o conteúdo textual padrão da notificação. | ✅ Corrigida |
 | **H13** | Foram especificadas as métricas de evolução física consideradas pelo sistema: peso corporal, percentual de gordura corporal e medidas corporais. | 🔎 Reavaliada |
 | **H14** | Foi reavaliada a ambiguidade sobre sincronização com smartwatch, esclarecendo o fluxo unidirecional de dados. A definição de marcas e sistemas suportados não recebeu alteração nesta etapa. | 🔎 Reavaliada / ⚪ Não corrigida |
@@ -138,24 +138,21 @@ Esta seção consolida, por história, o que foi ajustado ou mantido após a ava
 
 | Issue | História | Tipo | Título | Avaliação da Issue | Link |
 |---|---|---|---|---|---|
-| #1 | H01 | 🔴 Omissão / Incompletude | H01 - Inconsistência na Especificação de Erro: Validação de Nomes de Treino (RN02) | ✅ Corrigida |[Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/1) |
-| #9 | H01 | 🔴 Omissão / Incompletude | H01 - Falta de Especificação Técnica: Cadastro e Replicação de Treinos | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/9) |
-| #10 | H01 | ⚫ Defeito de especificação | H01 - Validação de template sem exercícios | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/10) |
-| #6 | H01/H10 | 🟣 Contradição | Conflito entre requisitos de cadastro (H01) e publicação de treino (H10) | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/6) |
-| #11 | H02 | 🟠 Ambiguidade | H02 - Dashboard Centralizado Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/11) |
-| #36 | H02 | 🔴 Omissão / Incompletude | H02 - Incompletude nos Critérios de Classificação e Filtro de Alunos | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/36) |
+| #9 | H01 | 🔴 Omissão / Incompletude | H01 - Treinos Padronizados Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/9) |
+| #23 | H01 | 🔴 Omissão / Incompletude | H01 - Impacto da Edição do Template em Treinos Ativos (CA04) | ⚪ Não corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/23) |
+| #4 | H01 | 🔴 Omissão / Incompletude | H01 - Treinos Padronizados Defeito 2 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/4) |
+| #13 | H01 | 🔴 Omissão / Incompletude | H01 - Inconsistência na Especificação de Erro: Validação de Nomes de Treino (RN02) | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/13) |
+| #10 | H01 | 🔴 Omissão / Incompletude | H01 - Falta de Especificação Técnica: Cadastro e Replicação de Treinos | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/10) |
+| #11 | H01 | ⚫ Defeito de especificação | H01 - Validação de template sem exercícios | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/11) |
+| #36 | H02 | 🟠 Ambiguidade | H02 - Dashboard Centralizado Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/36) |
+| #12 | H02 | 🔴 Omissão / Incompletude | H02 - Incompletude nos Critérios de Classificação e Filtro de Alunos | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/12) |
 | #5 | H02 | 🟣 Contradição | H02 - Contradição entre dados em tempo real e histórico de 4 semanas | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/5) |
+| #6 | H01/H10 | 🟣 Contradição | Conflito entre requisitos de cadastro (H01) e publicação de treino (H10) | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/6) |
 | #7 | H02 | 🔴 Omissão / Incompletude | H02 - Dashboard Centralizado Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/7) |
-| #8 | H02 | 🟣 Contradição | H02 - Dashboard Centralizado Defeito 2 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/8) |
+| #8 | H02 | 🟣 Contradição | H02 - Dashboard Centralizado Defeito 2 | 🔎 Reavaliada | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/8) |
 | #16 | H02 | ⚫ Defeito de especificação | H02 Definição de “tempo real” no processamento de dados | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/16) |
-| #12 | H03 | 🔴 Omissão / Incompletude | H03 - Relatórios Automáticos de Evolução Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/12) |
-| #15 | H03 | 🔴 Omissão / Incompletude | H03 - Relatórios Automáticos de Evolução Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/15) |
 | #50 | H03 | 🟠 Ambiguidade | H03 - Indefinição da Estratégia de Gatilho para Atualização de Dados | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/50) |
 | #14 | H03 | 🟠 Ambiguidade | H03 - Relatórios Automáticos de Evolução Defeito 2 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/14) |
-| #22 | H04 | 🟠 Ambiguidade | H04 - App em Português Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/22) |
-| #24 | H05 | 🔴 Omissão / Incompletude | H05 - Chat Direto Defeito 1 | ⚪ Não corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/24) |
-| #40 | H06 | ⚫ Defeito de especificação | H06 - Interface Visual Baseada em Ícones e Cores | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/40) |
-| #18 | H07 | 🔴 Omissão / Incompletude | H07 - Falta de Definição das Funções Críticas para o Roteiro do Tutorial | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/18) |
 | #25 | H07 | 🟠 Ambiguidade | H07 - Fluxo de "Primeiros Passos" Defeito 1 | ⚪ Não corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/25) |
 | #26 | H07 | 🔴 Omissão / Incompletude | H07 - Fluxo de "Primeiros Passos" Defeito 2 | ⚪ Não corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/26) |
 | #27 | H07 | 🟠 Ambiguidade | H07 - Fluxo de "Primeiros Passos" Defeito 3 | ⚪ Não corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/27) |
@@ -165,7 +162,7 @@ Esta seção consolida, por história, o que foi ajustado ou mantido após a ava
 | #29 | H10 | 🟣 Contradição | H10 - Vídeos Explicativos de Exercícios Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/29) |
 | #30 | H10 | 🟠 Ambiguidade | H10 – Definição de qualidade mínima de vídeo | 🔎 Reavaliada | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/30) |
 | #31 | H11 | 🔴 Omissão / Incompletude | H11 - Registro de Cargas e Repetições Defeito 1 | ⚪ Não corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/31) |
-| #32 | H11 | 🟣 Contradição | H11 - Registro de Cargas e Repetições Defeito 2 | ⚪ Não corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/32) |
+| #32 | H11 | 🟣 Contradição | H11 - Registro de Cargas e Repetições Defeito 2 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/32) |
 | #33 | H11 | 🟠 Ambiguidade | H11 - Registro de Cargas e Repetições Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/33) |
 | #34 | H12 | 🔴 Omissão / Incompletude | H12 - Notificações de Lembrete Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/34) |
 | #35 | H12 | 🔴 Omissão / Incompletude | H12 - Notificações de Lembrete Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/35) |
@@ -180,7 +177,7 @@ Esta seção consolida, por história, o que foi ajustado ou mantido após a ava
 | #41 | H17 | 🔴 Omissão / Incompletude | H17 - Acessibilidade Visual Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/41) |
 | #42 | H17 | 🟠 Ambiguidade | H17 - Acessibilidade Visual Defeito 2 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/42) |
 | #43 | H17 | 🔵 Informação estranha | H17 - Acessibilidade Visual Defeito 1 | 🔎 Reavaliada | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/43) |
-| #37 | H18 | 🔴 Omissão / Incompletude | 18 - Comandos de Voz para Cronômetro Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/37) |
+| #37 | H18 | 🔴 Omissão / Incompletude | H18 - Comandos de Voz para Cronômetro Defeito 3 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/37) |
 | #38 | H18 | 🔴 Omissão / Incompletude | H18 - Comandos de Voz para Cronômetro Defeito 2 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/38) |
 | #39 | H18 | 🔴 Omissão / Incompletude | H18 - Comandos de Voz para Cronômetro Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/39) |
 | #21 | H20 | 🟠 Ambiguidade | H20 - Feedback Vibratório Defeito 1 | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/21) |
@@ -199,7 +196,7 @@ Os itens abaixo foram selecionados como exemplos representativos por apresentare
 
 | Exemplo | História | Issue | Motivo da seleção | Avaliação da Issue |
 |---|---|---|---|---|
-| 1 | H01 | #10 | Define bloqueio objetivo para cadastro de template inválido | ✅ Corrigida |
+| 1 | H01 | #11 | Define bloqueio objetivo para cadastro de template inválido | ✅ Corrigida |
 | 2 | H02 | #36 | Resolve lacuna importante sobre alunos híbridos | ✅ Corrigida |
 | 3 | H03 | #12 | Define período temporal dos relatórios | ✅ Corrigida |
 | 4 | H06 | #40 | Transforma história sem critérios em requisito testável | ✅ Corrigida |
@@ -216,11 +213,11 @@ Os itens abaixo foram selecionados como exemplos representativos por apresentare
 
 | Campo | Informação |
 |---|---|
-| Issue | `#10` |
+| Issue | `#11` |
 | História relacionada | `H01` |
 | Tipo identificado | Defeito de especificação |
 | Avaliação da Issue | ✅ **Corrigida** |
-| Link | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/10) |
+| Link | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/11) |
 
 **Descrição resumida da issue**
 
@@ -454,13 +451,4 @@ A H20 passou a ter comportamento sensorial mais claro, especialmente importante 
 
 ---
 
-## 7. Conclusão
-
-A etapa de inspeção permitiu identificar problemas de ambiguidade, omissão, inconsistência, contradição e falta de detalhamento em diferentes histórias do backlog.
-
-As issues foram organizadas em uma matriz rastreável e cada uma foi relacionada à avaliação definida pela equipe: corrigida, não corrigida ou reavaliada.
-
-O registro final facilita a revisão acadêmica porque permite acompanhar, em um único arquivo, o caminho completo entre o problema identificado na inspeção, a avaliação da issue e a alteração aplicada no backlog.
-
----
 
