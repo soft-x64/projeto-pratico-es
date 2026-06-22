@@ -1,4 +1,4 @@
-# 🧾 Tratamento das Issues de Inspeção — TrainerX64
+# 🧾 Revisão das Issues de Inspeção — TrainerX64
 
 ---
 
