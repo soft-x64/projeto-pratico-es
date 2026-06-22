@@ -12,7 +12,6 @@
 | 4 | [Registro de Alterações Aplicadas no Backlog](#4-registro-de-alterações-aplicadas-no-backlog) | Síntese das alterações aplicadas por história |
 | 5 | [Matriz de Rastreabilidade](#5-matriz-de-rastreabilidade) | Visão geral das issues e avaliações |
 | 6 | [Exemplos Relevantes de Tratamento](#6-exemplos-relevantes-de-tratamento) | Amostra das issues mais representativas e seus tratamentos |
-| 7 | [Conclusão](#7-conclusão) | Síntese da etapa de inspeção |
 
 ---
 
