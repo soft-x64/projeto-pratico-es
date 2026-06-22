@@ -190,8 +190,6 @@ Esta seção consolida, por história, o que foi ajustado ou mantido após a ava
 
 ## 6. Exemplos Relevantes de Tratamento
 
-Para evitar repetição excessiva, esta seção **não detalha todas as issues individualmente**. A matriz de rastreabilidade já registra todas as issues identificadas, suas histórias relacionadas, seus tipos e suas avaliações.
-
 Os itens abaixo foram selecionados como exemplos representativos por apresentarem impacto direto na clareza dos requisitos, na testabilidade, na rastreabilidade do backlog ou na definição de comportamento do sistema.
 
 | Exemplo | História | Issue | Motivo da seleção | Avaliação da Issue |
