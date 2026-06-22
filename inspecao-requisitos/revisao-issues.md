@@ -74,7 +74,6 @@ As issues foram avaliadas apenas em três categorias finais, mantendo a análise
 | 🟠 Ambiguidade | 13 |
 | ⚫ Defeito de especificação | 6 |
 | 🟣 Contradição | 6 |
-| 🔵 Informação estranha | 1 |
 
 ### 3.3 Issues por história
 
@@ -139,7 +138,7 @@ Esta seção consolida, por história, o que foi ajustado ou mantido após a ava
 
 | Issue | História | Tipo | Título | Avaliação da Issue | Link |
 |---|---|---|---|---|---|
-| Sem numeração | H01 | 🔴 Omissão / Incompletude | H01 - Inconsistência na Especificação de Erro: Validação de Nomes de Treino (RN02) | ✅ Corrigida | — |
+| #1 | H01 | 🔴 Omissão / Incompletude | H01 - Inconsistência na Especificação de Erro: Validação de Nomes de Treino (RN02) | ✅ Corrigida |[Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/1) |
 | #9 | H01 | 🔴 Omissão / Incompletude | H01 - Falta de Especificação Técnica: Cadastro e Replicação de Treinos | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/9) |
 | #10 | H01 | ⚫ Defeito de especificação | H01 - Validação de template sem exercícios | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/10) |
 | #6 | H01/H10 | 🟣 Contradição | Conflito entre requisitos de cadastro (H01) e publicação de treino (H10) | ✅ Corrigida | [Abrir issue](https://github.com/soft-x64/projeto-pratico-es/issues/6) |
