@@ -43,6 +43,62 @@ interface Notif {
   id: string; type: "treino" | "financeiro" | "mensagem" | "evolucao";
   title: string; description: string; time: string; read: boolean;
 }
+interface RegisterStepOneData {
+  name: string;
+  email: string;
+  pw: string;
+  confirm: string;
+}
+
+interface RegisterStepTwoData {
+  atype: UserType | "";
+  goal: string;
+  terms: boolean;
+}
+
+function validateRegisterStepOne(data: RegisterStepOneData): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  if (!data.name.trim()) {
+    errors.name = "Nome obrigatório.";
+  }
+
+  if (!data.email) {
+    errors.email = "E-mail obrigatório.";
+  } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+    errors.email = "E-mail inválido.";
+  }
+
+  if (!data.pw) {
+    errors.pw = "Senha obrigatória.";
+  } else if (data.pw.length < 6) {
+    errors.pw = "Mínimo 6 caracteres.";
+  }
+
+  if (data.pw !== data.confirm) {
+    errors.confirm = "As senhas não conferem.";
+  }
+
+  return errors;
+}
+
+function validateRegisterStepTwo(data: RegisterStepTwoData): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  if (!data.atype) {
+    errors.atype = "Selecione o tipo.";
+  }
+
+  if (!data.goal) {
+    errors.goal = "Selecione um objetivo.";
+  }
+
+  if (!data.terms) {
+    errors.terms = "Aceite os Termos de Uso e a Política de Privacidade.";
+  }
+
+  return errors;
+}
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
@@ -666,21 +722,28 @@ function Register({ onDone,onLogin,onShowModal }:
     ["feedbackSonoro","Feedback sonoro/vibratório"],["descricoesAlternativas","Descrições alternativas"],
   ];
 
-  const v1=()=>{
-    const e:Record<string,string>={};
-    if(!name.trim()) e.name="Nome obrigatório.";
-    if(!email) e.email="E-mail obrigatório."; else if(!/\S+@\S+\.\S+/.test(email)) e.email="E-mail inválido.";
-    if(!pw) e.pw="Senha obrigatória."; else if(pw.length<6) e.pw="Mínimo 6 caracteres.";
-    if(pw!==confirm) e.confirm="As senhas não conferem.";
-    setErrs(e); return !Object.keys(e).length;
-  };
-  const v2=()=>{
-    const e:Record<string,string>={};
-    if(!atype) e.atype="Selecione o tipo.";
-    if(!goal) e.goal="Selecione um objetivo.";
-    if(!terms) e.terms="Aceite os Termos de Uso e a Política de Privacidade.";
-    setErrs(e); return !Object.keys(e).length;
-  };
+  const v1 = () => {
+  const errors = validateRegisterStepOne({
+    name,
+    email,
+    pw,
+    confirm,
+  });
+
+  setErrs(errors);
+  return Object.keys(errors).length === 0;
+};
+
+  const v2 = () => {
+  const errors = validateRegisterStepTwo({
+    atype,
+    goal,
+    terms,
+  });
+
+  setErrs(errors);
+  return Object.keys(errors).length === 0;
+};
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-y-auto">
