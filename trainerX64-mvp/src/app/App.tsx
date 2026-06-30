@@ -43,7 +43,7 @@ interface Notif {
   id: string; type: "treino" | "financeiro" | "mensagem" | "evolucao";
   title: string; description: string; time: string; read: boolean;
 }
-<<<<<<< HEAD
+
 interface RegisterStepOneData {
   name: string;
   email: string;
