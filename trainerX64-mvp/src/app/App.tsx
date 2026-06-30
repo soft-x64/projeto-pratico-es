@@ -23,7 +23,7 @@ type Screen =
   | "welcome" | "login" | "register"
   | "dashboard" | "alunos" | "aluno-detail" | "criar-treino"
   | "workouts" | "workout-detail"
-  | "evolution" | "notifications" | "profile";
+  | "evolution" | "notifications" | "profile" | "chat";
 
 type UserType = "personal" | "aluno";
 
@@ -43,6 +43,7 @@ interface Notif {
   id: string; type: "treino" | "financeiro" | "mensagem" | "evolucao";
   title: string; description: string; time: string; read: boolean;
 }
+<<<<<<< HEAD
 interface RegisterStepOneData {
   name: string;
   email: string;
@@ -100,6 +101,14 @@ function validateRegisterStepTwo(data: RegisterStepTwoData): Record<string, stri
   return errors;
 }
 
+interface ChatMsg {
+  id: string;
+  from: UserType;
+  senderName: string;
+  content: string;
+  time: string;
+  read: boolean;
+}
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
 const STUDENTS: Student[] = [
@@ -136,6 +145,32 @@ const NOTIFS: Notif[] = [
   { id:"n3", type:"financeiro", title:"Mensalidade pendente",  description:"Vencimento em 3 dias. Regularize o acesso.",     time:"Há 2 horas",   read:false },
   { id:"n4", type:"evolucao",   title:"Evolução registrada",   description:"Serena registrou evolução. Peso: 65 kg.",        time:"Ontem, 18:30", read:true  },
   { id:"n5", type:"mensagem",   title:"Mensagem do personal",  description:"Rafael: Ótimo treino! Continue assim, Gustavo.", time:"Ontem, 15:00", read:true  },
+];
+const CHAT_MOCK: ChatMsg[] = [
+  {
+    id: "m1",
+    from: "personal",
+    senderName: "Rafael",
+    content: "Bom treino hoje, Gustavo. Mantém a carga do supino e foca na execução.",
+    time: "09:20",
+    read: true,
+  },
+  {
+    id: "m2",
+    from: "aluno",
+    senderName: "Gustavo",
+    content: "Fechado, professor. Senti o ombro um pouco no final, vou controlar melhor.",
+    time: "09:23",
+    read: true,
+  },
+  {
+    id: "m3",
+    from: "personal",
+    senderName: "Rafael",
+    content: "Boa. Se incomodar, reduz a carga e me avisa pelo app depois do treino.",
+    time: "09:25",
+    read: false,
+  },
 ];
 
 const WEEK = [{day:"Seg",v:3200},{day:"Ter",v:0},{day:"Qua",v:4100},{day:"Qui",v:3800},{day:"Sex",v:0},{day:"Sáb",v:4500},{day:"Dom",v:0}];
@@ -340,17 +375,19 @@ function StatCard({ icon,label,value,sub,color }:{icon:React.ReactNode;label:str
 
 function BottomNav({ active,onNav,ut }:{active:Screen;onNav:(s:Screen)=>void;ut:UserType}) {
   const pItems = [
-    {id:"dashboard" as Screen, label:"Home",    icon:<Home    size={26}/>},
-    {id:"alunos"    as Screen, label:"Alunos",  icon:<Users   size={26}/>},
-    {id:"workouts"  as Screen, label:"Treinos", icon:<Dumbbell size={26}/>},
-    {id:"profile"   as Screen, label:"Perfil",  icon:<User    size={26}/>},
-  ];
-  const aItems = [
-    {id:"dashboard" as Screen, label:"Início",    icon:<Home      size={26}/>},
-    {id:"workouts"  as Screen, label:"Treino",    icon:<Dumbbell  size={26}/>},
-    {id:"evolution" as Screen, label:"Progresso", icon:<TrendingUp size={26}/>},
-    {id:"profile"   as Screen, label:"Perfil",    icon:<User      size={26}/>},
-  ];
+  {id:"dashboard" as Screen, label:"Home",    icon:<Home size={26}/>},
+  {id:"alunos"    as Screen, label:"Alunos",  icon:<Users size={26}/>},
+  {id:"workouts"  as Screen, label:"Treinos", icon:<Dumbbell size={26}/>},
+  {id:"chat"      as Screen, label:"Chat",    icon:<MessageCircle size={26}/>},
+  {id:"profile"   as Screen, label:"Perfil",  icon:<User size={26}/>},
+];
+ const aItems = [
+  {id:"dashboard" as Screen, label:"Início",    icon:<Home size={26}/>},
+  {id:"workouts"  as Screen, label:"Treino",    icon:<Dumbbell size={26}/>},
+  {id:"evolution" as Screen, label:"Progresso", icon:<TrendingUp size={26}/>},
+  {id:"chat"      as Screen, label:"Chat",      icon:<MessageCircle size={26}/>},
+  {id:"profile"   as Screen, label:"Perfil",    icon:<User size={26}/>},
+];
   const items = ut==="personal" ? pItems : aItems;
   const ac = AC(ut);
   const acBg = AC_BG(ut, 0.15);
@@ -909,7 +946,7 @@ function PersonalDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
               {icon:<Plus size={18}/>,         label:"Criar treino",     screen:"criar-treino" as Screen},
               {icon:<UserPlus size={18}/>,      label:"Cadastrar aluno",  screen:"alunos"       as Screen},
               {icon:<ClipboardList size={18}/>, label:"Avaliação física", screen:"evolution"    as Screen},
-              {icon:<Calendar size={18}/>,      label:"Agenda da semana", screen:"dashboard"    as Screen},
+              {icon:<MessageCircle size={18}/>, label:"Chat integrado",   screen:"chat"         as Screen},
             ].map(a=>(
               <button key={a.label} onClick={()=>onNav(a.screen)}
                 className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 hover:border-primary transition-all text-left">
@@ -991,7 +1028,7 @@ function AlunoDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
               {icon:<Play size={18}/>,    label:"Iniciar treino", screen:"workouts"  as Screen},
               {icon:<Target size={18}/>,  label:"Minhas metas",   screen:"evolution" as Screen},
               {icon:<Activity size={18}/>,label:"Histórico",      screen:"evolution" as Screen},
-              {icon:<Calendar size={18}/>,label:"Calendário",     screen:"dashboard" as Screen},
+              {icon:<MessageCircle size={18}/>, label:"Falar com personal", screen:"chat"   as Screen},
             ].map(a=>(
               <button key={a.label} onClick={()=>onNav(a.screen)}
                 className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 hover:border-accent transition-all text-left">
@@ -1647,7 +1684,151 @@ function Notifications({ ut }:{ut:UserType}) {
 }
 
 // ─── Profile ──────────────────────────────────────────────────────────────────
+function ChatPage({ user, ut, onBack }: { user: AppUser; ut: UserType; onBack: () => void }) {
+  const storageKey = `trainerx64-chat-${ut}`;
+  const [messages, setMessages] = useState<ChatMsg[]>(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? JSON.parse(saved) : CHAT_MOCK;
+    } catch {
+      return CHAT_MOCK;
+    }
+  });
+  const [text, setText] = useState("");
+  const ac = AC(ut);
+  const otherName = ut === "personal" ? "Gustavo" : "Rafael";
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(messages));
+    } catch {
+      // fallback silencioso para MVP
+    }
+  }, [messages, storageKey]);
+
+  const sendMessage = () => {
+    const clean = text.trim();
+    if (!clean) return;
+
+    const now = new Date();
+    const time = now.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const msg: ChatMsg = {
+      id: `m-${Date.now()}`,
+      from: ut,
+      senderName: user.name,
+      content: clean,
+      time,
+      read: false,
+    };
+
+    setMessages(prev => [...prev, msg]);
+    setText("");
+  };
+
+  return (
+    <div className="min-h-screen bg-background pb-36 flex flex-col">
+      <div className="px-6 pt-14 pb-4 border-b border-border">
+        <div className="flex items-center justify-between mb-4">
+          <BackBtn onClick={onBack} />
+          <p className="font-montserrat font-semibold text-sm text-muted-foreground">
+            Chat integrado
+          </p>
+          <div className="w-[52px]" />
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center text-black font-montserrat font-bold"
+            style={{ background: ac }}
+          >
+            {otherName[0]}
+          </div>
+          <div>
+            <h1 className="font-montserrat font-bold text-xl text-foreground">
+              {ut === "personal" ? "Conversa com aluno" : "Conversa com personal"}
+            </h1>
+            <p className="text-xs text-muted-foreground font-inter">
+              {otherName} · comunicação interna do TrainerX64
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <MessageCircle size={42} className="text-muted-foreground mb-3" />
+            <p className="text-muted-foreground font-inter text-sm">
+              Nenhuma mensagem ainda.
+            </p>
+            <p className="text-muted-foreground font-inter text-xs mt-1">
+              Envie uma mensagem para iniciar a conversa.
+            </p>
+          </div>
+        ) : (
+          messages.map(msg => {
+            const mine = msg.from === ut;
+            return (
+              <div
+                key={msg.id}
+                className={`flex ${mine ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className="max-w-[78%] rounded-2xl px-4 py-3 border"
+                  style={{
+                    background: mine ? AC_BG(ut, 0.22) : "#1C1C1E",
+                    borderColor: mine ? ac : "#2A2A2A",
+                  }}
+                >
+                  <p className="text-[11px] font-inter text-muted-foreground mb-1">
+                    {msg.senderName}
+                  </p>
+                  <p className="text-sm font-inter text-foreground leading-relaxed">
+                    {msg.content}
+                  </p>
+                  <div className="flex items-center justify-end gap-1 mt-1">
+                    <span className="text-[10px] font-inter text-muted-foreground">
+                      {msg.time}
+                    </span>
+                    {mine && <Check size={12} color={ac} />}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-6">
+        <div className="bg-card border border-border rounded-2xl p-2 flex items-center gap-2 shadow-2xl">
+          <input
+            value={text}
+            onChange={e => setText(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter") sendMessage();
+            }}
+            placeholder="Digite sua mensagem..."
+            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none px-3"
+            aria-label="Digite sua mensagem"
+          />
+          <button
+            onClick={sendMessage}
+            disabled={!text.trim()}
+            className="w-11 h-11 rounded-xl flex items-center justify-center transition-all active:scale-90 disabled:opacity-40"
+            style={{ background: text.trim() ? ac : "#2A2A2A" }}
+            aria-label="Enviar mensagem"
+          >
+            <MessageCircle size={20} color={text.trim() ? "#000" : "#9CA3AF"} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 function Profile({ user,onLogout }:{user:AppUser;onLogout:()=>void}) {
   const ac=AC(user.type);
   const [a11y,setA11y]=useState({altoContraste:false,textoAmpliado:false,leituraPorVoz:false,navegacaoSimplificada:false,feedbackSonoro:false});
@@ -1790,7 +1971,7 @@ export default function App() {
   const [gToast,setGToast]=useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
 
   // Telas focadas (internas) não exibem a barra inferior
-  const navScreens:Screen[]=["dashboard","alunos","workouts","evolution","notifications","profile"];
+  const navScreens:Screen[]=["dashboard","alunos","workouts","evolution","notifications","chat","profile"];
   const ut=user?.type??"personal";
   const nav=(s:Screen)=>setScreen(s);
 
@@ -1827,6 +2008,14 @@ export default function App() {
 
       {screen==="evolution"    &&<Evolution ut={ut}/>}
       {screen==="notifications"&&<Notifications ut={ut}/>}
+
+      {screen==="chat" && user && (
+        <ChatPage
+          user={user}
+          ut={ut}
+          onBack={() => setScreen("dashboard")}
+        />
+      )}
       {screen==="profile"      &&user&&<Profile user={user} onLogout={()=>{setUser(null);setScreen("welcome");}}/>}
 
       {navScreens.includes(screen)&&user&&<BottomNav active={screen} onNav={nav} ut={ut}/>}
