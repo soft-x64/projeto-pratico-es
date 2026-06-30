@@ -2,7 +2,7 @@
 
 | História | Funcionalidade | Evidência |
 |----------|----------------|-----------|
-| H01 | Treinos Padronizados 1| <img width="530" height="757" alt="image" src="https://github.com/user-attachments/assets/70410a54-d222-49e6-8a23-bfb372d48745" />|
+| H01 | Treinos Padronizados 1| |
 | H01 | Treinos Padronizados 2| prints/treinos.png |
 | H01 | Treinos Padronizados | prints/treinos.png |
 | H02 | Dashboard Centralizado | prints/dashboard.png |
