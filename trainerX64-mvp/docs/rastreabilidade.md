@@ -1,28 +1,19 @@
+# Rastreabilidade das Histórias de Usuário
 
-<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/cff03a76-57d1-4cb9-a2f9-eaee2a30dd01" />
-
-
-
-<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/c497c53d-2d60-403a-8695-e25bad02c5fd" />
-
-
-
-<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/44349a4c-20aa-434a-af09-72b587e31d84" />
-
-
-
-<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/e64d553f-ef21-4c4c-a786-55b9108dcfe2" />
-
-
-<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/ad6fe4e9-b8c8-4517-9378-b3288b0ecae1" />
-
-
-
-<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/24df1648-b419-45e0-9a46-7f5e73b7cbd9" />
-
-
-
-<img width="562" height="962" alt="image" src="https://github.com/user-attachments/assets/30883391-5b75-4ec4-acec-2dbbbe1a595e" />
-
-
+| História | Funcionalidade | Evidência |
+|----------|----------------|-----------|
+| H01 | Treinos Padronizados | prints/treinos.png |
+| H02 | Dashboard Centralizado | prints/dashboard.png |
+| H03 | Relatórios Automáticos de Evolução | prints/evolucao.png |
+| H04 | Aplicativo em Português | prints/dashboard.png |
+| H06 | Interface Visual Baseada em Ícones e Cores | prints/dashboard.png |
+| H07 | Funções Críticas para Tutorial | prints/dashboard.png |
+| H09 | Alerta de Ausência | prints/dashboard.png |
+| H10 | Vídeos Explicativos dos Exercícios | prints/treinos.png |
+| H11 | Registro de Cargas e Repetições | prints/treinos.png |
+| H12 | Notificações de Lembrete | prints/dashboard.png |
+| H16 | Organização do Backlog | GitHub Projects |
+| H17 | Acessibilidade Visual | prints/dashboard.png |
+| H18 | Comandos de Voz para Cronômetro | prints/cronometro.png (se existir) |
+| H20 | Feedback Vibratório | prints/treinos.png (se existir) |
 
