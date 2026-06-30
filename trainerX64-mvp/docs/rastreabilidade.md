@@ -2,6 +2,8 @@
 
 | História | Funcionalidade | Evidência |
 |----------|----------------|-----------|
+| H01 | Treinos Padronizados 1| prints/treinos.png |
+| H01 | Treinos Padronizados 2| prints/treinos.png |
 | H01 | Treinos Padronizados | prints/treinos.png |
 | H02 | Dashboard Centralizado | prints/dashboard.png |
 | H03 | Relatórios Automáticos de Evolução | prints/evolucao.png |
