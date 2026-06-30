@@ -1,0 +1,200 @@
+Atualize o protótipo existente do TrainerX64 sem recriar o projeto do zero.
+
+Quero reformular a tela inicial “Começar” do aplicativo, usando como inspiração a estrutura visual de uma tela de onboarding premium de app fitness, semelhante ao estilo do Hevy, mas sem copiar marca, logo, layout exato ou identidade visual.
+
+Objetivo:
+Criar uma nova tela inicial mais forte, moderna e atrativa, com cara de aplicativo fitness premium, mantendo a identidade do TrainerX64. Essa tela deve funcionar como uma introdução visual do app antes da seleção do tipo de usuário.
+
+Fluxo desejado:
+
+1. O usuário abre o app e vê a nova tela inicial/onboarding.
+2. Nessa tela existe um botão principal “Começar”.
+3. Ao clicar em “Começar”, o usuário deve ir para uma nova tela de seleção do tipo de usuário.
+4. Nessa segunda tela ele escolhe:
+
+   * Personal Trainer
+   * Aluno
+5. Depois da escolha:
+
+   * se for novo usuário → seguir para Cadastro
+   * se já tiver conta → seguir para Login
+6. A partir da escolha do perfil, o sistema aplica a identidade visual correspondente:
+
+   * Personal = verde predominante
+   * Aluno = azul predominante
+
+---
+
+## TELA 1 — NOVA TELA INICIAL / COMEÇAR
+
+Quero uma tela inicial inspirada em onboarding de app fitness premium.
+
+Estrutura visual:
+
+* Fundo escuro, sofisticado, com aparência moderna
+* Visual mais emocional e comercial
+* Um mockup central do app ou composição visual mostrando o TrainerX64 em uso
+* Pode ter imagem de fundo escurecida, borrada ou com overlay escuro
+* Pode ter um mockup de tela do app em destaque no centro, como se fosse uma apresentação do sistema
+* A identidade deve parecer de app mobile premium fitness/tecnologia
+
+Conteúdo da tela:
+
+* Logo do TrainerX64 no topo
+* Título principal forte e curto
+* Subtítulo explicando a proposta do app
+* Indicador de carrossel/páginas na parte inferior da área principal
+* Botão principal “Começar”
+* Link secundário: “Já tenho uma conta? Iniciar sessão”
+
+Texto sugerido:
+Título:
+“Organize seus treinos em um só lugar”
+
+Subtítulo:
+“Gerencie alunos, acompanhe evolução e registre treinos com praticidade e desempenho.”
+
+Botão principal:
+“Começar”
+
+Link secundário:
+“Já tenho uma conta? Iniciar sessão”
+
+Estilo visual dessa tela:
+
+* Fundo escuro #000000 ou #121212
+* Cards, mockups ou overlays com #1C1C1E
+* Texto branco
+* Texto secundário cinza claro
+* Botão principal com verde/ciano da identidade do TrainerX64
+* Bordas arredondadas
+* Tipografia forte e limpa
+* Visual premium, semelhante a onboarding de apps fitness modernos
+
+Importante:
+
+* Não usar login direto nessa tela
+* Essa tela serve apenas para apresentação inicial e entrada no fluxo
+* O botão “Começar” deve levar para a seleção de tipo de usuário
+* O link “Já tenho uma conta? Iniciar sessão” pode levar direto para a tela de login
+
+Se quiser, esta tela pode ter estrutura de 1 a 3 slides de onboarding, com bolinhas indicadoras, mas o mínimo necessário é 1 tela inicial muito bem resolvida.
+
+---
+
+## TELA 2 — SELEÇÃO DO TIPO DE USUÁRIO
+
+Criar uma nova tela logo após a tela “Começar”.
+
+Objetivo:
+Permitir que o usuário escolha seu tipo de uso antes de entrar no fluxo de cadastro ou login.
+
+Título:
+“Como você vai usar o TrainerX64?”
+
+Subtítulo:
+“Escolha o perfil que melhor representa sua jornada no aplicativo.”
+
+Opções:
+
+1. Personal Trainer
+   Descrição:
+   “Gerencie alunos, crie treinos personalizados e acompanhe avaliações.”
+
+2. Aluno
+   Descrição:
+   “Acompanhe seus treinos, registre evolução e visualize seu progresso.”
+
+Layout:
+
+* Dois cards grandes de seleção
+* Cada card com ícone, título e descrição
+* Card do Personal com destaque em verde
+* Card do Aluno com destaque em azul
+* Botão principal abaixo: “Continuar”
+* O botão só deve ser ativado depois da seleção de um perfil
+
+Regras:
+
+* Quando o usuário selecionar Personal Trainer:
+
+  * aplicar tema verde nas próximas telas
+  * seguir para Cadastro ou Login do perfil Personal
+* Quando selecionar Aluno:
+
+  * aplicar tema azul nas próximas telas
+  * seguir para Cadastro ou Login do perfil Aluno
+
+Opcional:
+Pode haver dois botões na parte inferior:
+
+* “Criar conta”
+* “Entrar”
+
+Ou então:
+
+* “Continuar” leva para Cadastro
+* link secundário: “Já tenho uma conta? Entrar”
+
+---
+
+## REGRAS DE IDENTIDADE VISUAL
+
+Mantenha a identidade do TrainerX64.
+
+Paleta:
+
+* Verde principal: #00E676
+* Azul/ciano principal: #38BDF8
+* Branco: #FFFFFF
+* Cinza escuro: #1E1E1E
+* Fundo preto ou quase preto: #000000 ou #121212
+
+Diferenciação por perfil:
+
+* Personal Trainer = verde predominante
+* Aluno = azul predominante
+
+---
+
+## REGRAS DE UX E IHC
+
+Aplique as heurísticas de usabilidade:
+
+* navegação simples
+* visual limpo
+* poucos elementos por tela
+* botão principal muito claro
+* mensagens e textos objetivos
+* consistência com o restante do app
+* acessibilidade visual
+* contraste alto
+* botões grandes
+* tipografia legível
+* ícones acompanhados de texto
+
+---
+
+## IMPORTANTE
+
+Não copie a interface do Hevy literalmente.
+Use apenas como inspiração para:
+
+* estrutura da tela inicial
+* sensação premium
+* hierarquia visual
+* uso de mockup central
+* onboarding forte
+* botão principal chamativo
+* indicadores de páginas
+
+Mantenha a identidade própria do TrainerX64.
+
+Resultado esperado:
+
+1. Uma nova tela inicial “Começar” muito mais atraente e profissional
+2. Uma nova tela de seleção do tipo de usuário
+3. Fluxo:
+   Tela Inicial → Seleção de Usuário → Cadastro/Login
+4. Tema verde para Personal e azul para Aluno
+5. Continuidade visual com o restante do sistema
