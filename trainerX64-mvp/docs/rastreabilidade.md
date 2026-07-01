@@ -7,8 +7,6 @@ O objetivo desta rastreabilidade é demonstrar que cada História de Usuário po
 
 Cada item desta documentação contém a identificação da História de Usuário, a funcionalidade implementada e sua respectiva evidência visual, permitindo identificar de forma clara a correspondência entre os requisitos especificados e o produto final desenvolvido.
 
-# TABELA DAS RASTREABILIDADE
-
 | História | Funcionalidade | Evidência |
 |----------|----------------|-----------|
 | H01 | Treinos Padronizados | <img width="315" height="771" alt="image" src="https://github.com/user-attachments/assets/29996786-3437-48c5-8d40-d804ddeb4b82" />|
