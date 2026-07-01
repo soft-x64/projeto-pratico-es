@@ -35,7 +35,7 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H23 | Aluno | Gráficos de progresso | <img width="298" height="242" alt="image" src="https://github.com/user-attachments/assets/c5e2f447-4e28-4dc6-88d7-b13ec094b04c" />|
 | H24 | Aluno | Ficha personalizada do dia |<img width="280" height="290" alt="image" src="https://github.com/user-attachments/assets/69d17512-dec3-415b-b9b3-dddab5f63baf" />|
 | H25 | Aluno | Lembretes de treino | <img width="327" height="773" alt="image" src="https://github.com/user-attachments/assets/7e6701cc-760b-43ca-aed1-3b85d9f6a76b" />|
-| H26 | Personal | Lista de mensalidades pendentes | <img width="323" height="772" alt="image" src="https://github.com/user-attachments/assets/415c9c38-7a8a-47cc-b744-b376e8d1e733" />|
+| H26 | Personal | Lista de mensalidades pendentes | <img width="314" height="311" alt="image" src="https://github.com/user-attachments/assets/64287871-3394-4086-aeb7-ebb14fd925a9" />|
 | H27 | Personal | Registrar mensalidade recebida | <img width="321" height="287" alt="image" src="https://github.com/user-attachments/assets/8b5234a9-6c2f-44bd-94ed-f9210b27a74c" />|
 | H28 | Ambos | Login com e-mail e senha | <img width="293" height="757" alt="image" src="https://github.com/user-attachments/assets/a274deb6-2ffc-4d0d-bc0a-6a4dc399d772" />|
 | H29 | Ambos | Recuperação de senha |<img width="295" height="760" alt="image" src="https://github.com/user-attachments/assets/26412b0c-0719-416d-8d3f-6c7988bb6729" />|
