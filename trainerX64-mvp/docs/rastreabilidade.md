@@ -1,5 +1,14 @@
 # Rastreabilidade das Histórias de Usuário
 
+# Introdução
+Este documento apresenta a rastreabilidade das **Histórias de Usuário** do projeto **TrainerX64**, estabelecendo a relação entre os requisitos funcionais definidos durante o planejamento e as funcionalidades efetivamente implementadas no sistema.
+
+O objetivo desta rastreabilidade é demonstrar que cada História de Usuário possui uma evidência correspondente, por meio de capturas de tela (prints), comprovando sua implementação no aplicativo. Dessa forma, é possível verificar a cobertura dos requisitos, facilitar o processo de validação do sistema e fornecer maior transparência sobre o desenvolvimento realizado pela equipe.
+
+Cada item desta documentação contém a identificação da História de Usuário, a funcionalidade implementada e sua respectiva evidência visual, permitindo identificar de forma clara a correspondência entre os requisitos especificados e o produto final desenvolvido.
+
+
+
 | História | Funcionalidade | Evidência |
 |----------|----------------|-----------|
 | H01 | Treinos Padronizados | <img width="315" height="771" alt="image" src="https://github.com/user-attachments/assets/29996786-3437-48c5-8d40-d804ddeb4b82" />|
