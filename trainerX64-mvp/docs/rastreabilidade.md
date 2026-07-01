@@ -17,11 +17,11 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H05 | Personal | Chat integrado | <img width="301" height="766" alt="image" src="https://github.com/user-attachments/assets/10012431-2247-40e0-8d52-64b3c5ce783d" />|
 | H06 | Ambos | Interface Visual baseada em ícones e cores | <img width="323" height="772" alt="image" src="https://github.com/user-attachments/assets/414fbb2f-c640-43af-8417-c3c2b46353c4" />|
 | H07 | Ambos | Tutorial das funções críticas | Tela inicial ou tela de ajuda/tutorial. |
-| H08 | Personal | Atalhos de teclado e gestos | <img width="306" height="69" alt="image" src="https://github.com/user-attachments/assets/91608411-83a7-4e47-a4e0-e8db9e76cfcd" />|
+| H08 | Personal | Atalhos de teclado e gestos |<img width="311" height="76" alt="image" src="https://github.com/user-attachments/assets/59f82539-fb59-41a6-bf15-d3083091b0f8" />|
 | H09 | Personal | Alerta de ausência de alunos | Tela de notificações ou lista de alunos com alerta. |
 | H10 | Aluno | Vídeos explicativos dos exercícios | Tela de treino mostrando o vídeo ou botão para assistir ao exercício. |
-| H11 | Aluno | Registro de cargas e repetições | <img width="328" height="761" alt="image" src="https://github.com/user-attachments/assets/e512c1b6-96b4-48e1-b0c1-28d431877f89" />|
-| H12 | Aluno | Notificações de lembrete | <img width="329" height="753" alt="image" src="https://github.com/user-attachments/assets/c873562b-778a-498c-b64c-c0e3b5b32827" />|
+| H11 | Aluno | Registro de cargas e repetições | <img width="280" height="248" alt="image" src="https://github.com/user-attachments/assets/9307c8f0-078f-461e-afce-169d7cafc0ff" />|
+| H12 | Aluno | Notificações de lembrete | <img width="311" height="393" alt="image" src="https://github.com/user-attachments/assets/524979ea-cb4a-4009-ad72-83b7b68a1662" />|
 | H13 | Aluno | Gráficos de evolução física |<img width="280" height="154" alt="image" src="https://github.com/user-attachments/assets/e313c5f6-049e-4a82-a04d-8a801bcaae8b" />|
 | H16 | GitHub | Organização do Backlog | Print do GitHub Projects (Kanban). |
 | H17 | Ambos | Acessibilidade Visual | <img width="288" height="215" alt="image" src="https://github.com/user-attachments/assets/fd08a6d3-55a5-4798-beda-50f013784b8d" />|
