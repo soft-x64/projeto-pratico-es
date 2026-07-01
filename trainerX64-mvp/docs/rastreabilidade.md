@@ -31,7 +31,7 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H19 | Aluno | Descrições em áudio dos exercícios | Tela do exercício com recurso de áudio. |
 | H20 | Aluno | Feedback vibratório | <img width="363" height="771" alt="image" src="https://github.com/user-attachments/assets/51a7ffdc-73c1-45c3-b638-7a46e003677a" />|
 | H21 | Personal | Cadastro de novo aluno | <img width="332" height="772" alt="image" src="https://github.com/user-attachments/assets/0d8081fb-e531-4d3c-9ad2-38c27fb273ba" />|
-| H22 | Aluno | Relatório semanal/mensal |<img width="275" height="743" alt="image" src="https://github.com/user-attachments/assets/26be7b82-22e5-4d7e-b148-b33b49957a4d" />|
+| H22 | Aluno | Relatório semanal/mensal |<img width="296" height="162" alt="image" src="https://github.com/user-attachments/assets/8c53ebd2-6c50-4955-9a91-1ab0b76c5385" />|
 | H23 | Aluno | Gráficos de progresso | <img width="298" height="242" alt="image" src="https://github.com/user-attachments/assets/c5e2f447-4e28-4dc6-88d7-b13ec094b04c" />|
 | H24 | Aluno | Ficha personalizada do dia |<img width="280" height="290" alt="image" src="https://github.com/user-attachments/assets/69d17512-dec3-415b-b9b3-dddab5f63baf" />|
 | H25 | Aluno | Lembretes de treino | <img width="328" height="352" alt="image" src="https://github.com/user-attachments/assets/f79a8b66-d7f6-4dea-83ea-72c31b63168b" />|
