@@ -7,7 +7,7 @@ O objetivo desta rastreabilidade é demonstrar que cada História de Usuário po
 
 Cada item desta documentação contém a identificação da História de Usuário, a funcionalidade implementada e sua respectiva evidência visual, permitindo identificar de forma clara a correspondência entre os requisitos especificados e o produto final desenvolvido.
 
-
+# TABELA DAS RASTREABILIDADE
 
 | História | Funcionalidade | Evidência |
 |----------|----------------|-----------|
