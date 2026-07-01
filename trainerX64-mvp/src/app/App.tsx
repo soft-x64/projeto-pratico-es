@@ -1,4 +1,3 @@
-import { alunoService } from "../services/alunoService";
 import { useState, useEffect } from "react";
 import logoImg from "@/imports/trainerx64_logo_nome_melhorada.png";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
@@ -19,6 +18,7 @@ import {
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
 type Screen =
   | "welcome" | "login" | "register"
   | "dashboard" | "alunos" | "aluno-detail" | "criar-treino"
@@ -43,64 +43,6 @@ interface Notif {
   id: string; type: "treino" | "financeiro" | "mensagem" | "evolucao";
   title: string; description: string; time: string; read: boolean;
 }
-
-interface RegisterStepOneData {
-  name: string;
-  email: string;
-  pw: string;
-  confirm: string;
-}
-
-interface RegisterStepTwoData {
-  atype: UserType | "";
-  goal: string;
-  terms: boolean;
-}
-
-function validateRegisterStepOne(data: RegisterStepOneData): Record<string, string> {
-  const errors: Record<string, string> = {};
-
-  if (!data.name.trim()) {
-    errors.name = "Nome obrigatório.";
-  }
-
-  if (!data.email) {
-    errors.email = "E-mail obrigatório.";
-  } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-    errors.email = "E-mail inválido.";
-  }
-
-  if (!data.pw) {
-    errors.pw = "Senha obrigatória.";
-  } else if (data.pw.length < 6) {
-    errors.pw = "Mínimo 6 caracteres.";
-  }
-
-  if (data.pw !== data.confirm) {
-    errors.confirm = "As senhas não conferem.";
-  }
-
-  return errors;
-}
-
-function validateRegisterStepTwo(data: RegisterStepTwoData): Record<string, string> {
-  const errors: Record<string, string> = {};
-
-  if (!data.atype) {
-    errors.atype = "Selecione o tipo.";
-  }
-
-  if (!data.goal) {
-    errors.goal = "Selecione um objetivo.";
-  }
-
-  if (!data.terms) {
-    errors.terms = "Aceite os Termos de Uso e a Política de Privacidade.";
-  }
-
-  return errors;
-}
-
 interface ChatMsg {
   id: string;
   from: UserType;
@@ -759,28 +701,21 @@ function Register({ onDone,onLogin,onShowModal }:
     ["feedbackSonoro","Feedback sonoro/vibratório"],["descricoesAlternativas","Descrições alternativas"],
   ];
 
-  const v1 = () => {
-  const errors = validateRegisterStepOne({
-    name,
-    email,
-    pw,
-    confirm,
-  });
-
-  setErrs(errors);
-  return Object.keys(errors).length === 0;
-};
-
-  const v2 = () => {
-  const errors = validateRegisterStepTwo({
-    atype,
-    goal,
-    terms,
-  });
-
-  setErrs(errors);
-  return Object.keys(errors).length === 0;
-};
+  const v1=()=>{
+    const e:Record<string,string>={};
+    if(!name.trim()) e.name="Nome obrigatório.";
+    if(!email) e.email="E-mail obrigatório."; else if(!/\S+@\S+\.\S+/.test(email)) e.email="E-mail inválido.";
+    if(!pw) e.pw="Senha obrigatória."; else if(pw.length<6) e.pw="Mínimo 6 caracteres.";
+    if(pw!==confirm) e.confirm="As senhas não conferem.";
+    setErrs(e); return !Object.keys(e).length;
+  };
+  const v2=()=>{
+    const e:Record<string,string>={};
+    if(!atype) e.atype="Selecione o tipo.";
+    if(!goal) e.goal="Selecione um objetivo.";
+    if(!terms) e.terms="Aceite os Termos de Uso e a Política de Privacidade.";
+    setErrs(e); return !Object.keys(e).length;
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-y-auto">
@@ -903,7 +838,7 @@ function Register({ onDone,onLogin,onShowModal }:
 
 // ─── Personal Dashboard ───────────────────────────────────────────────────────
 
-function PersonalDash({ user,onNav,students }:{user:AppUser;onNav:(s:Screen)=>void;students:Student[]}) {
+function PersonalDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
   const [period,setPeriod]=useState("Semana");
   const ac=AC("personal");
   return (
@@ -924,7 +859,7 @@ function PersonalDash({ user,onNav,students }:{user:AppUser;onNav:(s:Screen)=>vo
       <div className="px-6 flex flex-col gap-5">
         <Caps items={["Semana","Mês","3 meses"]} active={period} onChange={setPeriod} ut="personal"/>
         <div className="grid grid-cols-3 gap-3">
-          <StatCard icon={<Users size={18}/>}        label="Alunos ativos"  value={String(students.length)}  color={ac}/>
+          <StatCard icon={<Users size={18}/>}        label="Alunos ativos"  value="8"  color={ac}/>
           <StatCard icon={<ClipboardList size={18}/>} label="Treinos pend."  value="3"  color="#f59e0b"/>
           <StatCard icon={<Star size={18}/>}          label="Avaliações"     value="2"  color={ac}/>
         </div>
@@ -961,7 +896,7 @@ function PersonalDash({ user,onNav,students }:{user:AppUser;onNav:(s:Screen)=>vo
             <h2 className="font-montserrat font-bold text-base text-foreground">Alunos recentes</h2>
             <button className="text-xs font-inter" style={{color:ac}} onClick={()=>onNav("alunos")}>Ver todos</button>
           </div>
-          {students.slice(0,4).map(s=>(
+          {STUDENTS.slice(0,4).map(s=>(
             <div key={s.id} className="bg-card border border-border rounded-2xl px-4 py-3 mb-2 flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center font-montserrat font-bold text-sm text-black flex-shrink-0"
@@ -1067,29 +1002,21 @@ function AlunoDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
 
 // ─── Alunos List ──────────────────────────────────────────────────────────────
 
-function AlunosList({ students,onSelect,onCreateStudent,creatingStudent=false }:{students:Student[];onSelect:(s:Student)=>void;onCreateStudent:()=>void;creatingStudent?:boolean}) {
+function AlunosList({ onSelect }:{onSelect:(s:Student)=>void}) {
   const [filter,setFilter]=useState("Todos");
   const [search,setSearch]=useState("");
   const ac=AC("personal");
   const SM:Record<string,string>={"Em dia":"em-dia","Pendente":"pendente","Mensalidade":"mensalidade"};
-  const list=students.filter(s=>s.name.toLowerCase().includes(search.toLowerCase())&&(filter==="Todos"||s.status===SM[filter]));
+  const list=STUDENTS.filter(s=>s.name.toLowerCase().includes(search.toLowerCase())&&(filter==="Todos"||s.status===SM[filter]));
   return (
     <div className="min-h-screen bg-background pb-36">
       <div className="px-6 pt-14 pb-4" style={{background:"linear-gradient(180deg,rgba(0,230,118,0.06) 0%,transparent 100%)"}}>
         <div className="flex items-center justify-between mb-1">
           <h1 className="font-montserrat font-bold text-3xl text-foreground">Meus Alunos</h1>
-          <button
-            onClick={onCreateStudent}
-            disabled={creatingStudent}
-            className="w-11 h-11 rounded-2xl flex items-center justify-center text-black transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{background:ac}}
-            aria-label="Adicionar aluno"
-            title="Adicionar aluno de teste"
-          >
-            {creatingStudent ? <RefreshCw size={20} className="animate-spin"/> : <UserPlus size={20}/>}
-          </button>
+          <button className="w-11 h-11 rounded-2xl flex items-center justify-center text-black transition-all active:scale-95"
+            style={{background:ac}} aria-label="Adicionar aluno"><UserPlus size={20}/></button>
         </div>
-        <p className="text-muted-foreground text-sm font-inter">{students.length} alunos cadastrados</p>
+        <p className="text-muted-foreground text-sm font-inter">{STUDENTS.length} alunos cadastrados</p>
       </div>
       <div className="px-6 mb-3">
         <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12">
@@ -1977,43 +1904,6 @@ export default function App() {
   const [selS,setSelS]=useState<Student|null>(null);
   const [modal,setModal]=useState<"terms"|"privacy"|null>(null);
   const [gToast,setGToast]=useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
-  const [students,setStudents]=useState<Student[]>(STUDENTS);
-  const [creatingStudent,setCreatingStudent]=useState(false);
-
-  useEffect(() => {
-    alunoService
-      .listarAlunos()
-      .then(setStudents)
-      .catch((error) => {
-        console.error("Erro ao carregar alunos:", error);
-        setGToast({ msg: "Não foi possível carregar alunos da API. Usando dados locais.", type: "info" });
-      });
-  }, []);
-
-  async function handleCreateStudent() {
-    try {
-      setCreatingStudent(true);
-
-      const novoAluno = await alunoService.criarAluno({
-        nome: `Aluno Teste ${students.length + 1}`,
-        status: "em-dia",
-        treino: "Upper",
-        objetivo: "Hipertrofia",
-        nivel: "Iniciante",
-        peso: 70,
-        altura: 175,
-        idade: 22,
-      });
-
-      setStudents((prev) => [novoAluno, ...prev]);
-      setGToast({ msg: "Aluno cadastrado com sucesso no banco.", type: "success" });
-    } catch (error) {
-      console.error("Erro ao cadastrar aluno:", error);
-      setGToast({ msg: "Erro ao cadastrar aluno. Verifique se backend e banco estão rodando.", type: "error" });
-    } finally {
-      setCreatingStudent(false);
-    }
-  }
 
   // Telas focadas (internas) não exibem a barra inferior
   const navScreens:Screen[]=["dashboard","alunos","workouts","evolution","notifications","chat","profile"];
@@ -2042,9 +1932,9 @@ export default function App() {
       )}
       {screen==="register" &&<Register onDone={()=>setScreen("login")} onLogin={()=>setScreen("login")} onShowModal={setModal}/>}
 
-      {screen==="dashboard"&&user&&(ut==="personal"?<PersonalDash user={user} onNav={nav} students={students}/>:<AlunoDash user={user} onNav={nav}/>)}
+      {screen==="dashboard"&&user&&(ut==="personal"?<PersonalDash user={user} onNav={nav}/>:<AlunoDash user={user} onNav={nav}/>)}
 
-      {screen==="alunos"      &&ut==="personal"&&<AlunosList students={students} creatingStudent={creatingStudent} onCreateStudent={handleCreateStudent} onSelect={s=>{setSelS(s);setScreen("aluno-detail");}}/>}
+      {screen==="alunos"      &&ut==="personal"&&<AlunosList onSelect={s=>{setSelS(s);setScreen("aluno-detail");}}/>}
       {screen==="aluno-detail"&&selS           &&<AlunoDetail student={selS} onBack={()=>setScreen("alunos")} onNav={nav}/>}
       {screen==="criar-treino"                 &&<CriarTreino onBack={()=>setScreen(ut==="personal"?"workouts":"dashboard")}/>}
 
