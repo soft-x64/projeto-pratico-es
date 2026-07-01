@@ -10,14 +10,14 @@ Cada item desta documentação contém a identificação da História de Usuári
 
 | História | Perfil | Funcionalidade | Evidência (Print) |
 |----------|--------|----------------|-------------------|
-| H01 | Personal | Treinos Padronizados | Tela de criação/gerenciamento de treinos. |
-| H02 | Personal | Dashboard Centralizado | Dashboard inicial do personal. |
-| H03 | Personal | Relatórios Automáticos de Evolução | Tela de relatórios ou evolução dos alunos. |
-| H04 | Personal | Aplicativo totalmente em Português | Qualquer tela do sistema em português (Dashboard, Perfil ou Login). |
-| H05 | Personal | Chat integrado | Tela do chat entre personal e aluno. |
-| H06 | Ambos | Interface Visual baseada em ícones e cores | Dashboard ou tela inicial mostrando a interface. |
+| H01 | Personal | <img width="310" height="757" alt="image" src="https://github.com/user-attachments/assets/e0a3790b-0673-457a-8bd1-066e134f1bbd" /> |
+| H02 | Personal | Dashboard Centralizado |<img width="319" height="769" alt="image" src="https://github.com/user-attachments/assets/8c919739-91ce-4482-8429-4ed6a56c3937" />|
+| H03 | Personal | Relatórios Automáticos de Evolução | <img width="320" height="770" alt="image" src="https://github.com/user-attachments/assets/3d753477-a9c2-44e9-a24e-f50dd88f2018" />|
+| H04 | Personal | Aplicativo totalmente em Português | <img width="303" height="777" alt="image" src="https://github.com/user-attachments/assets/687df030-71fc-472c-ac15-b4131455a73f" />|
+| H05 | Personal | Chat integrado | <img width="301" height="766" alt="image" src="https://github.com/user-attachments/assets/10012431-2247-40e0-8d52-64b3c5ce783d" />|
+| H06 | Ambos | Interface Visual baseada em ícones e cores | <img width="323" height="772" alt="image" src="https://github.com/user-attachments/assets/414fbb2f-c640-43af-8417-c3c2b46353c4" />|
 | H07 | Ambos | Tutorial das funções críticas | Tela inicial ou tela de ajuda/tutorial. |
-| H08 | Personal | Atalhos de teclado e gestos | Tela desktop de gerenciamento de cronogramas (caso implementado). |
+| H08 | Personal | Atalhos de teclado e gestos | <img width="306" height="69" alt="image" src="https://github.com/user-attachments/assets/91608411-83a7-4e47-a4e0-e8db9e76cfcd" />|
 | H09 | Personal | Alerta de ausência de alunos | Tela de notificações ou lista de alunos com alerta. |
 | H10 | Aluno | Vídeos explicativos dos exercícios | Tela de treino mostrando o vídeo ou botão para assistir ao exercício. |
 | H11 | Aluno | Registro de cargas e repetições | Tela do treino registrando séries, repetições e cargas. |
@@ -26,16 +26,16 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H14 | Aluno | (Conforme descrição da história) | Tela correspondente à funcionalidade implementada. |
 | H15 | Aluno | Compartilhar conquistas nas redes sociais | Tela contendo botão ou opção de compartilhamento. |
 | H16 | GitHub | Organização do Backlog | Print do GitHub Projects (Kanban). |
-| H17 | Ambos | Acessibilidade Visual | Tela mostrando recursos de acessibilidade (tema, contraste, fonte etc.). |
+| H17 | Ambos | Acessibilidade Visual | <img width="330" height="775" alt="image" src="https://github.com/user-attachments/assets/d797d663-97ab-454d-9ce8-0c510df6e9b1" />|
 | H18 | Aluno | Comandos de voz para cronômetro | Tela do cronômetro com comando de voz. |
 | H19 | Aluno | Descrições em áudio dos exercícios | Tela do exercício com recurso de áudio. |
 | H20 | Aluno | Feedback vibratório | Tela do treino ou cronômetro onde o recurso é utilizado. |
-| H21 | Personal | Cadastro de novo aluno | Tela de cadastro de alunos. |
+| H21 | Personal | Cadastro de novo aluno | <img width="332" height="772" alt="image" src="https://github.com/user-attachments/assets/0d8081fb-e531-4d3c-9ad2-38c27fb273ba" />|
 | H22 | Aluno | Relatório semanal/mensal | Tela de geração ou visualização de relatórios. |
 | H23 | Aluno | Gráficos de progresso | Tela com gráficos de cargas, frequência e calorias. |
 | H24 | Aluno | Ficha personalizada do dia | Tela "Meu Treino" ou ficha diária. |
 | H25 | Aluno | Lembretes de treino | Tela de notificações ou configurações de lembretes. |
-| H26 | Personal | Lista de mensalidades pendentes | Tela financeira/lista de alunos inadimplentes. |
+| H26 | Personal | Lista de mensalidades pendentes | <img width="323" height="772" alt="image" src="https://github.com/user-attachments/assets/415c9c38-7a8a-47cc-b744-b376e8d1e733" />|
 | H27 | Personal | Registrar mensalidade recebida | Tela financeira com opção de confirmar pagamento. |
-| H28 | Ambos | Login com e-mail e senha | Tela de Login. |
-| H29 | Ambos | Recuperação de senha | Tela "Esqueci minha senha". |
+| H28 | Ambos | Login com e-mail e senha | <img width="293" height="757" alt="image" src="https://github.com/user-attachments/assets/a274deb6-2ffc-4d0d-bc0a-6a4dc399d772" />|
+| H29 | Ambos | Recuperação de senha |<img width="295" height="760" alt="image" src="https://github.com/user-attachments/assets/26412b0c-0719-416d-8d3f-6c7988bb6729" />|
