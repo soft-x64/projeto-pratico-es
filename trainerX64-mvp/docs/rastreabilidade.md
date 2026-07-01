@@ -10,7 +10,7 @@ Cada item desta documentação contém a identificação da História de Usuári
 
 | História | Perfil | Funcionalidade | Evidência (Print) |
 |----------|--------|----------------|-------------------|
-| H01 | Personal | <img width="310" height="757" alt="image" src="https://github.com/user-attachments/assets/e0a3790b-0673-457a-8bd1-066e134f1bbd" /> |
+| H01 | Personal | |<img width="310" height="757" alt="image" src="https://github.com/user-attachments/assets/e0a3790b-0673-457a-8bd1-066e134f1bbd" /> |
 | H02 | Personal | Dashboard Centralizado |<img width="319" height="769" alt="image" src="https://github.com/user-attachments/assets/8c919739-91ce-4482-8429-4ed6a56c3937" />|
 | H03 | Personal | Relatórios Automáticos de Evolução | <img width="320" height="770" alt="image" src="https://github.com/user-attachments/assets/3d753477-a9c2-44e9-a24e-f50dd88f2018" />|
 | H04 | Personal | Aplicativo totalmente em Português | <img width="303" height="777" alt="image" src="https://github.com/user-attachments/assets/687df030-71fc-472c-ac15-b4131455a73f" />|
