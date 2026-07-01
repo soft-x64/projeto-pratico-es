@@ -22,7 +22,7 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H10 | Aluno | Vídeos explicativos dos exercícios | Tela de treino mostrando o vídeo ou botão para assistir ao exercício. |
 | H11 | Aluno | Registro de cargas e repetições | <img width="328" height="761" alt="image" src="https://github.com/user-attachments/assets/e512c1b6-96b4-48e1-b0c1-28d431877f89" />|
 | H12 | Aluno | Notificações de lembrete | <img width="329" height="753" alt="image" src="https://github.com/user-attachments/assets/c873562b-778a-498c-b64c-c0e3b5b32827" />|
-| H13 | Aluno | Gráficos de evolução física |<img width="289" height="405" alt="image" src="https://github.com/user-attachments/assets/2403dd53-08e5-493b-9e52-a1e65b61a473" />|
+| H13 | Aluno | Gráficos de evolução física |<img width="280" height="154" alt="image" src="https://github.com/user-attachments/assets/e313c5f6-049e-4a82-a04d-8a801bcaae8b" />|
 | H16 | GitHub | Organização do Backlog | Print do GitHub Projects (Kanban). |
 | H17 | Ambos | Acessibilidade Visual | <img width="288" height="215" alt="image" src="https://github.com/user-attachments/assets/fd08a6d3-55a5-4798-beda-50f013784b8d" />|
 | H18 | Aluno | Comandos de voz para cronômetro | Tela do cronômetro com comando de voz. |
