@@ -34,9 +34,9 @@ Cada item desta documentação contém a identificação da História de Usuári
 
 ### Tabela de Rastreabilidade por Página (Tela do App)
 
-| Tela / Página do App | Evidência (Print) | Perfil | Histórias Atendidas | Funções Comprovadas no Print |
+| Tela / Página do App | Evidência| Perfil | Histórias Atendidas | Funções  |
 | :--- | :--- | :--- | :--- | :--- |
-| **1. Login e Acesso** | `image_9e8d57.png` | Ambos | H04, H28, H29 | • Campos de e-mail e senha para autenticação.<br>• Botão "Esqueceu sua senha?".<br>• Interface traduzida totalmente para o Português. |
+| **1. Login e Acesso** | <img width="353" height="753" alt="image" src="https://github.com/user-attachments/assets/b247e1ae-794c-475f-a7dc-a211863b0371" />| Ambos | H04, H28, H29 | • Campos de e-mail e senha para autenticação.<br>• Botão "Esqueceu sua senha?".<br>• Interface traduzida totalmente para o Português. |
 | **2. Dashboard (Início)** | `image_9edf94.png` | Aluno | H04, H06, H24 | • Boas-vindas personalizadas ("Olá, Gustavo!").<br>• Atalhos rápidos para os treinos do dia ("Upper", "Push 1").<br>• Identidade visual baseada em cores (verde/escuro) e ícones de navegação. |
 | **3. Progresso** | `image_9edfd6.png` | Aluno | H13, H22, H23 | • Gráfico linear de "Evolução de peso" ao longo dos meses.<br>• Formulário para registro de medidas (peso, altura, cintura, braço, perna). |
 | **4. Chat Integrado** | `image_9ee2ba.png` | Ambos | H05 | • Chat de mensagens em formato de balões para comunicação direta entre o aluno (Gustavo) e o personal (Rafael). |
