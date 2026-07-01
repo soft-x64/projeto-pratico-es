@@ -10,23 +10,17 @@ Cada item desta documentação contém a identificação da História de Usuári
 
 | História | Perfil | Funcionalidade | Evidência (Print) |
 |----------|--------|----------------|-------------------|
-| H01 | Personal | |<img width="310" height="757" alt="image" src="https://github.com/user-attachments/assets/e0a3790b-0673-457a-8bd1-066e134f1bbd" /> |
-| H02 | Personal | Dashboard Centralizado |<img width="319" height="769" alt="image" src="https://github.com/user-attachments/assets/8c919739-91ce-4482-8429-4ed6a56c3937" />|
-| H03 | Personal | Relatórios Automáticos de Evolução | <img width="320" height="770" alt="image" src="https://github.com/user-attachments/assets/3d753477-a9c2-44e9-a24e-f50dd88f2018" />|
-| H04 | Personal | Aplicativo totalmente em Português | <img width="303" height="777" alt="image" src="https://github.com/user-attachments/assets/687df030-71fc-472c-ac15-b4131455a73f" />|
-| H05 | Personal | Chat integrado | <img width="301" height="766" alt="image" src="https://github.com/user-attachments/assets/10012431-2247-40e0-8d52-64b3c5ce783d" />|
-| H06 | Ambos | Interface Visual baseada em ícones e cores | <img width="323" height="772" alt="image" src="https://github.com/user-attachments/assets/414fbb2f-c640-43af-8417-c3c2b46353c4" />|
-| H07 | Ambos | Tutorial das funções críticas | Tela inicial ou tela de ajuda/tutorial. |
-| H08 | Personal | Atalhos de teclado e gestos |<img width="311" height="76" alt="image" src="https://github.com/user-attachments/assets/59f82539-fb59-41a6-bf15-d3083091b0f8" />|
-| H09 | Personal | Alerta de ausência de alunos | Tela de notificações ou lista de alunos com alerta. |
-| H10 | Aluno | Vídeos explicativos dos exercícios | Tela de treino mostrando o vídeo ou botão para assistir ao exercício. |
+| H01 | Personal |Treinos Padronizados |<img width="295" height="644" alt="image" src="https://github.com/user-attachments/assets/6bd44beb-cf9c-4d9f-8547-40657fe8f7f2" />|
+| H02 | Personal | Dashboard Centralizado |<img width="279" height="467" alt="image" src="https://github.com/user-attachments/assets/499656ec-f97a-4492-aae4-4386bb888851" />|
+| H03 | Personal | Relatórios Automáticos de Evolução |<img width="253" height="405" alt="image" src="https://github.com/user-attachments/assets/57b022b8-16ff-4919-88df-37cccb0817ee" />|
+| H04 | Personal | Aplicativo totalmente em Português |<img width="293" height="168" alt="image" src="https://github.com/user-attachments/assets/1c1a154e-e374-4b53-a5a0-f358d4c00cad" />|
+| H05 | Personal | Chat integrado | <img width="313" height="648" alt="image" src="https://github.com/user-attachments/assets/98b3d43f-dfcf-4f42-8d70-5100295b4d50" />|
+| H06 | Ambos | Interface Visual baseada em ícones e cores | <img width="283" height="228" alt="image" src="https://github.com/user-attachments/assets/8af70593-d446-4276-babd-a5729e812f31" />|
+| H09 | Personal | Alerta de ausência de alunos |<img width="305" height="239" alt="image" src="https://github.com/user-attachments/assets/dae43acc-f342-42db-990d-f1b5f8f442c9" />|
 | H11 | Aluno | Registro de cargas e repetições | <img width="280" height="248" alt="image" src="https://github.com/user-attachments/assets/9307c8f0-078f-461e-afce-169d7cafc0ff" />|
 | H12 | Aluno | Notificações de lembrete | <img width="311" height="393" alt="image" src="https://github.com/user-attachments/assets/524979ea-cb4a-4009-ad72-83b7b68a1662" />|
 | H13 | Aluno | Gráficos de evolução física |<img width="280" height="154" alt="image" src="https://github.com/user-attachments/assets/e313c5f6-049e-4a82-a04d-8a801bcaae8b" />|
-| H16 | GitHub | Organização do Backlog | Print do GitHub Projects (Kanban). |
 | H17 | Ambos | Acessibilidade Visual | <img width="288" height="215" alt="image" src="https://github.com/user-attachments/assets/fd08a6d3-55a5-4798-beda-50f013784b8d" />|
-| H18 | Aluno | Comandos de voz para cronômetro | Tela do cronômetro com comando de voz. |
-| H19 | Aluno | Descrições em áudio dos exercícios | Tela do exercício com recurso de áudio. |
 | H20 | Aluno | Feedback vibratório | <img width="321" height="341" alt="image" src="https://github.com/user-attachments/assets/fe38b054-9d54-464d-b9c0-13558f3e9910" />|
 | H21 | Personal | Cadastro de novo aluno |<img width="284" height="480" alt="image" src="https://github.com/user-attachments/assets/23ad2c67-729f-4d37-a601-ee6fc3763b0c" />|
 | H22 | Aluno | Relatório semanal/mensal |<img width="296" height="162" alt="image" src="https://github.com/user-attachments/assets/8c53ebd2-6c50-4955-9a91-1ab0b76c5385" />|
@@ -34,6 +28,6 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H24 | Aluno | Ficha personalizada do dia |<img width="280" height="290" alt="image" src="https://github.com/user-attachments/assets/69d17512-dec3-415b-b9b3-dddab5f63baf" />|
 | H25 | Aluno | Lembretes de treino | <img width="328" height="352" alt="image" src="https://github.com/user-attachments/assets/f79a8b66-d7f6-4dea-83ea-72c31b63168b" />|
 | H26 | Personal | Lista de mensalidades pendentes | <img width="314" height="311" alt="image" src="https://github.com/user-attachments/assets/64287871-3394-4086-aeb7-ebb14fd925a9" />|
-| H27 | Personal | Registrar mensalidade recebida | |
+| H27 | Personal | Registrar mensalidade recebida | <img width="293" height="469" alt="image" src="https://github.com/user-attachments/assets/09e6ee22-af67-42db-9344-2bb805c6f97e" />|
 | H28 | Ambos | Login com e-mail e senha | <img width="293" height="757" alt="image" src="https://github.com/user-attachments/assets/a274deb6-2ffc-4d0d-bc0a-6a4dc399d772" />|
 | H29 | Ambos | Recuperação de senha |<img width="295" height="760" alt="image" src="https://github.com/user-attachments/assets/26412b0c-0719-416d-8d3f-6c7988bb6729" />|
