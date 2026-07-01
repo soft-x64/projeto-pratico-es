@@ -8,12 +8,11 @@
 | H04 | Aplicativo em Português | <img width="453" height="753" alt="image" src="https://github.com/user-attachments/assets/bdeb014b-a540-42dc-bca9-4474b73d5c25" /> |
 | H06 | Interface Visual Baseada em Ícones e Cores | <img width="505" height="775" alt="image" src="https://github.com/user-attachments/assets/028c0859-99d5-492d-ae01-63a0bf7afee5" />|
 | H07 | Funções Críticas para Tutorial | <img width="326" height="773" alt="image" src="https://github.com/user-attachments/assets/a3a2e79b-1bf7-467a-9350-834f679a0845" />|
-| H09 | Alerta de Ausência | prints/dashboard.png |
-| H10 | Vídeos Explicativos dos Exercícios | prints/treinos.png |
+| H09 | Alerta de Ausência | <img width="297" height="774" alt="image" src="https://github.com/user-attachments/assets/9df969c2-0020-4575-b0be-717e94a66bb8" />|
 | H11 | Registro de Cargas e Repetições | <img width="301" height="764" alt="image" src="https://github.com/user-attachments/assets/5007f767-cac0-4fbb-bab6-63fd1d6c50ea" />|
 | H12 | Notificações de Lembrete | <img width="321" height="755" alt="image" src="https://github.com/user-attachments/assets/2ba1fa14-13d4-4441-84b0-e5cce9f81d68" />|
 | H16 | Organização do Backlog | GitHub Projects |
-| H17 | Acessibilidade Visual | prints/dashboard.png |
+| H17 | Acessibilidade Visual |<img width="301" height="777" alt="image" src="https://github.com/user-attachments/assets/fcf28861-de94-46fe-8ab6-bc6654589c06" />|
 | H18 | Comandos de Voz para Cronômetro | <img width="319" height="777" alt="image" src="https://github.com/user-attachments/assets/ad8d3bee-c0d5-4119-b51a-8dfaba27424c" />|
 | H20 | Feedback Vibratório | p<img width="346" height="757" alt="image" src="https://github.com/user-attachments/assets/5bf1d467-c957-4d95-a0d5-f2634f0a61d9" />|
 
