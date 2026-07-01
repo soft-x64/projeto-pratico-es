@@ -22,14 +22,12 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H10 | Aluno | Vídeos explicativos dos exercícios | Tela de treino mostrando o vídeo ou botão para assistir ao exercício. |
 | H11 | Aluno | Registro de cargas e repetições | <img width="328" height="761" alt="image" src="https://github.com/user-attachments/assets/e512c1b6-96b4-48e1-b0c1-28d431877f89" />|
 | H12 | Aluno | Notificações de lembrete | <img width="329" height="753" alt="image" src="https://github.com/user-attachments/assets/c873562b-778a-498c-b64c-c0e3b5b32827" />|
-| H13 | Aluno | Gráficos de evolução física |<img width="307" height="776" alt="image" src="https://github.com/user-attachments/assets/99f5ae10-0fb0-4a61-835e-345912818a73" />|
-| H14 | Aluno | (Conforme descrição da história) | Tela correspondente à funcionalidade implementada. |
-| H15 | Aluno | Compartilhar conquistas nas redes sociais | Tela contendo botão ou opção de compartilhamento. |
+| H13 | Aluno | Gráficos de evolução física |<img width="289" height="405" alt="image" src="https://github.com/user-attachments/assets/2403dd53-08e5-493b-9e52-a1e65b61a473" />|
 | H16 | GitHub | Organização do Backlog | Print do GitHub Projects (Kanban). |
-| H17 | Ambos | Acessibilidade Visual | <img width="330" height="775" alt="image" src="https://github.com/user-attachments/assets/d797d663-97ab-454d-9ce8-0c510df6e9b1" />|
+| H17 | Ambos | Acessibilidade Visual | <img width="288" height="215" alt="image" src="https://github.com/user-attachments/assets/fd08a6d3-55a5-4798-beda-50f013784b8d" />|
 | H18 | Aluno | Comandos de voz para cronômetro | Tela do cronômetro com comando de voz. |
 | H19 | Aluno | Descrições em áudio dos exercícios | Tela do exercício com recurso de áudio. |
-| H20 | Aluno | Feedback vibratório | <img width="363" height="771" alt="image" src="https://github.com/user-attachments/assets/51a7ffdc-73c1-45c3-b638-7a46e003677a" />|
+| H20 | Aluno | Feedback vibratório | <img width="321" height="341" alt="image" src="https://github.com/user-attachments/assets/fe38b054-9d54-464d-b9c0-13558f3e9910" />|
 | H21 | Personal | Cadastro de novo aluno |<img width="284" height="480" alt="image" src="https://github.com/user-attachments/assets/23ad2c67-729f-4d37-a601-ee6fc3763b0c" />|
 | H22 | Aluno | Relatório semanal/mensal |<img width="296" height="162" alt="image" src="https://github.com/user-attachments/assets/8c53ebd2-6c50-4955-9a91-1ab0b76c5385" />|
 | H23 | Aluno | Gráficos de progresso | <img width="298" height="242" alt="image" src="https://github.com/user-attachments/assets/c5e2f447-4e28-4dc6-88d7-b13ec094b04c" />|
