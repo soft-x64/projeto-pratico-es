@@ -1,8 +1,4 @@
 # 🗺️ Rastreabilidade — Histórias × Telas — TrainerX64
-
-> **Engenharia de Software I · ICET/UFAM · Prof. Dr. Andrey Rodrigues**
-> Documento de rastreabilidade entre as histórias de usuário do backlog e as telas implementadas no MVP.
-
 ---
 
 ## Sumário
