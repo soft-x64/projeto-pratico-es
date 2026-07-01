@@ -11,7 +11,7 @@
 | H09 | Alerta de Ausência | <img width="297" height="774" alt="image" src="https://github.com/user-attachments/assets/9df969c2-0020-4575-b0be-717e94a66bb8" />|
 | H11 | Registro de Cargas e Repetições | <img width="301" height="764" alt="image" src="https://github.com/user-attachments/assets/5007f767-cac0-4fbb-bab6-63fd1d6c50ea" />|
 | H12 | Notificações de Lembrete | <img width="321" height="755" alt="image" src="https://github.com/user-attachments/assets/2ba1fa14-13d4-4441-84b0-e5cce9f81d68" />|
-| H16 | Organização do Backlog | GitHub Projects |
+| H16 | Organização do Backlog |<img width="1137" height="601" alt="image" src="https://github.com/user-attachments/assets/d4e20964-43f9-40c9-99e0-26e2f25cc5b4" />|
 | H17 | Acessibilidade Visual |<img width="301" height="777" alt="image" src="https://github.com/user-attachments/assets/fcf28861-de94-46fe-8ab6-bc6654589c06" />|
 | H18 | Comandos de Voz para Cronômetro | <img width="319" height="777" alt="image" src="https://github.com/user-attachments/assets/ad8d3bee-c0d5-4119-b51a-8dfaba27424c" />|
 | H20 | Feedback Vibratório | p<img width="346" height="757" alt="image" src="https://github.com/user-attachments/assets/5bf1d467-c957-4d95-a0d5-f2634f0a61d9" />|
