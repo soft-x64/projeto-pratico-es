@@ -7,7 +7,7 @@
 | H03 | Relatórios Automáticos de Evolução | <img width="352" height="755" alt="image" src="https://github.com/user-attachments/assets/c21f29eb-34fd-4d7e-9189-58951683da1a" /> |
 | H04 | Aplicativo em Português | <img width="453" height="753" alt="image" src="https://github.com/user-attachments/assets/bdeb014b-a540-42dc-bca9-4474b73d5c25" /> |
 | H06 | Interface Visual Baseada em Ícones e Cores | <img width="505" height="775" alt="image" src="https://github.com/user-attachments/assets/028c0859-99d5-492d-ae01-63a0bf7afee5" />|
-| H07 | Funções Críticas para Tutorial | <img width="355" height="748" alt="image" src="https://github.com/user-attachments/assets/c0d8b003-0648-4747-babd-d546183841b1" /> |
+| H07 | Funções Críticas para Tutorial | <img width="326" height="773" alt="image" src="https://github.com/user-attachments/assets/a3a2e79b-1bf7-467a-9350-834f679a0845" />|
 | H09 | Alerta de Ausência | prints/dashboard.png |
 | H10 | Vídeos Explicativos dos Exercícios | prints/treinos.png |
 | H11 | Registro de Cargas e Repetições | <img width="301" height="764" alt="image" src="https://github.com/user-attachments/assets/5007f767-cac0-4fbb-bab6-63fd1d6c50ea" />|
