@@ -31,3 +31,16 @@ Cada item desta documentação contém a identificação da História de Usuári
 | H27 | Personal | Registrar mensalidade recebida | <img width="293" height="469" alt="image" src="https://github.com/user-attachments/assets/09e6ee22-af67-42db-9344-2bb805c6f97e" />|
 | H28 | Ambos | Login com e-mail e senha | <img width="293" height="757" alt="image" src="https://github.com/user-attachments/assets/a274deb6-2ffc-4d0d-bc0a-6a4dc399d772" />|
 | H29 | Ambos | Recuperação de senha |<img width="295" height="760" alt="image" src="https://github.com/user-attachments/assets/26412b0c-0719-416d-8d3f-6c7988bb6729" />|
+
+### Tabela de Rastreabilidade por Página (Tela do App)
+
+| Tela / Página do App | Evidência (Print) | Perfil | Histórias Atendidas | Funções Comprovadas no Print |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Login e Acesso** | `image_9e8d57.png` | Ambos | H04, H28, H29 | • Campos de e-mail e senha para autenticação.<br>• Botão "Esqueceu sua senha?".<br>• Interface traduzida totalmente para o Português. |
+| **2. Dashboard (Início)** | `image_9edf94.png` | Aluno | H04, H06, H24 | • Boas-vindas personalizadas ("Olá, Gustavo!").<br>• Atalhos rápidos para os treinos do dia ("Upper", "Push 1").<br>• Identidade visual baseada em cores (verde/escuro) e ícones de navegação. |
+| **3. Progresso** | `image_9edfd6.png` | Aluno | H13, H22, H23 | • Gráfico linear de "Evolução de peso" ao longo dos meses.<br>• Formulário para registro de medidas (peso, altura, cintura, braço, perna). |
+| **4. Chat Integrado** | `image_9ee2ba.png` | Ambos | H05 | • Chat de mensagens em formato de balões para comunicação direta entre o aluno (Gustavo) e o personal (Rafael). |
+| **5. Execução do Treino** | `image_9ee2f4.png` | Aluno | H10, H11 | • Listagem de exercícios com séries, KG e repetições.<br>• Botão "Ver execução" para carregar vídeos explicativos.<br>• Botão de "Concluído" para salvar as cargas e repetições executadas. |
+| **6. Lista de Treinos** | `image_9ee334.png` | Aluno | H24 | • Listagem completa de rotinas disponíveis criadas pelo personal ("Upper", "Push 1", "Pull 1", etc.).<br>• Filtros por objetivo (Hipertrofia, Emagrecimento). |
+| **7. Perfil e Configurações** | `image_9ee35a.png` | Ambos | H12, H17, H19, H20, H25 | • Chaves (*toggles*) para ativar/desativar lembretes de treino.<br>• Menu de Acessibilidade Visual (Tema de Alto contraste e Texto ampliado).<br>• Recursos de "Leitura por voz" (áudio) e "Feedback sonoro/vibratório". |
+| **8. Central de Notificações**| `image_9ee396.png` | Ambos | H12, H25, H26 | • Histórico de avisos do sistema ("Novo treino publicado", "Treino disponível").<br>• Alerta financeiro de "Mensalidade pendente" com prazo de vencimento. |
