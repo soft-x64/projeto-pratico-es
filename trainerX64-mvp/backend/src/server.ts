@@ -4,6 +4,7 @@ import express from "express";
 
 import { alunosRoutes } from "./routes/alunos.routes";
 import treinosRoutes from "./routes/treinos.routes";
+import { avaliacoesRoutes } from "./routes/avaliacoes.routes";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.get("/", (request, response) => {
 app.use("/alunos", alunosRoutes);
 
 app.use("/treinos", treinosRoutes);
+
+app.use(avaliacoesRoutes);
 
 const PORT = process.env.PORT || 3333;
 
