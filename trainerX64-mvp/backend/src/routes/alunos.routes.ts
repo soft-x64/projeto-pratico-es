@@ -1,14 +1,23 @@
 import { Router } from "express";
+
 import {
+  atualizarAluno,
   buscarAlunoPorId,
   criarAluno,
+  excluirAluno,
   listarAlunos,
 } from "../controllers/alunos.controller";
 
-const router = Router();
+const alunosRoutes = Router();
 
-router.get("/", listarAlunos);
-router.get("/:id", buscarAlunoPorId);
-router.post("/", criarAluno);
+alunosRoutes.get("/", listarAlunos);
 
-export default router;
+alunosRoutes.get("/:id", buscarAlunoPorId);
+
+alunosRoutes.post("/", criarAluno);
+
+alunosRoutes.put("/:id", atualizarAluno);
+
+alunosRoutes.delete("/:id", excluirAluno);
+
+export { alunosRoutes };

@@ -1,4 +1,9 @@
-import { alunoService } from "../services/alunoService";
+import {
+  alunoService,
+  type AtualizarAlunoDTO,
+  type CriarAlunoDTO,
+  type StatusAluno,
+} from "../services/alunoService";
 import { useState, useEffect } from "react";
 import logoImg from "@/imports/trainerx64_logo_nome_melhorada.png";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
@@ -35,9 +40,18 @@ interface Workout {
   exerciseCount: number; status: "disponivel" | "andamento" | "concluido"; exercises: Exercise[];
 }
 interface Student {
-  id: string; name: string; status: "em-dia" | "pendente" | "mensalidade" | "sem-atividade";
-  workout: string; lastSeen: string; weight: number; height: number; age: number;
-  goal: string; level: string;
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  status: "em-dia" | "pendente" | "mensalidade" | "sem-atividade";
+  workout?: string;
+  lastSeen: string;
+  weight: number;
+  height: number;
+  age: number;
+  goal: string;
+  level: string;
 }
 interface Notif {
   id: string; type: "treino" | "financeiro" | "mensagem" | "evolucao";
@@ -112,11 +126,11 @@ interface ChatMsg {
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
 const STUDENTS: Student[] = [
-  { id:"s1", name:"Gustavo", status:"em-dia",        workout:"Upper",     lastSeen:"Hoje",   weight:82, height:178, age:27, goal:"Hipertrofia",    level:"Intermediário" },
-  { id:"s2", name:"Serena",  status:"pendente",      workout:"Full Body", lastSeen:"Ontem",  weight:65, height:165, age:24, goal:"Emagrecimento",  level:"Iniciante"     },
-  { id:"s3", name:"Gabriel", status:"mensalidade",   workout:"Pull 1",    lastSeen:"3 dias", weight:75, height:172, age:30, goal:"Condicionamento",level:"Avançado"      },
-  { id:"s4", name:"Lucas",   status:"sem-atividade", workout:"Leg Day",   lastSeen:"7 dias", weight:90, height:182, age:32, goal:"Hipertrofia",    level:"Intermediário" },
-  { id:"s5", name:"Carla",   status:"em-dia",        workout:"Push 2",    lastSeen:"Hoje",   weight:58, height:160, age:26, goal:"Saúde",          level:"Iniciante"     },
+  { id:"s1", name:"Gustavo", email:"gustavo@trainerx64.local", phone:"92999990001", status:"em-dia",        workout:"Upper",     lastSeen:"Hoje",   weight:82, height:178, age:27, goal:"Hipertrofia",    level:"Intermediário" },
+  { id:"s2", name:"Serena", email:"serena@trainerx64.local", phone:"92999990002", status:"pendente",      workout:"Full Body", lastSeen:"Ontem",  weight:65, height:165, age:24, goal:"Emagrecimento",  level:"Iniciante"     },
+  { id:"s3", name:"Gabriel", email:"gabriel@trainerx64.local", phone:"92999990003", status:"mensalidade",   workout:"Pull 1",    lastSeen:"3 dias", weight:75, height:172, age:30, goal:"Condicionamento",level:"Avançado"      },
+  { id:"s4", name:"Lucas", email:"lucas@trainerx64.local", phone:"92999990004", status:"sem-atividade", workout:"Leg Day",   lastSeen:"7 dias", weight:90, height:182, age:32, goal:"Hipertrofia",    level:"Intermediário" },
+  { id:"s5", name:"Carla", email:"carla@trainerx64.local", phone:"92999990005", status:"em-dia",        workout:"Push 2",    lastSeen:"Hoje",   weight:58, height:160, age:26, goal:"Saúde",          level:"Iniciante"     },
 ];
 
 const WORKOUTS: Workout[] = [
@@ -1065,14 +1079,298 @@ function AlunoDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
   );
 }
 
+// ─── Formulário de Aluno ──────────────────────────────────────────────────────
+
+function StudentInput({
+  label,
+  value,
+  onChange,
+  type = "text",
+  required = false,
+  min,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  required?: boolean;
+  min?: number;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-sm font-montserrat font-semibold text-muted-foreground">
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value}
+        required={required}
+        min={min}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none transition-colors focus:border-accent"
+      />
+    </div>
+  );
+}
+
+function StudentForm({
+  student,
+  saving,
+  onCancel,
+  onSubmit,
+}: {
+  student?: Student | null;
+  saving: boolean;
+  onCancel: () => void;
+  onSubmit: (
+    data: CriarAlunoDTO | AtualizarAlunoDTO,
+  ) => Promise<boolean>;
+}) {
+  const [nome, setNome] = useState(student?.name ?? "");
+  const [email, setEmail] = useState(student?.email ?? "");
+  const [telefone, setTelefone] = useState(student?.phone ?? "");
+  const [status, setStatus] = useState<StatusAluno>(
+    student?.status ?? "em-dia",
+  );
+  const [treino, setTreino] = useState(student?.workout ?? "");
+  const [objetivo, setObjetivo] = useState(student?.goal ?? "");
+  const [nivel, setNivel] = useState(student?.level ?? "Iniciante");
+  const [peso, setPeso] = useState(student?.weight?.toString() ?? "");
+  const [altura, setAltura] = useState(student?.height?.toString() ?? "");
+  const [idade, setIdade] = useState(student?.age?.toString() ?? "");
+  const [error, setError] = useState("");
+
+  const ac = AC("personal");
+
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+    setError("");
+
+    if (
+      !nome.trim() ||
+      !email.trim() ||
+      !objetivo.trim() ||
+      !nivel.trim() ||
+      !peso ||
+      !altura ||
+      !idade
+    ) {
+      setError("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email.trim())) {
+      setError("Informe um e-mail válido.");
+      return;
+    }
+
+    if (
+      Number(peso) <= 0 ||
+      Number(altura) <= 0 ||
+      Number(idade) <= 0
+    ) {
+      setError("Peso, altura e idade devem ser maiores que zero.");
+      return;
+    }
+
+    const sucesso = await onSubmit({
+      nome: nome.trim(),
+      email: email.trim().toLowerCase(),
+      telefone: telefone.trim() || undefined,
+      status,
+      treino: treino.trim() || undefined,
+      objetivo: objetivo.trim(),
+      nivel,
+      peso: Number(peso),
+      altura: Number(altura),
+      idade: Number(idade),
+    });
+
+    if (sucesso) {
+      onCancel();
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label={student ? "Editar aluno" : "Cadastrar aluno"}
+    >
+      <div className="w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl bg-background border border-border p-6 pb-10">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="font-montserrat font-bold text-2xl text-foreground">
+              {student ? "Editar aluno" : "Novo aluno"}
+            </h2>
+            <p className="text-sm text-muted-foreground font-inter mt-1">
+              {student
+                ? "Atualize os dados cadastrados."
+                : "Preencha os dados para cadastrar um novo aluno."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={saving}
+            className="w-11 h-11 rounded-2xl bg-card border border-border flex items-center justify-center text-muted-foreground disabled:opacity-50"
+            aria-label="Fechar formulário"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <StudentInput
+            label="Nome completo"
+            value={nome}
+            onChange={setNome}
+            required
+          />
+
+          <StudentInput
+            label="E-mail"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            required
+          />
+
+          <StudentInput
+            label="Telefone"
+            value={telefone}
+            onChange={setTelefone}
+          />
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground">
+              Status
+            </label>
+            <select
+              value={status}
+              onChange={(event) =>
+                setStatus(event.target.value as StatusAluno)
+              }
+              className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none focus:border-accent"
+            >
+              <option value="em-dia">Em dia</option>
+              <option value="pendente">Avaliação pendente</option>
+              <option value="mensalidade">Mensalidade</option>
+              <option value="sem-atividade">Sem atividade</option>
+            </select>
+          </div>
+
+          <StudentInput
+            label="Treino atual"
+            value={treino}
+            onChange={setTreino}
+          />
+
+          <StudentInput
+            label="Objetivo"
+            value={objetivo}
+            onChange={setObjetivo}
+            required
+          />
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground">
+              Nível
+            </label>
+            <select
+              value={nivel}
+              onChange={(event) => setNivel(event.target.value)}
+              className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none focus:border-accent"
+            >
+              <option value="Iniciante">Iniciante</option>
+              <option value="Intermediário">Intermediário</option>
+              <option value="Avançado">Avançado</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <StudentInput
+              label="Peso (kg)"
+              type="number"
+              min={1}
+              value={peso}
+              onChange={setPeso}
+              required
+            />
+            <StudentInput
+              label="Altura (cm)"
+              type="number"
+              min={1}
+              value={altura}
+              onChange={setAltura}
+              required
+            />
+            <StudentInput
+              label="Idade"
+              type="number"
+              min={1}
+              value={idade}
+              onChange={setIdade}
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="text-sm text-destructive flex items-center gap-2">
+              <AlertCircle size={16} />
+              {error}
+            </p>
+          )}
+
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <SBtn onClick={onCancel}>Cancelar</SBtn>
+            <button
+              type="submit"
+              disabled={saving}
+              className="h-14 rounded-2xl font-montserrat font-bold text-sm text-black flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+              style={{ background: saving ? "#2a2a2a" : ac }}
+            >
+              {saving ? (
+                <>
+                  <RefreshCw size={18} className="animate-spin text-white" />
+                  <span className="text-white">Salvando...</span>
+                </>
+              ) : student ? (
+                "Salvar alterações"
+              ) : (
+                "Cadastrar aluno"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 // ─── Alunos List ──────────────────────────────────────────────────────────────
 
-function AlunosList({ students,onSelect,onCreateStudent,creatingStudent=false }:{students:Student[];onSelect:(s:Student)=>void;onCreateStudent:()=>void;creatingStudent?:boolean}) {
+function AlunosList({
+  students,
+  loading,
+  onSelect,
+  onCreateStudent,
+}: {
+  students: Student[];
+  loading: boolean;
+  onSelect: (student: Student) => void;
+  onCreateStudent: () => void;
+}) {
   const [filter,setFilter]=useState("Todos");
   const [search,setSearch]=useState("");
   const ac=AC("personal");
   const SM:Record<string,string>={"Em dia":"em-dia","Pendente":"pendente","Mensalidade":"mensalidade"};
   const list=students.filter(s=>s.name.toLowerCase().includes(search.toLowerCase())&&(filter==="Todos"||s.status===SM[filter]));
+
   return (
     <div className="min-h-screen bg-background pb-36">
       <div className="px-6 pt-14 pb-4" style={{background:"linear-gradient(180deg,rgba(0,230,118,0.06) 0%,transparent 100%)"}}>
@@ -1080,49 +1378,74 @@ function AlunosList({ students,onSelect,onCreateStudent,creatingStudent=false }:
           <h1 className="font-montserrat font-bold text-3xl text-foreground">Meus Alunos</h1>
           <button
             onClick={onCreateStudent}
-            disabled={creatingStudent}
-            className="w-11 h-11 rounded-2xl flex items-center justify-center text-black transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-11 h-11 rounded-2xl flex items-center justify-center text-black transition-all active:scale-95"
             style={{background:ac}}
-            aria-label="Adicionar aluno"
-            title="Adicionar aluno de teste"
+            aria-label="Cadastrar novo aluno"
+            title="Cadastrar novo aluno"
           >
-            {creatingStudent ? <RefreshCw size={20} className="animate-spin"/> : <UserPlus size={20}/>}
+            <UserPlus size={20}/>
           </button>
         </div>
         <p className="text-muted-foreground text-sm font-inter">{students.length} alunos cadastrados</p>
       </div>
+
       <div className="px-6 mb-3">
         <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12">
           <Search size={18} className="text-muted-foreground"/>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar aluno..."
-            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" aria-label="Buscar aluno"/>
+          <input
+            value={search}
+            onChange={e=>setSearch(e.target.value)}
+            placeholder="Buscar aluno..."
+            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none"
+            aria-label="Buscar aluno"
+          />
           {search&&<button onClick={()=>setSearch("")} aria-label="Limpar"><X size={16} className="text-muted-foreground"/></button>}
         </div>
       </div>
+
       <div className="px-6 mb-4 overflow-x-auto">
         <div className="flex gap-2 pb-1">
           {["Todos","Em dia","Pendente","Mensalidade"].map(f=>(
             <button key={f} onClick={()=>setFilter(f)}
               className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter===f?"text-black":"bg-card border border-border text-muted-foreground"}`}
-              style={filter===f?{background:ac}:undefined} aria-pressed={filter===f}>{f}</button>
+              style={filter===f?{background:ac}:undefined}
+              aria-pressed={filter===f}
+            >
+              {f}
+            </button>
           ))}
         </div>
       </div>
+
       <div className="px-6 flex flex-col gap-2">
-        {list.length===0 ? (
-          <div className="flex flex-col items-center gap-3 py-12"><Users size={40} className="text-muted-foreground"/>
-            <p className="font-inter text-muted-foreground text-center">Nenhum aluno encontrado.</p></div>
+        {loading ? (
+          <div className="flex flex-col items-center gap-3 py-12">
+            <RefreshCw size={32} className="text-muted-foreground animate-spin"/>
+            <p className="font-inter text-muted-foreground text-center">Carregando alunos...</p>
+          </div>
+        ) : list.length===0 ? (
+          <div className="flex flex-col items-center gap-3 py-12">
+            <Users size={40} className="text-muted-foreground"/>
+            <p className="font-inter text-muted-foreground text-center">Nenhum aluno encontrado.</p>
+          </div>
         ) : list.map(s=>(
-          <button key={s.id} onClick={()=>onSelect(s)}
-            className="bg-card border border-border rounded-2xl px-4 py-3.5 flex items-center justify-between w-full hover:border-primary transition-all text-left">
+          <button
+            key={s.id}
+            onClick={()=>onSelect(s)}
+            className="bg-card border border-border rounded-2xl px-4 py-3.5 flex items-center justify-between w-full hover:border-primary transition-all text-left"
+          >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center font-montserrat font-bold text-sm text-black flex-shrink-0"
-                style={{background:s.status==="em-dia"?ac:s.status==="pendente"?"#f59e0b":s.status==="mensalidade"?"#ef4444":"#2a2a2a"}}>
+              <div
+                className="w-11 h-11 rounded-2xl flex items-center justify-center font-montserrat font-bold text-sm text-black flex-shrink-0"
+                style={{background:s.status==="em-dia"?ac:s.status==="pendente"?"#f59e0b":s.status==="mensalidade"?"#ef4444":"#2a2a2a"}}
+              >
                 {s.name[0]}
               </div>
               <div className="min-w-0">
                 <p className="font-montserrat font-bold text-sm text-foreground">{s.name}</p>
-                <p className="text-xs font-inter text-muted-foreground truncate">{s.workout} · Visto {s.lastSeen}</p>
+                <p className="text-xs font-inter text-muted-foreground truncate">
+                  {s.workout || "Sem treino"} · Visto {s.lastSeen}
+                </p>
                 <Badge status={s.status}/>
               </div>
             </div>
@@ -1136,9 +1459,24 @@ function AlunosList({ students,onSelect,onCreateStudent,creatingStudent=false }:
 
 // ─── Aluno Detail ─────────────────────────────────────────────────────────────
 
-function AlunoDetail({ student,onBack,onNav }:{student:Student;onBack:()=>void;onNav:(s:Screen)=>void}) {
+function AlunoDetail({
+  student,
+  onBack,
+  onNav,
+  onEdit,
+  onDelete,
+  deleting,
+}: {
+  student: Student;
+  onBack: () => void;
+  onNav: (s: Screen) => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  deleting: boolean;
+}) {
   const ac=AC("personal");
   const [toast,setToast]=useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
+
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
       {toast&&<Toast message={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
@@ -1146,42 +1484,92 @@ function AlunoDetail({ student,onBack,onNav }:{student:Student;onBack:()=>void;o
         <div className="flex items-center justify-between mb-6">
           <BackBtn onClick={onBack}/>
           <p className="font-montserrat font-semibold text-sm text-muted-foreground">Perfil do Aluno</p>
-          <button aria-label="Mais opções"><MoreVertical size={20} className="text-muted-foreground"/></button>
+          <button onClick={onEdit} aria-label="Editar aluno" title="Editar aluno">
+            <Settings size={20} className="text-muted-foreground"/>
+          </button>
         </div>
+
         <div className="bg-card border border-border rounded-2xl p-5 flex items-center gap-4 mb-5">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center font-montserrat font-bold text-2xl text-black flex-shrink-0"
-            style={{background:ac}}>{student.name[0]}</div>
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center font-montserrat font-bold text-2xl text-black flex-shrink-0"
+            style={{background:ac}}
+          >
+            {student.name[0]}
+          </div>
           <div className="flex-1 min-w-0">
             <h1 className="font-montserrat font-bold text-xl text-foreground">{student.name}</h1>
             <Badge status={student.status}/>
-            <p className="text-xs font-inter text-muted-foreground mt-1">Treino: {student.workout}</p>
+            <p className="text-xs font-inter text-muted-foreground mt-1">
+              Treino: {student.workout || "Sem treino vinculado"}
+            </p>
           </div>
         </div>
+
+        <div className="bg-card border border-border rounded-2xl p-4 mb-5 flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Mail size={16} style={{color:ac}}/>
+            <span className="break-all">{student.email}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <User size={16} style={{color:ac}}/>
+            <span>{student.phone || "Telefone não informado"}</span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <StatCard icon={<Weight size={16}/>} label="Peso"   value={`${student.weight} kg`} color={ac}/>
-          <StatCard icon={<Ruler size={16}/>}  label="Altura" value={`${student.height} cm`} color={ac}/>
-          <StatCard icon={<User size={16}/>}   label="Idade"  value={`${student.age} anos`}  color={ac}/>
+          <StatCard icon={<Weight size={16}/>} label="Peso" value={`${student.weight} kg`} color={ac}/>
+          <StatCard icon={<Ruler size={16}/>} label="Altura" value={`${student.height} cm`} color={ac}/>
+          <StatCard icon={<User size={16}/>} label="Idade" value={`${student.age} anos`} color={ac}/>
         </div>
+
         <div className="grid grid-cols-3 gap-3 mb-5">
-          <StatCard icon={<Star size={16}/>}     label="Nível"    value={student.level}    color={ac}/>
-          <StatCard icon={<Target size={16}/>}   label="Objetivo" value={student.goal}     color={ac}/>
-          <StatCard icon={<Activity size={16}/>} label="Visto"    value={student.lastSeen} color={ac}/>
+          <StatCard icon={<Star size={16}/>} label="Nível" value={student.level} color={ac}/>
+          <StatCard icon={<Target size={16}/>} label="Objetivo" value={student.goal} color={ac}/>
+          <StatCard icon={<Activity size={16}/>} label="Visto" value={student.lastSeen} color={ac}/>
         </div>
+
         <div className="grid grid-cols-2 gap-3 mb-5">
           {[
-            {icon:<Plus size={18}/>,         label:"Criar treino",   action:()=>onNav("criar-treino")},
-            {icon:<TrendingUp size={18}/>,   label:"Ver evolução",   action:()=>onNav("evolution")},
-            {icon:<ClipboardList size={18}/>,label:"Reg. avaliação", action:()=>setToast({msg:"Avaliação registrada com sucesso.",type:"success"})},
-            {icon:<CreditCard size={18}/>,   label:"Mensalidade",    action:()=>setToast({msg:"Status de mensalidade atualizado.",type:"info"})},
+            {icon:<Plus size={18}/>,label:"Criar treino",action:()=>onNav("criar-treino")},
+            {icon:<TrendingUp size={18}/>,label:"Ver evolução",action:()=>onNav("evolution")},
+            {icon:<ClipboardList size={18}/>,label:"Reg. avaliação",action:()=>setToast({msg:"Avaliação registrada com sucesso.",type:"success"})},
+            {icon:<CreditCard size={18}/>,label:"Mensalidade",action:()=>setToast({msg:"Status de mensalidade atualizado.",type:"info"})},
           ].map(a=>(
-            <button key={a.label} onClick={a.action}
-              className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 hover:border-primary transition-all text-left">
+            <button
+              key={a.label}
+              onClick={a.action}
+              className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 hover:border-primary transition-all text-left"
+            >
               <span style={{color:ac}}>{a.icon}</span>
               <span className="text-sm font-inter font-medium text-foreground leading-tight">{a.label}</span>
             </button>
           ))}
         </div>
-        <PBtn onClick={()=>onNav("criar-treino")} ut="personal"><Plus size={20}/> Criar novo treino</PBtn>
+
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="w-full h-14 rounded-2xl font-montserrat font-bold text-base text-black flex items-center justify-center gap-2 transition-all active:scale-95"
+            style={{background:ac}}
+          >
+            <Settings size={19}/> Editar aluno
+          </button>
+
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={deleting}
+            className="w-full h-14 rounded-2xl font-montserrat font-bold text-base border border-destructive text-destructive flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+          >
+            {deleting ? (
+              <RefreshCw size={19} className="animate-spin"/>
+            ) : (
+              <X size={19}/>
+            )}
+            {deleting ? "Excluindo..." : "Excluir aluno"}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1977,45 +2365,104 @@ export default function App() {
   const [selS,setSelS]=useState<Student|null>(null);
   const [modal,setModal]=useState<"terms"|"privacy"|null>(null);
   const [gToast,setGToast]=useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
+
   const [students,setStudents]=useState<Student[]>(STUDENTS);
-  const [creatingStudent,setCreatingStudent]=useState(false);
+  const [loadingStudents,setLoadingStudents]=useState(true);
+  const [savingStudent,setSavingStudent]=useState(false);
+  const [deletingStudent,setDeletingStudent]=useState(false);
+  const [studentFormMode,setStudentFormMode]=useState<"create"|"edit"|null>(null);
 
-  useEffect(() => {
-    alunoService
-      .listarAlunos()
-      .then(setStudents)
-      .catch((error) => {
-        console.error("Erro ao carregar alunos:", error);
-        setGToast({ msg: "Não foi possível carregar alunos da API. Usando dados locais.", type: "info" });
-      });
-  }, []);
+  useEffect(()=>{
+    async function carregarAlunos() {
+      try {
+        setLoadingStudents(true);
+        const alunos=await alunoService.listarAlunos();
+        setStudents(alunos);
+      } catch(error) {
+        console.error("Erro ao carregar alunos:",error);
+        setGToast({
+          msg:error instanceof Error?error.message:"Erro ao carregar alunos.",
+          type:"error",
+        });
+      } finally {
+        setLoadingStudents(false);
+      }
+    }
 
-  async function handleCreateStudent() {
+    carregarAlunos();
+  },[]);
+
+  async function handleCreateStudent(data:CriarAlunoDTO):Promise<boolean> {
     try {
-      setCreatingStudent(true);
-
-      const novoAluno = await alunoService.criarAluno({
-        nome: `Aluno Teste ${students.length + 1}`,
-        status: "em-dia",
-        treino: "Upper",
-        objetivo: "Hipertrofia",
-        nivel: "Iniciante",
-        peso: 70,
-        altura: 175,
-        idade: 22,
+      setSavingStudent(true);
+      const novoAluno=await alunoService.criarAluno(data);
+      setStudents(prev=>[novoAluno,...prev]);
+      setGToast({msg:"Aluno cadastrado com sucesso.",type:"success"});
+      return true;
+    } catch(error) {
+      setGToast({
+        msg:error instanceof Error?error.message:"Erro ao cadastrar aluno.",
+        type:"error",
       });
-
-      setStudents((prev) => [novoAluno, ...prev]);
-      setGToast({ msg: "Aluno cadastrado com sucesso no banco.", type: "success" });
-    } catch (error) {
-      console.error("Erro ao cadastrar aluno:", error);
-      setGToast({ msg: "Erro ao cadastrar aluno. Verifique se backend e banco estão rodando.", type: "error" });
+      return false;
     } finally {
-      setCreatingStudent(false);
+      setSavingStudent(false);
     }
   }
 
-  // Telas focadas (internas) não exibem a barra inferior
+  async function handleUpdateStudent(
+    studentId:string,
+    data:AtualizarAlunoDTO,
+  ):Promise<boolean> {
+    try {
+      setSavingStudent(true);
+      const alunoAtualizado=await alunoService.atualizarAluno(studentId,data);
+
+      setStudents(prev=>
+        prev.map(student=>
+          student.id===studentId?alunoAtualizado:student
+        )
+      );
+
+      setSelS(alunoAtualizado);
+      setGToast({msg:"Aluno atualizado com sucesso.",type:"success"});
+      return true;
+    } catch(error) {
+      setGToast({
+        msg:error instanceof Error?error.message:"Erro ao atualizar aluno.",
+        type:"error",
+      });
+      return false;
+    } finally {
+      setSavingStudent(false);
+    }
+  }
+
+  async function handleDeleteStudent(studentId:string):Promise<void> {
+    const confirmar=window.confirm("Deseja realmente excluir este aluno?");
+
+    if(!confirmar) return;
+
+    try {
+      setDeletingStudent(true);
+      await alunoService.excluirAluno(studentId);
+
+      setStudents(prev=>prev.filter(student=>student.id!==studentId));
+      setSelS(null);
+      setStudentFormMode(null);
+      setScreen("alunos");
+
+      setGToast({msg:"Aluno excluído com sucesso.",type:"success"});
+    } catch(error) {
+      setGToast({
+        msg:error instanceof Error?error.message:"Erro ao excluir aluno.",
+        type:"error",
+      });
+    } finally {
+      setDeletingStudent(false);
+    }
+  }
+
   const navScreens:Screen[]=["dashboard","alunos","workouts","evolution","notifications","chat","profile"];
   const ut=user?.type??"personal";
   const nav=(s:Screen)=>setScreen(s);
@@ -2023,16 +2470,17 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background" style={{fontFamily:"'Inter',sans-serif",maxWidth:"430px",margin:"0 auto",position:"relative"}}>
       {gToast&&<Toast message={gToast.msg} type={gToast.type} onClose={()=>setGToast(null)}/>}
-      {modal==="terms"  &&<Modal title="Termos de Uso"          onClose={()=>setModal(null)}>{TERMS_MD}</Modal>}
+      {modal==="terms"&&<Modal title="Termos de Uso" onClose={()=>setModal(null)}>{TERMS_MD}</Modal>}
       {modal==="privacy"&&<Modal title="Política de Privacidade" onClose={()=>setModal(null)}>{PRIV_MD}</Modal>}
 
-      {screen==="welcome" && (
+      {screen==="welcome"&&(
         <Welcome
           onContinue={()=>setScreen("login")}
           onLogin={()=>setScreen("login")}
         />
       )}
-      {screen==="login" && (
+
+      {screen==="login"&&(
         <Login
           onLogin={u=>{setUser(u);setScreen("dashboard");}}
           onRegister={()=>setScreen("register")}
@@ -2040,30 +2488,106 @@ export default function App() {
           onBack={()=>setScreen("welcome")}
         />
       )}
-      {screen==="register" &&<Register onDone={()=>setScreen("login")} onLogin={()=>setScreen("login")} onShowModal={setModal}/>}
 
-      {screen==="dashboard"&&user&&(ut==="personal"?<PersonalDash user={user} onNav={nav} students={students}/>:<AlunoDash user={user} onNav={nav}/>)}
+      {screen==="register"&&(
+        <Register
+          onDone={()=>setScreen("login")}
+          onLogin={()=>setScreen("login")}
+          onShowModal={setModal}
+        />
+      )}
 
-      {screen==="alunos"      &&ut==="personal"&&<AlunosList students={students} creatingStudent={creatingStudent} onCreateStudent={handleCreateStudent} onSelect={s=>{setSelS(s);setScreen("aluno-detail");}}/>}
-      {screen==="aluno-detail"&&selS           &&<AlunoDetail student={selS} onBack={()=>setScreen("alunos")} onNav={nav}/>}
-      {screen==="criar-treino"                 &&<CriarTreino onBack={()=>setScreen(ut==="personal"?"workouts":"dashboard")}/>}
+      {screen==="dashboard"&&user&&(
+        ut==="personal"
+          ? <PersonalDash user={user} onNav={nav} students={students}/>
+          : <AlunoDash user={user} onNav={nav}/>
+      )}
 
-      {screen==="workouts"      &&<Workouts onSelect={w=>{setSelW(w);setScreen("workout-detail");}} ut={ut}/>}
-      {screen==="workout-detail"&&selW&&<WorkoutDetail workout={selW} onBack={()=>setScreen("workouts")} onToast={(m,t)=>setGToast({msg:m,type:t})} ut={ut}/>}
+      {screen==="alunos"&&ut==="personal"&&(
+        <AlunosList
+          students={students}
+          loading={loadingStudents}
+          onCreateStudent={()=>setStudentFormMode("create")}
+          onSelect={student=>{
+            setSelS(student);
+            setScreen("aluno-detail");
+          }}
+        />
+      )}
 
-      {screen==="evolution"    &&<Evolution ut={ut}/>}
+      {screen==="aluno-detail"&&selS&&(
+        <AlunoDetail
+          student={selS}
+          onBack={()=>setScreen("alunos")}
+          onNav={nav}
+          onEdit={()=>setStudentFormMode("edit")}
+          onDelete={()=>handleDeleteStudent(selS.id)}
+          deleting={deletingStudent}
+        />
+      )}
+
+      {screen==="criar-treino"&&(
+        <CriarTreino
+          onBack={()=>setScreen(ut==="personal"?"workouts":"dashboard")}
+        />
+      )}
+
+      {screen==="workouts"&&(
+        <Workouts
+          onSelect={w=>{setSelW(w);setScreen("workout-detail");}}
+          ut={ut}
+        />
+      )}
+
+      {screen==="workout-detail"&&selW&&(
+        <WorkoutDetail
+          workout={selW}
+          onBack={()=>setScreen("workouts")}
+          onToast={(m,t)=>setGToast({msg:m,type:t})}
+          ut={ut}
+        />
+      )}
+
+      {screen==="evolution"&&<Evolution ut={ut}/>}
       {screen==="notifications"&&<Notifications ut={ut}/>}
 
-      {screen==="chat" && user && (
+      {screen==="chat"&&user&&(
         <ChatPage
           user={user}
           ut={ut}
-          onBack={() => setScreen("dashboard")}
+          onBack={()=>setScreen("dashboard")}
         />
       )}
-      {screen==="profile"      &&user&&<Profile user={user} onLogout={()=>{setUser(null);setScreen("welcome");}}/>}
 
-      {navScreens.includes(screen)&&user&&<BottomNav active={screen} onNav={nav} ut={ut}/>}
+      {screen==="profile"&&user&&(
+        <Profile
+          user={user}
+          onLogout={()=>{setUser(null);setScreen("welcome");}}
+        />
+      )}
+
+      {studentFormMode==="create"&&(
+        <StudentForm
+          saving={savingStudent}
+          onCancel={()=>setStudentFormMode(null)}
+          onSubmit={data=>handleCreateStudent(data as CriarAlunoDTO)}
+        />
+      )}
+
+      {studentFormMode==="edit"&&selS&&(
+        <StudentForm
+          student={selS}
+          saving={savingStudent}
+          onCancel={()=>setStudentFormMode(null)}
+          onSubmit={data=>
+            handleUpdateStudent(selS.id,data as AtualizarAlunoDTO)
+          }
+        />
+      )}
+
+      {navScreens.includes(screen)&&user&&(
+        <BottomNav active={screen} onNav={nav} ut={ut}/>
+      )}
     </div>
   );
 }
