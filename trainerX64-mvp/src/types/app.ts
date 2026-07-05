@@ -47,8 +47,10 @@ export interface Workout {
 export interface Student {
   id: string;
   name: string;
+  email: string;
+  phone?: string;
   status: "em-dia" | "pendente" | "mensalidade" | "sem-atividade";
-  workout: string;
+  workout?: string;
   lastSeen: string;
   weight: number;
   height: number;

@@ -1,12 +1,14 @@
 import { Router } from "express";
+
 import {
   buscarTreinoPorId,
   listarTreinos,
 } from "../controllers/treinos.controller";
 
-const router = Router();
+const treinosRoutes = Router();
 
-router.get("/", listarTreinos);
-router.get("/:id", buscarTreinoPorId);
+treinosRoutes.get("/", listarTreinos);
 
-export default router;
+treinosRoutes.get("/:id", buscarTreinoPorId);
+
+export default treinosRoutes;
