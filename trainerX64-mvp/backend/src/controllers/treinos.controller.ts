@@ -36,6 +36,13 @@ export async function listarTreinos(
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        _count: {
+          select: {
+            exercicios: true,
+          },
+        },
+      },
     });
 
     return response.status(200).json(treinos);
@@ -58,6 +65,16 @@ export async function buscarTreinoPorId(
     const treino = await prisma.treino.findUnique({
       where: {
         id,
+      },
+      include: {
+        exercicios: {
+          orderBy: {
+            ordem: "asc",
+          },
+          include: {
+            exercicio: true,
+          },
+        },
       },
     });
 

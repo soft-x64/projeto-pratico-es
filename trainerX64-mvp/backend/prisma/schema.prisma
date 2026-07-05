@@ -52,23 +52,41 @@ model AvaliacaoFisica {
   @@index([alunoId])
 }
 
+model Treino {
+  id         String            @id @default(uuid())
+  nome       String
+  objetivo   String
+  descricao  String?
+  duracao    Int?
+  status     String            @default("disponivel")
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  exercicios TreinoExercicio[]
+}
+
 model Exercicio {
-  id        String   @id @default(uuid())
+  id        String            @id @default(uuid())
   nome      String
   categoria String
   descricao String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  treinos   TreinoExercicio[]
 }
 
+model TreinoExercicio {
+  id          String @id @default(uuid())
+  treinoId    String
+  exercicioId String
+  ordem       Int
+  series      Int
+  repeticoes  Int
+  carga       Float?
 
-model Treino {
-  id        String   @id @default(uuid())
-  nome      String
-  objetivo  String
-  descricao String?
-  duracao   Int?
-  status    String   @default("disponivel")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  treino    Treino    @relation(fields: [treinoId], references: [id], onDelete: Cascade)
+  exercicio Exercicio @relation(fields: [exercicioId], references: [id], onDelete: Restrict)
+
+  @@unique([treinoId, exercicioId])
+  @@index([treinoId])
+  @@index([exercicioId])
 }

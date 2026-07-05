@@ -1,3 +1,9 @@
+import {
+  treinoExercicioService,
+  type TreinoExercicio,
+  type AdicionarExercicioTreinoDTO,
+  type AtualizarExercicioTreinoDTO,
+} from "../services/treinoExercicioService";
 
 import {
   exercicioService,
@@ -1767,75 +1773,125 @@ function CriarTreino({
 
 // ─── Workouts ─────────────────────────────────────────────────────────────────
 
-function Workouts({ onSelect,ut }:{onSelect:(w:Workout)=>void;ut:UserType}) {
-  const [search,setSearch]=useState("");
-  const [filter,setFilter]=useState("Todos");
-  const ac=AC(ut);
-  const list=WORKOUTS.filter(w=>w.name.toLowerCase().includes(search.toLowerCase())&&(filter==="Todos"||w.goal===filter));
+function Workouts({ 
+  treinos, 
+  onSelect, 
+  ut 
+}: { 
+  treinos: Treino[]; 
+  onSelect: (id: string) => void; 
+  ut: UserType 
+}) {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("Todos");
+  const ac = AC(ut);
+  
+  // Agora filtra a lista REALS de treinos vinda do banco
+  const list = treinos.filter(w => 
+    w.nome.toLowerCase().includes(search.toLowerCase()) &&
+    (filter === "Todos" || w.objetivo === filter)
+  );
+
   return (
     <div className="min-h-screen bg-background pb-36">
       <div className="px-6 pt-14 pb-4">
         <h1 className="font-montserrat font-bold text-3xl text-foreground mb-0.5">Treinos</h1>
-        <p className="text-muted-foreground text-sm font-inter">{ut==="personal"?"Gerencie rotinas e programas":"Suas rotinas disponíveis"}</p>
+        <p className="text-muted-foreground text-sm font-inter">
+          {ut === "personal" ? "Gerencie rotinas e programas" : "Suas rotinas disponíveis"}
+        </p>
       </div>
+
       <div className="px-6 mb-4">
-        {ut==="personal"
-          ? <div className="grid grid-cols-2 gap-3">
-              <button className="h-12 rounded-2xl border border-border flex items-center justify-center gap-2 text-foreground hover:border-primary transition-all font-inter font-semibold text-sm"><Plus size={18}/> Nova Rotina</button>
-              <button className="h-12 rounded-2xl flex items-center justify-center gap-2 text-black font-inter font-semibold text-sm" style={{background:ac}}><Search size={18}/> Explorar</button>
-            </div>
-          : <button className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground hover:border-accent hover:text-accent transition-all font-inter font-semibold text-sm">
-              <Play size={18}/> Iniciar Treinamento Livre
+        {ut === "personal" ? (
+          <div className="grid grid-cols-2 gap-3">
+            <button className="h-12 rounded-2xl border border-border flex items-center justify-center gap-2 text-foreground hover:border-primary transition-all font-inter font-semibold text-sm">
+              <Plus size={18}/> Nova Rotina
             </button>
-        }
+            <button className="h-12 rounded-2xl flex items-center justify-center gap-2 text-black font-inter font-semibold text-sm" style={{ background: ac }}>
+              <Search size={18}/> Explorar
+            </button>
+          </div>
+        ) : (
+          <button className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground hover:border-accent hover:text-accent transition-all font-inter font-semibold text-sm">
+            <Play size={18}/> Iniciar Treinamento Livre
+          </button>
+        )}
       </div>
+
       <div className="px-6 mb-3">
         <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12">
           <Search size={18} className="text-muted-foreground"/>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar treino..."
-            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" aria-label="Buscar treino"/>
-          {search&&<button onClick={()=>setSearch("")} aria-label="Limpar"><X size={16} className="text-muted-foreground"/></button>}
+          <input 
+            value={search} 
+            onChange={e => setSearch(e.target.value)} 
+            placeholder="Buscar treino..."
+            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" 
+            aria-label="Buscar treino"
+          />
+          {search && <button onClick={() => setSearch("")} aria-label="Limpar"><X size={16} className="text-muted-foreground"/></button>}
         </div>
       </div>
+
       <div className="px-6 mb-4 overflow-x-auto">
         <div className="flex gap-2 pb-1">
-          {["Todos","Hipertrofia","Emagrecimento","Condicionamento"].map(f=>(
-            <button key={f} onClick={()=>setFilter(f)}
-              className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter===f?"text-black":"bg-card border border-border text-muted-foreground"}`}
-              style={filter===f?{background:ac}:undefined} aria-pressed={filter===f}>{f}</button>
+          {["Todos", "Hipertrofia", "Emagrecimento", "Condicionamento"].map(f => (
+            <button 
+              key={f} 
+              onClick={() => setFilter(f)}
+              className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter === f ? "text-black" : "bg-card border border-border text-muted-foreground"}`}
+              style={filter === f ? { background: ac } : undefined} 
+              aria-pressed={filter === f}
+            >
+              {f}
+            </button>
           ))}
         </div>
       </div>
+
       <div className="px-6 flex flex-col gap-3">
         <p className="font-montserrat font-semibold text-sm text-foreground">
-          {ut==="personal"?"Modelos de treino":"Minhas rotinas"}{filter!=="Todos"&&` · ${filter}`}
+          {ut === "personal" ? "Modelos de treino" : "Minhas rotinas"}{filter !== "Todos" && ` · ${filter}`}
         </p>
-        {list.length===0
-          ? <div className="flex flex-col items-center gap-3 py-12"><Dumbbell size={40} className="text-muted-foreground"/><p className="font-inter text-muted-foreground text-center">Nenhum treino encontrado.</p></div>
-          : list.map(w=>(
-            <div key={w.id} className="bg-card border border-border rounded-2xl p-4 flex flex-col gap-3">
+
+        {list.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12">
+            <Dumbbell size={40} className="text-muted-foreground"/>
+            <p className="font-inter text-muted-foreground text-center">Nenhum treino encontrado.</p>
+          </div>
+        ) : (
+          list.map(treino => (
+            /* AQUI ENTRA O CÓDIGO DO MAP ATUALIZADO COM O SEU CLIQUE DA API */
+            <div 
+              key={treino.id} 
+              onClick={() => onSelect(treino.id)} 
+              className="bg-card border border-border rounded-2xl p-4 flex flex-col gap-3 cursor-pointer hover:border-primary transition-colors"
+            >
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0 pr-2">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <h3 className="font-montserrat font-bold text-lg text-foreground">{w.name}</h3>
-                    <Badge status={w.status}/>
+                    <h3 className="font-montserrat font-bold text-lg text-foreground">{treino.nome}</h3>
+                    <Badge status={treino.status}/>
                   </div>
-                  <p className="text-sm font-inter text-muted-foreground">{w.goal}</p>
+                  <p className="text-sm font-inter text-muted-foreground">{treino.objetivo}</p>
                 </div>
-                <button className="text-muted-foreground p-1 flex-shrink-0" aria-label="Mais opções"><MoreVertical size={18}/></button>
+                <button className="text-muted-foreground p-1 flex-shrink-0" aria-label="Mais opções">
+                  <MoreVertical size={18}/>
+                </button>
               </div>
+              
               <div className="flex items-center gap-4 text-xs font-inter text-muted-foreground">
-                <span className="flex items-center gap-1"><Dumbbell size={12}/>{w.exerciseCount} exercícios</span>
-                <span className="flex items-center gap-1"><Clock size={12}/>{w.duration}</span>
+                <span className="flex items-center gap-1">
+                  <Dumbbell size={12}/>
+                  {treino._count?.exercicios ?? 0} exercícios
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock size={12}/>
+                  {treino.duracao ? `${treino.duracao} min` : "N/A"}
+                </span>
               </div>
-              <button onClick={()=>onSelect(w)}
-                className="w-full h-12 rounded-xl flex items-center justify-center gap-2 font-inter font-semibold text-sm text-black transition-all active:scale-95"
-                style={{background:ac}}>
-                {ut==="personal"?<><ClipboardList size={16}/> Atribuir ao aluno</>:<><Play size={16}/> Iniciar Rotina</>}
-              </button>
             </div>
           ))
-        }
+        )}
       </div>
     </div>
   );
@@ -1843,19 +1899,32 @@ function Workouts({ onSelect,ut }:{onSelect:(w:Workout)=>void;ut:UserType}) {
 
 // ─── Workout Detail ───────────────────────────────────────────────────────────
 
-function WorkoutDetail({ workout,onBack,onToast,ut }:
-  {workout:Workout;onBack:()=>void;onToast:(msg:string,t:"success"|"error"|"info")=>void;ut:UserType}) {
-  const [exs,setExs]=useState(workout.exercises);
-  const [cf,setCf]=useState("Volume");
-  const ac=AC(ut);
-  const done=exs.filter(e=>e.completed).length;
-  const pct=exs.length?(done/exs.length)*100:0;
-  const toggle=(id:string)=>setExs(p=>p.map(e=>{if(e.id!==id)return e;onToast(e.completed?"Exercício desmarcado.":"Exercício marcado como concluído.","success");return {...e,completed:!e.completed};}));
-  const finish=()=>{
-    if(!done){onToast("Conclua ao menos um exercício antes de finalizar.","error");return;}
-    onToast(done<exs.length?`Treino finalizado com ${done} de ${exs.length} exercícios.`:"Treino concluído com sucesso.",done<exs.length?"info":"success");
-  };
-  const chartData=[{w:"S1",v:3200},{w:"S2",v:3800},{w:"S3",v:3600},{w:"S4",v:4500},{w:"S5",v:4100}];
+function WorkoutDetail({ 
+  workout, 
+  onBack, 
+  onToast, 
+  ut 
+}: { 
+  workout: Treino; 
+  onBack: () => void; 
+  onToast: (msg: string, t: "success" | "error" | "info") => void; 
+  ut: UserType 
+}) {
+  const [cf, setCf] = useState("Volume");
+  const ac = AC(ut);
+  
+  // Pegamos a lista real de exercícios vinculados ao treino
+  const exerciciosVinculados = workout.exercicios ?? [];
+  const totalExercicios = exerciciosVinculados.length;
+
+  const chartData = [
+    { w: "S1", v: 3200 },
+    { w: "S2", v: 3800 },
+    { w: "S3", v: 3600 },
+    { w: "S4", v: 4500 },
+    { w: "S5", v: 4100 }
+  ];
+
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
       <div className="px-6 pt-14 pb-4">
@@ -1867,89 +1936,77 @@ function WorkoutDetail({ workout,onBack,onToast,ut }:
             <button aria-label="Mais opções"><MoreVertical size={20} className="text-muted-foreground"/></button>
           </div>
         </div>
-        <h1 className="font-montserrat font-bold text-3xl text-foreground">{workout.name}</h1>
-        <p className="text-muted-foreground text-sm font-inter mt-1">Criado por TrainerX64 · {workout.goal}</p>
-        <div className="mt-4 mb-1">
-          <div className="flex justify-between text-xs font-inter text-muted-foreground mb-2"><span>Progresso</span><span>{done}/{exs.length} exercícios</span></div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div className="h-full rounded-full transition-all" style={{width:`${pct}%`,background:ac}}
-              role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${Math.round(pct)}%`}/>
-          </div>
-        </div>
-        <div className="flex gap-4 mt-3 text-xs font-inter text-muted-foreground">
-          <span className="flex items-center gap-1"><Clock size={12}/>{workout.duration}</span>
-          <span className="flex items-center gap-1"><Dumbbell size={12}/>{workout.exerciseCount} exercícios</span>
+        
+        <h1 className="font-montserrat font-bold text-3xl text-foreground">{workout.nome}</h1>
+        <p className="text-muted-foreground text-sm font-inter mt-1">Mentalidade TrainerX64 · {workout.objetivo}</p>
+        
+        {workout.descricao && (
+          <p className="text-xs text-gray-400 mt-2 italic bg-card p-3 rounded-xl border border-border">
+            {workout.descricao}
+          </p>
+        )}
+
+        <div className="flex gap-4 mt-4 text-xs font-inter text-muted-foreground">
+          <span className="flex items-center gap-1"><Clock size={12}/>{workout.duracao ? `${workout.duracao} min` : "N/A"}</span>
+          <span className="flex items-center gap-1"><Dumbbell size={12}/>{totalExercicios} exercícios</span>
         </div>
       </div>
+
       <div className="px-6 mb-4">
         <div className="bg-card border border-border rounded-2xl p-4">
-          <Caps items={["Volume","Repetições","Duração"]} active={cf} onChange={setCf} ut={ut}/>
+          <Caps items={["Volume", "Repetições", "Duração"]} active={cf} onChange={setCf} ut={ut}/>
           <div className="mt-3">
             <ResponsiveContainer width="100%" height={90}>
               <LineChart data={chartData}>
-                <XAxis dataKey="w" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
+                <XAxis dataKey="w" tick={{ fill: "#a0a0a0", fontSize: 11 }} axisLine={false} tickLine={false}/>
                 <YAxis hide/>
-                <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
+                <Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #2a2a2a", borderRadius: "12px", color: "#fff" }}/>
                 <Line type="monotone" dataKey="v" stroke={ac} strokeWidth={2.5} dot={false}/>
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
-      <div className="px-6 mb-4">
-        <button onClick={finish}
-          className="w-full h-14 rounded-2xl font-montserrat font-bold text-base text-black flex items-center justify-center gap-2 transition-all active:scale-95"
-          style={{background:ac}}>
-          {ut==="personal"?<><ClipboardList size={20}/> Atribuir treino</>:<><Play size={20}/> Iniciar Rotina</>}
-        </button>
-      </div>
+
       <div className="px-6 flex flex-col gap-3">
-        <p className="font-montserrat font-bold text-lg text-foreground">Exercícios</p>
-        {exs.map(ex=>(
-          <div key={ex.id} className="bg-card border rounded-2xl p-4 transition-all"
-            style={{border:ex.completed?`1px solid ${ac}`:"1px solid #2a2a2a",background:ex.completed?AC_BG(ut,0.04):undefined}}>
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:AC_BG(ut,0.15)}}>
-                  <Dumbbell size={20} style={{color:ac}}/>
-                </div>
-                <div>
-                  <h3 className="font-montserrat font-semibold text-sm text-foreground">{ex.name}</h3>
-                  <p className="text-xs font-inter text-muted-foreground mt-0.5">{ex.sets.length} séries</p>
+        <p className="font-montserrat font-bold text-lg text-foreground">Exercícios da Ficha</p>
+        
+        {totalExercicios === 0 ? (
+          <p className="text-sm text-muted-foreground italic text-center py-6">Nenhum exercício vinculado a este treino.</p>
+        ) : (
+          exerciciosVinculados.map((item) => (
+            <div key={item.id} className="bg-card border border-border rounded-2xl p-4 transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: AC_BG(ut, 0.15) }}>
+                    <Dumbbell size={20} style={{ color: ac }}/>
+                  </div>
+                  <div>
+                    {/* Acessa o nome do exercício de dentro do relacionamento M:N */}
+                    <h3 className="font-montserrat font-semibold text-sm text-foreground">{item.exercicio.nome}</h3>
+                    <p className="text-xs font-inter text-muted-foreground mt-0.5">{item.exercicio.categoria}</p>
+                  </div>
                 </div>
               </div>
-              {ex.completed&&<CheckCircle size={20} style={{color:ac}} aria-label="Concluído"/>}
-            </div>
-            <div className="bg-background rounded-xl overflow-hidden mb-3" role="table" aria-label={`Séries de ${ex.name}`}>
-              <div className="grid grid-cols-3 px-3 py-2 border-b border-border" role="row">
-                {["Série","KG","Reps"].map(h=><span key={h} className="text-xs font-inter font-semibold text-muted-foreground text-center" role="columnheader">{h}</span>)}
-              </div>
-              {ex.sets.map(s=>(
-                <div key={s.serie} className="grid grid-cols-3 px-3 py-2 border-b border-border last:border-0" role="row">
-                  <span className="text-sm font-inter text-foreground text-center" role="cell">{s.serie}</span>
-                  <span className="text-sm font-inter font-semibold text-foreground text-center" role="cell">{s.kg}</span>
-                  <span className="text-sm font-inter text-foreground text-center" role="cell">{s.reps}</span>
+
+              {/* Tabela de Séries com dados dinâmicos do banco */}
+              <div className="bg-background rounded-xl overflow-hidden mb-2" role="table">
+                <div className="grid grid-cols-4 px-3 py-2 border-b border-border" role="row">
+                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Ordem</span>
+                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Séries</span>
+                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Reps</span>
+                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Carga</span>
                 </div>
-              ))}
+                <div className="grid grid-cols-4 px-3 py-2" role="row">
+                  <span className="text-sm font-inter text-foreground text-center">{item.ordem}º</span>
+                  <span className="text-sm font-inter text-foreground text-center font-bold text-accent">{item.series}</span>
+                  <span className="text-sm font-inter text-foreground text-center">{item.repeticoes}</span>
+                  <span className="text-sm font-inter text-foreground text-center font-semibold text-primary">{item.carga ?? 0} kg</span>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button className="flex-1 h-10 rounded-xl border border-border flex items-center justify-center gap-1.5 text-xs font-inter font-semibold text-muted-foreground hover:border-accent hover:text-accent transition-all" aria-label={`Ver execução de ${ex.name}`}>
-                <Play size={14}/> Ver execução
-              </button>
-              {ut==="aluno"&&(
-                <button onClick={()=>toggle(ex.id)}
-                  className="flex-1 h-10 rounded-xl flex items-center justify-center gap-1.5 text-xs font-inter font-semibold transition-all active:scale-95"
-                  style={{background:ex.completed?"#2a2a2a":ac,color:ex.completed?"#a0a0a0":"#000"}} aria-pressed={ex.completed}>
-                  <Check size={14}/> {ex.completed?"Desmarcar":"Concluído"}
-                </button>
-              )}
-            </div>
-            <p className="text-[11px] text-muted-foreground font-inter mt-2 flex items-center gap-1">
-              <Info size={10}/> Integração futura com Cloudinary para vídeos demonstrativos.
-            </p>
-          </div>
-        ))}
-        {ut==="aluno"&&<SBtn onClick={finish}>Finalizar treino</SBtn>}
+          ))
+        )}
       </div>
     </div>
   );
@@ -2805,6 +2862,11 @@ export default function App() {
   const [deletingTreino, setDeletingTreino] = useState(false);
   const [treinoSelecionado, setTreinoSelecionado] = useState<Treino | null>(null);
 
+  // ─── Estados do Vínculo Treino ↔ Exercício ──────────────────────────────
+  const [exerciciosDoTreino, setExerciciosDoTreino] = useState<TreinoExercicio[]>([]);
+  const [loadingExerciciosDoTreino, setLoadingExerciciosDoTreino] = useState(false);
+  const [savingExercicioTreino, setSavingExercicioTreino] = useState(false);
+
   useEffect(() => {
     async function carregarExercicios() {
       try {
@@ -2930,6 +2992,122 @@ export default function App() {
       setGToast({ msg: error instanceof Error ? error.message : "Erro ao excluir treino.", type: "error" });
     } finally {
       setDeletingTreino(false);
+    }
+  }
+
+  // Coloque perto das outras funções "handle..." do App.tsx
+  async function handleSelectTreino(treinoId: string) {
+    try {
+      setLoadingTreinos(true);
+      // Busca o treino atualizado direto da API (com os exercícios inclusos)
+      const treinoCompleto = await treinoService.buscarTreinoPorId(treinoId);
+      setSelW(treinoCompleto); // Guarda o treino selecionado no estado
+      setScreen("workout-detail"); // Muda para a tela de detalhes do treino
+    } catch (error) {
+      setGToast({
+        msg: "Erro ao abrir detalhes do treino.",
+        type: "error",
+      });
+    } finally {
+      setLoadingTreinos(false);
+    }
+  }
+
+  // ─── Funções de Ação do Vínculo ──────────────────────────────────────────
+  async function carregarExerciciosDoTreino(treinoId: string): Promise<void> {
+    try {
+      setLoadingExerciciosDoTreino(true);
+      const data = await treinoExercicioService.listarExerciciosDoTreino(treinoId);
+      setExerciciosDoTreino(data);
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao carregar exercícios do treino.",
+        type: "error",
+      });
+    } finally {
+      setLoadingExerciciosDoTreino(false);
+    }
+  }
+
+  async function handleAddExercicioTreino(treinoId: string, data: AdicionarExercicioTreinoDTO): Promise<boolean> {
+    try {
+      setSavingExercicioTreino(true);
+      const novoVinculo = await treinoExercicioService.adicionarExercicioAoTreino(treinoId, data);
+      
+      setExerciciosDoTreino((prev) =>
+        [...prev, novoVinculo].sort((a, b) => a.ordem - b.ordem)
+      );
+
+      setGToast({ msg: "Exercício adicionado ao treino com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao adicionar exercício ao treino.",
+        type: "error",
+      });
+      return false;
+    } finally {
+      setSavingExercicioTreino(false);
+    }
+  }
+
+  async function handleUpdateExercicioTreino(treinoId: string, vinculoId: string, data: AtualizarExercicioTreinoDTO): Promise<boolean> {
+    try {
+      setSavingExercicioTreino(true);
+      const vinculoAtualizado = await treinoExercicioService.atualizarExercicioDoTreino(treinoId, vinculoId, data);
+
+      setExerciciosDoTreino((prev) =>
+        prev
+          .map((item) => item.id === vinculoId ? vinculoAtualizado : item)
+          .sort((a, b) => a.ordem - b.ordem)
+      );
+
+      setGToast({ msg: "Exercício do treino atualizado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao atualizar exercício do treino.",
+        type: "error",
+      });
+      return false;
+    } finally {
+      setSavingExercicioTreino(false);
+    }
+  }
+
+  async function handleRemoveExercicioTreino(treinoId: string, vinculoId: string): Promise<void> {
+    const confirmar = window.confirm("Deseja remover este exercício do treino?");
+    if (!confirmar) return;
+
+    try {
+      await treinoExercicioService.removerExercicioDoTreino(treinoId, vinculoId);
+      setExerciciosDoTreino((prev) => prev.filter((item) => item.id !== vinculoId));
+      setGToast({ msg: "Exercício removido do treino com sucesso.", type: "success" });
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao remover exercício do treino.",
+        type: "error",
+      });
+    }
+  }
+
+  // Função de Fluxo Completo (Item 36)
+  async function criarTreinoComExercicios(treinoData: CriarTreinoDTO, exerciciosSelecionados: AdicionarExercicioTreinoDTO[]): Promise<boolean> {
+    try {
+      const treino = await treinoService.criarTreino(treinoData);
+
+      for (const exercicio of exerciciosSelecionados) {
+        await treinoExercicioService.adicionarExercicioAoTreino(treino.id, exercicio);
+      }
+
+      setGToast({ msg: "Treino e exercícios cadastrados com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao criar treino.",
+        type: "error",
+      });
+      return false;
     }
   }
   
@@ -3099,7 +3277,8 @@ export default function App() {
 
       {screen==="workouts"&&(
         <Workouts
-          onSelect={w=>{setSelW(w);setScreen("workout-detail");}}
+          treinos={treinos}
+          onSelect={handleSelectTreino}
           ut={ut}
         />
       )}

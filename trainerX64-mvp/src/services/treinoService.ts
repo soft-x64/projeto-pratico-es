@@ -1,3 +1,4 @@
+import type { TreinoExercicio } from "./treinoExercicioService";
 import axios from "axios";
 
 import { api } from "./api";
@@ -16,6 +17,10 @@ export interface Treino {
   status: StatusTreino;
   createdAt: string;
   updatedAt: string;
+  exercicios?: TreinoExercicio[];
+  _count?: {
+    exercicios: number;
+  };
 }
 
 export interface CriarTreinoDTO {
