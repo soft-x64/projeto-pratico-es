@@ -1,3 +1,10 @@
+
+import {
+  exercicioService,
+  type Exercicio,
+  type CriarExercicioDTO,
+  type AtualizarExercicioDTO,
+} from "../services/exercicioService";
 import {
   treinoService,
   type Treino,
@@ -1592,7 +1599,15 @@ function AlunoDetail({
 
 // ─── Criar Treino ─────────────────────────────────────────────────────────────
 
-function CriarTreino({ onBack }:{onBack:()=>void}) {
+function CriarTreino({ 
+  onBack, 
+  exercicios, 
+  loadingExercicios 
+}: { 
+  onBack: () => void; 
+  exercicios: Exercicio[]; 
+  loadingExercicios: boolean; 
+}) {
   const [student,setStudent]=useState("");
   const [wname,setWname]=useState("");
   const [cat,setCat]=useState("");
@@ -1605,7 +1620,12 @@ function CriarTreino({ onBack }:{onBack:()=>void}) {
   const [toast,setToast]=useState<{msg:string;type:"success"|"error"}|null>(null);
   const ac=AC("personal");
   const canSave=wname.trim()&&cat&&exs.length>0;
-  const filtered=ALL_EX.filter(e=>e.name.toLowerCase().includes(exSearch.toLowerCase())&&(exFilter==="Todos"||e.cat===exFilter));
+  
+  // Filtrando usando as propriedades REAIS do banco (nome e categoria)
+  const filtered = exercicios.filter(e => 
+    e.nome.toLowerCase().includes(exSearch.toLowerCase()) &&
+    (exFilter === "Todos" || e.categoria === exFilter)
+  );
 
   const save=()=>{
     const e:Record<string,string>={};
@@ -1639,20 +1659,27 @@ function CriarTreino({ onBack }:{onBack:()=>void}) {
                   style={exFilter===f?{background:ac}:undefined} aria-pressed={exFilter===f}>{f}</button>
               ))}
             </div>
-            {filtered.length===0
-              ? <p className="text-center text-muted-foreground text-sm py-8">Nenhum exercício encontrado.</p>
-              : filtered.map(ex=>(
-                <button key={ex.name} onClick={()=>{if(!exs.includes(ex.name))setExs(p=>[...p,ex.name]);setShowModal(false);}}
+            
+            {/* Tratando o carregamento dinâmico do banco */}
+            {loadingExercicios ? (
+              <div className="flex flex-col items-center gap-2 py-8">
+                <RefreshCw size={22} className="animate-spin text-muted-foreground" />
+                <p className="text-xs text-muted-foreground font-inter">Buscando exercícios no banco...</p>
+              </div>
+            ) : filtered.length===0 ? (
+              <p className="text-center text-muted-foreground text-sm py-8">Nenhum exercício encontrado.</p>
+            ) : filtered.map(ex=>(
+                <button key={ex.id} onClick={()=>{if(!exs.includes(ex.nome))setExs(p=>[...p,ex.nome]);setShowModal(false);}}
                   className="flex items-center gap-3 bg-background border border-border rounded-2xl px-4 py-3 text-left hover:border-primary transition-all w-full mb-2">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:AC_BG("personal",0.15)}}>
                     <Dumbbell size={18} style={{color:ac}}/>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-inter font-semibold text-sm text-foreground">{ex.name}</p>
-                    <p className="text-xs text-muted-foreground font-inter">{ex.desc}</p>
+                    <p className="font-inter font-semibold text-sm text-foreground">{ex.nome}</p>
+                    <p className="text-xs text-muted-foreground font-inter truncate">{ex.descricao || "Sem descrição"}</p>
                   </div>
-                  <span className="text-xs font-inter px-2 py-1 rounded-full bg-muted text-muted-foreground flex-shrink-0">{ex.cat}</span>
-                  {exs.includes(ex.name)&&<Check size={16} style={{color:ac}}/>}
+                  <span className="text-xs font-inter px-2 py-1 rounded-full bg-muted text-muted-foreground flex-shrink-0">{ex.categoria}</span>
+                  {exs.includes(ex.nome)&&<Check size={16} style={{color:ac}}/>}
                 </button>
               ))
             }
@@ -2766,6 +2793,12 @@ export default function App() {
   const [deletingStudent,setDeletingStudent]=useState(false);
   const [studentFormMode,setStudentFormMode]=useState<"create"|"edit"|null>(null);
 
+  const [exercicios, setExercicios] = useState<Exercicio[]>([]);
+  const [loadingExercicios, setLoadingExercicios] = useState(true);
+  const [savingExercicio, setSavingExercicio] = useState(false);
+  const [deletingExercicio, setDeletingExercicio] = useState(false);
+
+  
   const [treinos, setTreinos] = useState<Treino[]>([]);
   const [loadingTreinos, setLoadingTreinos] = useState(true);
   const [savingTreino, setSavingTreino] = useState(false);
@@ -2773,150 +2806,134 @@ export default function App() {
   const [treinoSelecionado, setTreinoSelecionado] = useState<Treino | null>(null);
 
   useEffect(() => {
-  async function carregarTreinos() {
+    async function carregarExercicios() {
+      try {
+        setLoadingExercicios(true);
+        const data = await exercicioService.listarExercicios();
+        setExercicios(data);
+      } catch (error) {
+        setGToast({
+          msg: error instanceof Error ? error.message : "Erro ao carregar exercícios.",
+          type: "error",
+        });
+      } finally {
+        setLoadingExercicios(false);
+      }
+    }
+    carregarExercicios();
+  }, []);
+
+  useEffect(() => {
+    async function carregarTreinos() {
+      try {
+        setLoadingTreinos(true);
+        const data = await treinoService.listarTreinos();
+        setTreinos(data);
+      } catch (error) {
+        setGToast({
+          msg: error instanceof Error ? error.message : "Erro ao carregar treinos.",
+          type: "error",
+        });
+      } finally {
+        setLoadingTreinos(false);
+      }
+    }
+    carregarTreinos();
+  }, []);
+
+  // ─── Ações de Exercícios ──────────────────────────────────────────────────
+  async function handleCreateExercicio(data: CriarExercicioDTO): Promise<boolean> {
     try {
-      setLoadingTreinos(true);
-
-      const data =
-        await treinoService.listarTreinos();
-
-      setTreinos(data);
+      setSavingExercicio(true);
+      const novoExercicio = await exercicioService.criarExercicio(data);
+      setExercicios((prev) => [...prev, novoExercicio]);
+      setGToast({ msg: "Exercício criado com sucesso.", type: "success" });
+      return true;
     } catch (error) {
-      setGToast({
-        msg:
-          error instanceof Error
-            ? error.message
-            : "Erro ao carregar treinos.",
-        type: "error",
-      });
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao criar exercício.", type: "error" });
+      return false;
     } finally {
-      setLoadingTreinos(false);
+      setSavingExercicio(false);
     }
   }
 
-  carregarTreinos();
-}, []);
-
-  async function handleCreateTreino(
-  data: CriarTreinoDTO,
-): Promise<boolean> {
-  try {
-    setSavingTreino(true);
-
-    const novoTreino =
-      await treinoService.criarTreino(data);
-
-    setTreinos((prev) => [
-      novoTreino,
-      ...prev,
-    ]);
-
-    setGToast({
-      msg: "Treino criado com sucesso.",
-      type: "success",
-    });
-
-    return true;
-  } catch (error) {
-    setGToast({
-      msg:
-        error instanceof Error
-          ? error.message
-          : "Erro ao criar treino.",
-      type: "error",
-    });
-
-    return false;
-  } finally {
-    setSavingTreino(false);
-  }
-}
-
-async function handleUpdateTreino(
-  treinoId: string,
-  data: AtualizarTreinoDTO,
-): Promise<boolean> {
-  try {
-    setSavingTreino(true);
-
-    const treinoAtualizado =
-      await treinoService.atualizarTreino(
-        treinoId,
-        data,
-      );
-
-    setTreinos((prev) =>
-      prev.map((treino) =>
-        treino.id === treinoId
-          ? treinoAtualizado
-          : treino,
-      ),
-    );
-
-    setTreinoSelecionado(treinoAtualizado);
-
-    setGToast({
-      msg: "Treino atualizado com sucesso.",
-      type: "success",
-    });
-
-    return true;
-  } catch (error) {
-    setGToast({
-      msg:
-        error instanceof Error
-          ? error.message
-          : "Erro ao atualizar treino.",
-      type: "error",
-    });
-
-    return false;
-  } finally {
-    setSavingTreino(false);
-  }
-}
-
-
-async function handleDeleteTreino(
-  treinoId: string,
-): Promise<void> {
-  const confirmar = window.confirm(
-    "Deseja realmente excluir este treino?",
-  );
-
-  if (!confirmar) {
-    return;
+  async function handleUpdateExercicio(exercicioId: string, data: AtualizarExercicioDTO): Promise<boolean> {
+    try {
+      setSavingExercicio(true);
+      const exercicioAtualizado = await exercicioService.atualizarExercicio(exercicioId, data);
+      setExercicios((prev) => prev.map((ex) => ex.id === exercicioId ? exercicioAtualizado : ex));
+      setGToast({ msg: "Exercício atualizado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao atualizar exercício.", type: "error" });
+      return false;
+    } finally {
+      setSavingExercicio(false);
+    }
   }
 
-  try {
-    setDeletingTreino(true);
-
-    await treinoService.excluirTreino(treinoId);
-
-    setTreinos((prev) =>
-      prev.filter(
-        (treino) => treino.id !== treinoId,
-      ),
-    );
-
-    setTreinoSelecionado(null);
-
-    setGToast({
-      msg: "Treino excluído com sucesso.",
-      type: "success",
-    });
-  } catch (error) {
-    setGToast({
-      msg:
-        error instanceof Error
-          ? error.message
-          : "Erro ao excluir treino.",
-      type: "error",
-    });
-  } finally {
-    setDeletingTreino(false);
+  async function handleDeleteExercicio(exercicioId: string): Promise<void> {
+    const confirmar = window.confirm("Deseja realmente excluir este exercício?");
+    if (!confirmar) return;
+    try {
+      setDeletingExercicio(true);
+      await exercicioService.excluirExercicio(exercicioId);
+      setExercicios((prev) => prev.filter((ex) => ex.id !== exercicioId));
+      setGToast({ msg: "Exercício excluído com sucesso.", type: "success" });
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao excluir exercício.", type: "error" });
+    } finally {
+      setDeletingExercicio(false);
+    }
   }
-}
+
+  // ─── Ações de Treinos ─────────────────────────────────────────────────────
+  async function handleCreateTreino(data: CriarTreinoDTO): Promise<boolean> {
+    try {
+      setSavingTreino(true);
+      const novoTreino = await treinoService.criarTreino(data);
+      setTreinos((prev) => [...prev, novoTreino]);
+      setGToast({ msg: "Treino criado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao criar treino.", type: "error" });
+      return false;
+    } finally {
+      setSavingTreino(false);
+    }
+  }
+
+  async function handleUpdateTreino(treinoId: string, data: AtualizarTreinoDTO): Promise<boolean> {
+    try {
+      setSavingTreino(true);
+      const treinoAtualizado = await treinoService.atualizarTreino(treinoId, data);
+      setTreinos((prev) => prev.map((t) => t.id === treinoId ? treinoAtualizado : t));
+      setGToast({ msg: "Treino atualizado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao atualizar treino.", type: "error" });
+      return false;
+    } finally {
+      setSavingTreino(false);
+    }
+  }
+
+  async function handleDeleteTreino(treinoId: string): Promise<void> {
+    const confirmar = window.confirm("Deseja realmente excluir este treino?");
+    if (!confirmar) return;
+    try {
+      setDeletingTreino(true);
+      await treinoService.excluirTreino(treinoId);
+      setTreinos((prev) => prev.filter((t) => t.id !== treinoId));
+      setGToast({ msg: "Treino excluído com sucesso.", type: "success" });
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao excluir treino.", type: "error" });
+    } finally {
+      setDeletingTreino(false);
+    }
+  }
+  
+  
   useEffect(()=>{
     async function carregarAlunos() {
       try {
@@ -3075,6 +3092,8 @@ async function handleDeleteTreino(
       {screen==="criar-treino"&&(
         <CriarTreino
           onBack={()=>setScreen(ut==="personal"?"workouts":"dashboard")}
+          exercicios={exercicios} 
+          loadingExercicios={loadingExercicios}
         />
       )}
 

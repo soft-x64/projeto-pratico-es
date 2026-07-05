@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
+import { exerciciosRoutes } from "./routes/exercicios.routes";
 
 import { alunosRoutes } from "./routes/alunos.routes";
 import treinosRoutes from "./routes/treinos.routes";
@@ -26,6 +27,8 @@ app.get("/", (request, response) => {
 app.use("/alunos", alunosRoutes);
 
 app.use("/treinos", treinosRoutes);
+
+app.use("/exercicios", exerciciosRoutes);
 
 app.use(avaliacoesRoutes);
 

@@ -52,6 +52,16 @@ model AvaliacaoFisica {
   @@index([alunoId])
 }
 
+model Exercicio {
+  id        String   @id @default(uuid())
+  nome      String
+  categoria String
+  descricao String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 model Treino {
   id        String   @id @default(uuid())
   nome      String
