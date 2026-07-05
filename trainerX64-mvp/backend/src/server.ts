@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
+import { treinoExerciciosRoutes } from "./routes/treinoExercicios.routes";
 import { exerciciosRoutes } from "./routes/exercicios.routes";
 
 import { alunosRoutes } from "./routes/alunos.routes";
@@ -31,6 +32,10 @@ app.use("/treinos", treinosRoutes);
 app.use("/exercicios", exerciciosRoutes);
 
 app.use(avaliacoesRoutes);
+
+app.use("/exercicios", exerciciosRoutes);
+
+app.use(treinoExerciciosRoutes);
 
 const PORT = process.env.PORT || 3333;
 
