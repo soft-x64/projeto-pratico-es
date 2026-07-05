@@ -1,4 +1,11 @@
 import {
+  treinoService,
+  type Treino,
+  type CriarTreinoDTO,
+  type AtualizarTreinoDTO,
+} from "../services/treinoService";
+
+import {
   alunoService,
   type AtualizarAlunoDTO,
   type CriarAlunoDTO,
@@ -2759,6 +2766,157 @@ export default function App() {
   const [deletingStudent,setDeletingStudent]=useState(false);
   const [studentFormMode,setStudentFormMode]=useState<"create"|"edit"|null>(null);
 
+  const [treinos, setTreinos] = useState<Treino[]>([]);
+  const [loadingTreinos, setLoadingTreinos] = useState(true);
+  const [savingTreino, setSavingTreino] = useState(false);
+  const [deletingTreino, setDeletingTreino] = useState(false);
+  const [treinoSelecionado, setTreinoSelecionado] = useState<Treino | null>(null);
+
+  useEffect(() => {
+  async function carregarTreinos() {
+    try {
+      setLoadingTreinos(true);
+
+      const data =
+        await treinoService.listarTreinos();
+
+      setTreinos(data);
+    } catch (error) {
+      setGToast({
+        msg:
+          error instanceof Error
+            ? error.message
+            : "Erro ao carregar treinos.",
+        type: "error",
+      });
+    } finally {
+      setLoadingTreinos(false);
+    }
+  }
+
+  carregarTreinos();
+}, []);
+
+  async function handleCreateTreino(
+  data: CriarTreinoDTO,
+): Promise<boolean> {
+  try {
+    setSavingTreino(true);
+
+    const novoTreino =
+      await treinoService.criarTreino(data);
+
+    setTreinos((prev) => [
+      novoTreino,
+      ...prev,
+    ]);
+
+    setGToast({
+      msg: "Treino criado com sucesso.",
+      type: "success",
+    });
+
+    return true;
+  } catch (error) {
+    setGToast({
+      msg:
+        error instanceof Error
+          ? error.message
+          : "Erro ao criar treino.",
+      type: "error",
+    });
+
+    return false;
+  } finally {
+    setSavingTreino(false);
+  }
+}
+
+async function handleUpdateTreino(
+  treinoId: string,
+  data: AtualizarTreinoDTO,
+): Promise<boolean> {
+  try {
+    setSavingTreino(true);
+
+    const treinoAtualizado =
+      await treinoService.atualizarTreino(
+        treinoId,
+        data,
+      );
+
+    setTreinos((prev) =>
+      prev.map((treino) =>
+        treino.id === treinoId
+          ? treinoAtualizado
+          : treino,
+      ),
+    );
+
+    setTreinoSelecionado(treinoAtualizado);
+
+    setGToast({
+      msg: "Treino atualizado com sucesso.",
+      type: "success",
+    });
+
+    return true;
+  } catch (error) {
+    setGToast({
+      msg:
+        error instanceof Error
+          ? error.message
+          : "Erro ao atualizar treino.",
+      type: "error",
+    });
+
+    return false;
+  } finally {
+    setSavingTreino(false);
+  }
+}
+
+
+async function handleDeleteTreino(
+  treinoId: string,
+): Promise<void> {
+  const confirmar = window.confirm(
+    "Deseja realmente excluir este treino?",
+  );
+
+  if (!confirmar) {
+    return;
+  }
+
+  try {
+    setDeletingTreino(true);
+
+    await treinoService.excluirTreino(treinoId);
+
+    setTreinos((prev) =>
+      prev.filter(
+        (treino) => treino.id !== treinoId,
+      ),
+    );
+
+    setTreinoSelecionado(null);
+
+    setGToast({
+      msg: "Treino excluído com sucesso.",
+      type: "success",
+    });
+  } catch (error) {
+    setGToast({
+      msg:
+        error instanceof Error
+          ? error.message
+          : "Erro ao excluir treino.",
+      type: "error",
+    });
+  } finally {
+    setDeletingTreino(false);
+  }
+}
   useEffect(()=>{
     async function carregarAlunos() {
       try {

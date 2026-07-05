@@ -1,6 +1,9 @@
+import "dotenv/config";
+
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+
 
 import { alunosRoutes } from "./routes/alunos.routes";
 import treinosRoutes from "./routes/treinos.routes";
