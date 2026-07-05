@@ -4,6 +4,12 @@ import {
   type CriarAlunoDTO,
   type StatusAluno,
 } from "../services/alunoService";
+import {
+  avaliacaoService,
+  type AvaliacaoFisica,
+  type CriarAvaliacaoDTO,
+  type AtualizarAvaliacaoDTO,
+} from "../services/avaliacaoService";
 import { useState, useEffect } from "react";
 import logoImg from "@/imports/trainerx64_logo_nome_melhorada.png";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
@@ -1465,6 +1471,7 @@ function AlunoDetail({
   onNav,
   onEdit,
   onDelete,
+  onOpenEvaluations,
   deleting,
 }: {
   student: Student;
@@ -1472,6 +1479,7 @@ function AlunoDetail({
   onNav: (s: Screen) => void;
   onEdit: () => void;
   onDelete: () => void;
+  onOpenEvaluations: () => void;
   deleting: boolean;
 }) {
   const ac=AC("personal");
@@ -1531,8 +1539,8 @@ function AlunoDetail({
         <div className="grid grid-cols-2 gap-3 mb-5">
           {[
             {icon:<Plus size={18}/>,label:"Criar treino",action:()=>onNav("criar-treino")},
-            {icon:<TrendingUp size={18}/>,label:"Ver evolução",action:()=>onNav("evolution")},
-            {icon:<ClipboardList size={18}/>,label:"Reg. avaliação",action:()=>setToast({msg:"Avaliação registrada com sucesso.",type:"success"})},
+            {icon:<TrendingUp size={18}/>,label:"Ver evolução",action:onOpenEvaluations},
+            {icon:<ClipboardList size={18}/>,label:"Reg. avaliação",action:onOpenEvaluations},
             {icon:<CreditCard size={18}/>,label:"Mensalidade",action:()=>setToast({msg:"Status de mensalidade atualizado.",type:"info"})},
           ].map(a=>(
             <button
@@ -1915,93 +1923,472 @@ function WorkoutDetail({ workout,onBack,onToast,ut }:
 
 // ─── Evolution ────────────────────────────────────────────────────────────────
 
-function Evolution({ ut }:{ut:UserType}) {
+function EvaluationInput({
+  label,
+  value,
+  onChange,
+  required = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-xs font-montserrat font-semibold text-muted-foreground">
+        {label}
+      </label>
+      <input
+        type="number"
+        step="0.1"
+        min="0"
+        required={required}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-11 rounded-xl bg-background border border-border px-3 text-foreground text-sm outline-none focus:border-accent transition-colors"
+      />
+    </div>
+  );
+}
+
+function Evolution({
+  ut,
+  student,
+  onBack,
+}: {
+  ut: UserType;
+  student?: Student | null;
+  onBack?: () => void;
+}) {
   const [period,setPeriod]=useState("Mês");
-  const [form,setForm]=useState({peso:"",altura:"",cintura:"",braco:"",perna:"",obs:""});
-  const [errs,setErrs]=useState<Record<string,string>>({});
+  const [evaluations,setEvaluations]=useState<AvaliacaoFisica[]>([]);
+  const [loading,setLoading]=useState(false);
+  const [saving,setSaving]=useState(false);
+  const [deletingId,setDeletingId]=useState<string|null>(null);
+  const [editing,setEditing]=useState<AvaliacaoFisica|null>(null);
   const [toast,setToast]=useState<{msg:string;type:"success"|"error"}|null>(null);
-  const [hist,setHist]=useState([
-    {date:"Jun 2026",peso:74.6,cintura:82,braco:38,perna:60},
-    {date:"Mai 2026",peso:75.1,cintura:83,braco:37.5,perna:59.5},
-    {date:"Abr 2026",peso:75.8,cintura:84,braco:37,perna:59},
-  ]);
-  const ac=AC(ut);
-  const save=()=>{
-    const e:Record<string,string>={};
-    if(!form.peso||parseFloat(form.peso)<=0) e.peso="Peso inválido.";
-    setErrs(e);
-    if(Object.keys(e).length){setToast({msg:"Informe valores válidos para registrar sua evolução.",type:"error"});return;}
-    setHist(p=>[{date:new Date().toLocaleDateString("pt-BR",{month:"short",year:"numeric"}),
-      peso:parseFloat(form.peso),cintura:parseFloat(form.cintura)||0,
-      braco:parseFloat(form.braco)||0,perna:parseFloat(form.perna)||0},...p]);
-    setForm({peso:"",altura:"",cintura:"",braco:"",perna:"",obs:""});
-    setToast({msg:"Evolução registrada com sucesso.",type:"success"});
+
+  const emptyForm = {
+    peso:"",
+    altura:"",
+    percentualGordura:"",
+    massaMuscular:"",
+    braco:"",
+    peitoral:"",
+    cintura:"",
+    quadril:"",
+    coxa:"",
+    panturrilha:"",
+    observacoes:"",
+    dataAvaliacao:new Date().toISOString().slice(0,10),
   };
+
+  const [form,setForm]=useState(emptyForm);
+  const ac=AC(ut);
+  const realMode=ut==="personal"&&!!student;
+
+  useEffect(()=>{
+    if(!realMode||!student) return;
+
+    async function carregarAvaliacoes() {
+      try {
+        setLoading(true);
+        const data=await avaliacaoService.listarAvaliacoesDoAluno(student.id);
+        setEvaluations(data);
+      } catch(error) {
+        setToast({
+          msg:error instanceof Error?error.message:"Erro ao carregar avaliações.",
+          type:"error",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarAvaliacoes();
+  },[realMode,student?.id]);
+
+  useEffect(()=>{
+    if(!editing) return;
+
+    setForm({
+      peso:String(editing.peso),
+      altura:String(editing.altura),
+      percentualGordura:editing.percentualGordura?.toString()??"",
+      massaMuscular:editing.massaMuscular?.toString()??"",
+      braco:editing.braco?.toString()??"",
+      peitoral:editing.peitoral?.toString()??"",
+      cintura:editing.cintura?.toString()??"",
+      quadril:editing.quadril?.toString()??"",
+      coxa:editing.coxa?.toString()??"",
+      panturrilha:editing.panturrilha?.toString()??"",
+      observacoes:editing.observacoes??"",
+      dataAvaliacao:new Date(editing.dataAvaliacao).toISOString().slice(0,10),
+    });
+  },[editing]);
+
+  function resetForm() {
+    setEditing(null);
+    setForm({
+      ...emptyForm,
+      dataAvaliacao:new Date().toISOString().slice(0,10),
+    });
+  }
+
+  function optionalNumber(value:string):number|undefined {
+    return value.trim()===""?undefined:Number(value);
+  }
+
+  async function save() {
+    if(!realMode||!student) {
+      setToast({
+        msg:"Para registrar uma avaliação real, acesse o perfil de um aluno pelo Personal.",
+        type:"error",
+      });
+      return;
+    }
+
+    if(!form.peso||Number(form.peso)<=0||!form.altura||Number(form.altura)<=0) {
+      setToast({msg:"Peso e altura devem ser maiores que zero.",type:"error"});
+      return;
+    }
+
+    const data:CriarAvaliacaoDTO={
+      peso:Number(form.peso),
+      altura:Number(form.altura),
+      percentualGordura:optionalNumber(form.percentualGordura),
+      massaMuscular:optionalNumber(form.massaMuscular),
+      braco:optionalNumber(form.braco),
+      peitoral:optionalNumber(form.peitoral),
+      cintura:optionalNumber(form.cintura),
+      quadril:optionalNumber(form.quadril),
+      coxa:optionalNumber(form.coxa),
+      panturrilha:optionalNumber(form.panturrilha),
+      observacoes:form.observacoes.trim()||undefined,
+      dataAvaliacao:new Date(`${form.dataAvaliacao}T12:00:00`).toISOString(),
+    };
+
+    try {
+      setSaving(true);
+
+      if(editing) {
+        const atualizada=await avaliacaoService.atualizarAvaliacao(
+          editing.id,
+          data as AtualizarAvaliacaoDTO,
+        );
+
+        setEvaluations(prev=>
+          prev.map(item=>item.id===atualizada.id?atualizada:item)
+        );
+
+        setToast({msg:"Avaliação atualizada com sucesso.",type:"success"});
+      } else {
+        const nova=await avaliacaoService.criarAvaliacao(student.id,data);
+        setEvaluations(prev=>[nova,...prev]);
+        setToast({msg:"Avaliação registrada com sucesso.",type:"success"});
+      }
+
+      resetForm();
+    } catch(error) {
+      setToast({
+        msg:error instanceof Error?error.message:"Erro ao salvar avaliação.",
+        type:"error",
+      });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function deleteEvaluation(id:string) {
+    const confirmar=window.confirm("Deseja realmente excluir esta avaliação física?");
+    if(!confirmar) return;
+
+    try {
+      setDeletingId(id);
+      await avaliacaoService.excluirAvaliacao(id);
+      setEvaluations(prev=>prev.filter(item=>item.id!==id));
+
+      if(editing?.id===id) {
+        resetForm();
+      }
+
+      setToast({msg:"Avaliação excluída com sucesso.",type:"success"});
+    } catch(error) {
+      setToast({
+        msg:error instanceof Error?error.message:"Erro ao excluir avaliação.",
+        type:"error",
+      });
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  const chartData=[...evaluations]
+    .reverse()
+    .map(item=>({
+      date:new Date(item.dataAvaliacao).toLocaleDateString("pt-BR",{month:"short"}),
+      peso:item.peso,
+    }));
+
+  const latest=evaluations[0];
+
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
       {toast&&<Toast message={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
+
       <div className="px-6 pt-14 pb-4">
-        <h1 className="font-montserrat font-bold text-3xl text-foreground">{ut==="aluno"?"Progresso":"Avaliação Física"}</h1>
-        <p className="text-muted-foreground text-sm font-inter mt-1">{ut==="aluno"?"Registre e acompanhe seu progresso físico.":"Registre e visualize a evolução dos alunos."}</p>
+        {realMode&&onBack&&(
+          <div className="mb-5">
+            <BackBtn onClick={onBack}/>
+          </div>
+        )}
+
+        <h1 className="font-montserrat font-bold text-3xl text-foreground">
+          {realMode?`Avaliações de ${student?.name}`:ut==="aluno"?"Progresso":"Avaliação Física"}
+        </h1>
+        <p className="text-muted-foreground text-sm font-inter mt-1">
+          {realMode
+            ?"Registre, edite e acompanhe o histórico físico deste aluno."
+            :ut==="aluno"
+              ?"Acompanhe seu progresso físico."
+              :"Selecione um aluno em Meus Alunos para registrar avaliações reais."}
+        </p>
       </div>
+
       <div className="px-6 flex flex-col gap-5">
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard icon={<Weight size={18}/>}   label="Peso atual"      value={`${hist[0]?.peso??"-"} kg`} color={ac}/>
-          <StatCard icon={<Calendar size={18}/>} label="Último registro" value={hist[0]?.date??"-"}         color={ac}/>
-          <StatCard icon={<Activity size={18}/>} label="Frequência"      value="3x" sub="Meta: 4x"          color={ac}/>
-          <StatCard icon={<Zap size={18}/>}      label="Volume total"    value="17.8k kg"                   color={ac}/>
-        </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
-          <p className="font-montserrat font-semibold text-sm text-foreground mb-3">Evolução de peso</p>
-          <Caps items={["Semana","Mês","3 meses","Ano"]} active={period} onChange={setPeriod} ut={ut}/>
-          <div className="mt-3">
-            <ResponsiveContainer width="100%" height={110}>
-              <LineChart data={MONTHS}>
-                <XAxis dataKey="m" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
-                <YAxis hide domain={["auto","auto"]}/>
-                <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
-                <Line type="monotone" dataKey="p" stroke={ac} strokeWidth={2.5} dot={false} name="Peso (kg)"/>
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
-          <p className="font-montserrat font-bold text-sm text-foreground mb-4">{ut==="aluno"?"Registrar evolução":"Registrar avaliação"}</p>
-          <div className="grid grid-cols-2 gap-3">
-            {[{k:"peso",l:"Peso (kg)",p:"75.0"},{k:"altura",l:"Altura (cm)",p:"175"},{k:"cintura",l:"Cintura (cm)",p:"82"},{k:"braco",l:"Braço (cm)",p:"38"},{k:"perna",l:"Perna (cm)",p:"60"}].map(f=>(
-              <div key={f.k} className="flex flex-col gap-1">
-                <label className="text-xs font-montserrat font-semibold text-muted-foreground">{f.l}</label>
-                <input type="number" value={form[f.k as keyof typeof form]} min="0"
-                  onChange={e=>setForm(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
-                  className={`h-11 rounded-xl bg-background border px-3 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-accent transition-colors ${errs[f.k]?"border-destructive":"border-border"}`}
-                  aria-label={f.l}/>
-              </div>
-            ))}
-            <div className="col-span-2 flex flex-col gap-1">
-              <label className="text-xs font-montserrat font-semibold text-muted-foreground">Observações</label>
-              <textarea value={form.obs} onChange={e=>setForm(p=>({...p,obs:e.target.value}))} placeholder="Observações opcionais..."
-                className="rounded-xl bg-background border border-border px-3 py-2 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-accent transition-colors resize-none"
-                rows={2} aria-label="Observações"/>
+        {realMode ? (
+          <>
+            <div className="grid grid-cols-2 gap-3">
+              <StatCard
+                icon={<Weight size={18}/>}
+                label="Peso atual"
+                value={latest?`${latest.peso} kg`:"-"}
+                color={ac}
+              />
+              <StatCard
+                icon={<Calendar size={18}/>}
+                label="Última avaliação"
+                value={latest
+                  ?new Date(latest.dataAvaliacao).toLocaleDateString("pt-BR")
+                  :"-"}
+                color={ac}
+              />
+              <StatCard
+                icon={<Activity size={18}/>}
+                label="Gordura corporal"
+                value={latest?.percentualGordura!=null?`${latest.percentualGordura}%`:"-"}
+                color={ac}
+              />
+              <StatCard
+                icon={<Zap size={18}/>}
+                label="Massa muscular"
+                value={latest?.massaMuscular!=null?`${latest.massaMuscular} kg`:"-"}
+                color={ac}
+              />
             </div>
-          </div>
-          <button onClick={save}
-            className="w-full h-12 rounded-2xl font-montserrat font-bold text-sm text-black flex items-center justify-center gap-2 transition-all active:scale-95 mt-4"
-            style={{background:ac}}>
-            <Check size={18}/> {ut==="aluno"?"Salvar evolução":"Registrar avaliação"}
-          </button>
-        </div>
-        <div>
-          <p className="font-montserrat font-bold text-sm text-foreground mb-3">Histórico</p>
-          {hist.map((e,i)=>(
-            <div key={i} className="bg-card border border-border rounded-2xl px-4 py-3 mb-2 flex items-center justify-between">
-              <div className="min-w-0">
-                <p className="font-montserrat font-semibold text-sm text-foreground">{e.date}</p>
-                <p className="text-xs font-inter text-muted-foreground mt-0.5 truncate">Cintura:{e.cintura} · Braço:{e.braco} · Perna:{e.perna} cm</p>
+
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="font-montserrat font-semibold text-sm text-foreground mb-3">
+                Evolução de peso
+              </p>
+              <Caps items={["Semana","Mês","3 meses","Ano"]} active={period} onChange={setPeriod} ut={ut}/>
+              <div className="mt-3">
+                {chartData.length>0 ? (
+                  <ResponsiveContainer width="100%" height={130}>
+                    <LineChart data={chartData}>
+                      <XAxis dataKey="date" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
+                      <YAxis hide domain={["auto","auto"]}/>
+                      <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
+                      <Line type="monotone" dataKey="peso" stroke={ac} strokeWidth={2.5} dot name="Peso (kg)"/>
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <p className="py-8 text-sm text-center text-muted-foreground">
+                    Nenhuma avaliação cadastrada para gerar o gráfico.
+                  </p>
+                )}
               </div>
-              <span className="text-2xl font-montserrat font-bold ml-4 flex-shrink-0" style={{color:ac}}>{e.peso}</span>
             </div>
-          ))}
-        </div>
+
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-4">
+                <p className="font-montserrat font-bold text-sm text-foreground">
+                  {editing?"Editar avaliação":"Registrar avaliação"}
+                </p>
+                {editing&&(
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="text-xs font-inter"
+                    style={{color:ac}}
+                  >
+                    Cancelar edição
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <EvaluationInput label="Peso (kg)" value={form.peso} onChange={value=>setForm(prev=>({...prev,peso:value}))} required/>
+                <EvaluationInput label="Altura (cm)" value={form.altura} onChange={value=>setForm(prev=>({...prev,altura:value}))} required/>
+                <EvaluationInput label="Gordura (%)" value={form.percentualGordura} onChange={value=>setForm(prev=>({...prev,percentualGordura:value}))}/>
+                <EvaluationInput label="Massa muscular (kg)" value={form.massaMuscular} onChange={value=>setForm(prev=>({...prev,massaMuscular:value}))}/>
+                <EvaluationInput label="Braço (cm)" value={form.braco} onChange={value=>setForm(prev=>({...prev,braco:value}))}/>
+                <EvaluationInput label="Peitoral (cm)" value={form.peitoral} onChange={value=>setForm(prev=>({...prev,peitoral:value}))}/>
+                <EvaluationInput label="Cintura (cm)" value={form.cintura} onChange={value=>setForm(prev=>({...prev,cintura:value}))}/>
+                <EvaluationInput label="Quadril (cm)" value={form.quadril} onChange={value=>setForm(prev=>({...prev,quadril:value}))}/>
+                <EvaluationInput label="Coxa (cm)" value={form.coxa} onChange={value=>setForm(prev=>({...prev,coxa:value}))}/>
+                <EvaluationInput label="Panturrilha (cm)" value={form.panturrilha} onChange={value=>setForm(prev=>({...prev,panturrilha:value}))}/>
+
+                <div className="col-span-2 flex flex-col gap-1">
+                  <label className="text-xs font-montserrat font-semibold text-muted-foreground">
+                    Data da avaliação
+                  </label>
+                  <input
+                    type="date"
+                    value={form.dataAvaliacao}
+                    onChange={event=>setForm(prev=>({...prev,dataAvaliacao:event.target.value}))}
+                    className="h-11 rounded-xl bg-background border border-border px-3 text-foreground text-sm outline-none focus:border-accent"
+                  />
+                </div>
+
+                <div className="col-span-2 flex flex-col gap-1">
+                  <label className="text-xs font-montserrat font-semibold text-muted-foreground">
+                    Observações
+                  </label>
+                  <textarea
+                    value={form.observacoes}
+                    onChange={event=>setForm(prev=>({...prev,observacoes:event.target.value}))}
+                    placeholder="Observações opcionais..."
+                    rows={3}
+                    className="rounded-xl bg-background border border-border px-3 py-2 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-accent resize-none"
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={save}
+                disabled={saving}
+                className="w-full h-12 rounded-2xl font-montserrat font-bold text-sm text-black flex items-center justify-center gap-2 transition-all active:scale-95 mt-4 disabled:opacity-50"
+                style={{background:ac}}
+              >
+                {saving
+                  ?<RefreshCw size={18} className="animate-spin"/>
+                  :<Check size={18}/>}
+                {saving
+                  ?"Salvando..."
+                  :editing
+                    ?"Salvar alterações"
+                    :"Registrar avaliação"}
+              </button>
+            </div>
+
+            <div>
+              <p className="font-montserrat font-bold text-sm text-foreground mb-3">
+                Histórico de avaliações
+              </p>
+
+              {loading ? (
+                <div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+                  <RefreshCw size={20} className="animate-spin"/>
+                  <span className="text-sm">Carregando avaliações...</span>
+                </div>
+              ) : evaluations.length===0 ? (
+                <div className="bg-card border border-border rounded-2xl p-6 text-center">
+                  <ClipboardList size={34} className="text-muted-foreground mx-auto mb-3"/>
+                  <p className="text-sm text-muted-foreground">
+                    Nenhuma avaliação física cadastrada.
+                  </p>
+                </div>
+              ) : evaluations.map(item=>(
+                <div
+                  key={item.id}
+                  className="bg-card border border-border rounded-2xl p-4 mb-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-montserrat font-semibold text-sm text-foreground">
+                        {new Date(item.dataAvaliacao).toLocaleDateString("pt-BR")}
+                      </p>
+                      <p className="text-xs font-inter text-muted-foreground mt-1">
+                        Peso: {item.peso} kg · Altura: {item.altura} cm
+                      </p>
+                      <p className="text-xs font-inter text-muted-foreground mt-1">
+                        Gordura: {item.percentualGordura??"-"}% · Massa muscular: {item.massaMuscular??"-"} kg
+                      </p>
+                      <p className="text-xs font-inter text-muted-foreground mt-1">
+                        Braço: {item.braco??"-"} · Cintura: {item.cintura??"-"} · Coxa: {item.coxa??"-"} cm
+                      </p>
+                      {item.observacoes&&(
+                        <p className="text-xs font-inter text-foreground mt-2">
+                          {item.observacoes}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <button
+                        type="button"
+                        onClick={()=>setEditing(item)}
+                        className="w-9 h-9 rounded-xl border border-border flex items-center justify-center"
+                        aria-label="Editar avaliação"
+                      >
+                        <Settings size={16} style={{color:ac}}/>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={()=>deleteEvaluation(item.id)}
+                        disabled={deletingId===item.id}
+                        className="w-9 h-9 rounded-xl border border-destructive/50 text-destructive flex items-center justify-center disabled:opacity-50"
+                        aria-label="Excluir avaliação"
+                      >
+                        {deletingId===item.id
+                          ?<RefreshCw size={16} className="animate-spin"/>
+                          :<X size={16}/>}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 gap-3">
+              <StatCard icon={<Weight size={18}/>} label="Peso atual" value="74.6 kg" color={ac}/>
+              <StatCard icon={<Calendar size={18}/>} label="Último registro" value="Jun 2026" color={ac}/>
+              <StatCard icon={<Activity size={18}/>} label="Frequência" value="3x" sub="Meta: 4x" color={ac}/>
+              <StatCard icon={<Zap size={18}/>} label="Volume total" value="17.8k kg" color={ac}/>
+            </div>
+
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="font-montserrat font-semibold text-sm text-foreground mb-3">
+                Evolução de peso
+              </p>
+              <Caps items={["Semana","Mês","3 meses","Ano"]} active={period} onChange={setPeriod} ut={ut}/>
+              <div className="mt-3">
+                <ResponsiveContainer width="100%" height={110}>
+                  <LineChart data={MONTHS}>
+                    <XAxis dataKey="m" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
+                    <YAxis hide domain={["auto","auto"]}/>
+                    <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
+                    <Line type="monotone" dataKey="p" stroke={ac} strokeWidth={2.5} dot={false} name="Peso (kg)"/>
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="bg-card border border-border rounded-2xl p-5 text-center">
+              <ClipboardList size={34} className="text-muted-foreground mx-auto mb-3"/>
+              <p className="font-montserrat font-semibold text-sm text-foreground">
+                Dados demonstrativos do MVP
+              </p>
+              <p className="text-xs text-muted-foreground mt-2">
+                O CRUD real de avaliações é acessado pelo Personal no perfil de um aluno.
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -2522,6 +2909,7 @@ export default function App() {
           onNav={nav}
           onEdit={()=>setStudentFormMode("edit")}
           onDelete={()=>handleDeleteStudent(selS.id)}
+          onOpenEvaluations={()=>setScreen("evolution")}
           deleting={deletingStudent}
         />
       )}
@@ -2548,7 +2936,13 @@ export default function App() {
         />
       )}
 
-      {screen==="evolution"&&<Evolution ut={ut}/>}
+      {screen==="evolution"&&(
+        <Evolution
+          ut={ut}
+          student={ut==="personal"?selS:null}
+          onBack={ut==="personal"&&selS?()=>setScreen("aluno-detail"):undefined}
+        />
+      )}
       {screen==="notifications"&&<Notifications ut={ut}/>}
 
       {screen==="chat"&&user&&(
