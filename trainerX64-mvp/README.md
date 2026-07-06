@@ -14,7 +14,7 @@
 Clone o repositório e acesse a pasta do projeto:
 
 ```bash
-git clone URL_DO_REPOSITORIO
+git clone [URL_DO_REPOSITORIO](https://github.com/soft-x64/projeto-pratico-es.git)
 cd trainerX64-mvp
 
 Configure e execute o backend:
