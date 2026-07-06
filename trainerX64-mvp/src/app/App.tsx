@@ -2838,9 +2838,367 @@ function Profile({ user,onLogout }:{user:AppUser;onLogout:()=>void}) {
 
 // ─── Modal Content ────────────────────────────────────────────────────────────
 
-const TERMS_MD = (<><p className="mb-3"><strong className="text-foreground">1. Aceitação dos Termos</strong></p><p className="mb-3">Ao criar uma conta no TrainerX64, você concorda com estes Termos de Uso.</p><p className="mb-3"><strong className="text-foreground">2. Uso do Serviço</strong></p><p className="mb-3">O TrainerX64 é uma plataforma de gestão de treinos. O usuário é responsável pela veracidade das informações.</p><p className="mb-3"><strong className="text-foreground">3. Responsabilidade</strong></p><p>Consulte sempre um profissional antes de iniciar qualquer programa de exercícios.</p></>);
-const PRIV_MD  = (<><p className="mb-3"><strong className="text-foreground">1. Dados Coletados</strong></p><p className="mb-3">Coletamos nome, e-mail, dados de treino e medidas físicas fornecidas voluntariamente.</p><p className="mb-3"><strong className="text-foreground">2. LGPD</strong></p><p>Em conformidade com a Lei 13.709/2018, você tem direito de acessar, corrigir e excluir seus dados.</p></>);
+const TERMS_MD = (
+  <>
+    <h2 className="text-2xl font-bold mb-4 text-foreground">
+      Termos de Uso — Aplicativo TrainerX64
+    </h2>
 
+    <p className="mb-4">
+      <strong>Versão:</strong> 1.0<br />
+      <strong>Última Atualização:</strong> Versão 1.1<br />
+      <strong>Data de Publicação:</strong> 05 de julho de 2026
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      1. Aceitação dos Termos
+    </h3>
+
+    <p className="mb-3">
+      Bem-vindo ao <strong>TrainerX64</strong>. Estes Termos de Uso estabelecem
+      as condições para utilização do aplicativo. Ao criar uma conta,
+      acessar ou utilizar qualquer funcionalidade do TrainerX64, o usuário
+      declara que leu, compreendeu e concorda integralmente com as
+      disposições deste documento.
+    </p>
+
+    <p className="mb-4">
+      Caso não concorde com estes Termos de Uso, recomenda-se não utilizar
+      o aplicativo.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      2. Sobre o Aplicativo
+    </h3>
+
+    <p className="mb-3">
+      O <strong>TrainerX64</strong> é um aplicativo desenvolvido como um
+      MVP (Minimum Viable Product) com o objetivo de facilitar a comunicação
+      entre personal trainers e alunos, auxiliando na organização dos
+      treinamentos e no acompanhamento da evolução física.
+    </p>
+
+    <p className="mb-2">
+      O aplicativo oferece, entre outras, as seguintes funcionalidades:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Cadastro e autenticação de usuários;</li>
+      <li>Gerenciamento de perfis de alunos e personal trainers;</li>
+      <li>Criação, edição e consulta de fichas de treino;</li>
+      <li>Registro da execução dos treinos;</li>
+      <li>Acompanhamento da evolução do aluno;</li>
+      <li>Visualização de vídeos demonstrativos dos exercícios;</li>
+      <li>Histórico de atividades realizadas;</li>
+      <li>Sistema de notificações e lembretes;</li>
+      <li>Gerenciamento básico de pagamentos e consultorias.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      3. Perfis de Usuário
+    </h3>
+
+    <p className="mb-3">
+      O TrainerX64 disponibiliza dois perfis de acesso:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>
+        <strong>Aluno:</strong> pode visualizar fichas de treino, registrar
+        exercícios realizados, acompanhar sua evolução física, visualizar
+        vídeos demonstrativos e receber lembretes.
+      </li>
+
+      <li>
+        <strong>Personal Trainer:</strong> pode cadastrar e gerenciar alunos,
+        criar, editar e atualizar fichas de treino, além de acompanhar o
+        desempenho e evolução dos alunos.
+      </li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      4. Responsabilidades do Usuário
+    </h3>
+
+    <p className="mb-2">
+      Ao utilizar o TrainerX64, o usuário compromete-se a:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Fornecer informações verdadeiras e atualizadas;</li>
+      <li>Manter sua senha em sigilo;</li>
+      <li>Não compartilhar sua conta com terceiros;</li>
+      <li>Utilizar o aplicativo apenas para fins legais;</li>
+      <li>
+        Não realizar qualquer tentativa de comprometer a segurança do
+        sistema.
+      </li>
+    </ul>
+
+    <p className="mb-4">
+      O usuário é responsável por todas as ações realizadas utilizando sua
+      conta.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      5. Responsabilidade sobre os Treinos
+    </h3>
+
+    <p className="mb-3">
+      O TrainerX64 é uma ferramenta tecnológica de apoio ao gerenciamento
+      de treinos.
+    </p>
+
+    <p className="mb-3">
+      A elaboração, prescrição, intensidade e adequação dos exercícios são
+      de responsabilidade exclusiva do Personal Trainer responsável pelo
+      aluno.
+    </p>
+
+    <p className="mb-4">
+      O aplicativo não substitui acompanhamento médico, fisioterapêutico
+      ou qualquer outro acompanhamento profissional relacionado à saúde.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      6. Disponibilidade do Serviço
+    </h3>
+
+    <p className="mb-4">
+      Por se tratar de um projeto desenvolvido no formato MVP, o aplicativo
+      poderá passar por atualizações, melhorias, manutenções programadas e
+      eventuais indisponibilidades temporárias.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      7. Propriedade Intelectual
+    </h3>
+
+    <p className="mb-4">
+      Todo o conteúdo disponibilizado no TrainerX64, incluindo código-fonte,
+      identidade visual, logotipo, layout, banco de dados, imagens, textos,
+      vídeos e demais elementos do aplicativo são protegidos por direitos de
+      propriedade intelectual. É proibida sua reprodução, distribuição,
+      modificação ou utilização sem autorização da equipe desenvolvedora.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      8. Limitação de Responsabilidade
+    </h3>
+
+    <p className="mb-2">
+      A equipe do TrainerX64 não se responsabiliza por:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Problemas decorrentes de falhas na conexão com a internet;</li>
+      <li>Danos causados por uso inadequado do aplicativo;</li>
+      <li>Informações cadastradas incorretamente pelos usuários;</li>
+      <li>Falhas decorrentes de dispositivos incompatíveis;</li>
+      <li>Danos causados pela execução inadequada dos exercícios.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      9. Alterações dos Termos
+    </h3>
+
+    <p className="mb-4">
+      Estes Termos de Uso poderão ser atualizados sempre que necessário para
+      adequação do aplicativo, inclusão de novas funcionalidades ou
+      atendimento à legislação aplicável.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      10. Aceite dos Termos
+    </h3>
+
+    <p className="mb-4">
+      O aceite destes Termos ocorre durante o cadastro do usuário, mediante
+      a seleção da opção de concordância apresentada no aplicativo.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      11. Foro
+    </h3>
+
+    <p>
+      Fica eleito o Foro da Comarca de Manaus, Estado do Amazonas, para
+      dirimir quaisquer dúvidas ou controvérsias decorrentes da utilização
+      do TrainerX64, observada a legislação brasileira aplicável.
+    </p>
+  </>
+);
+const PRIV_MD = (
+  <>
+    <h2 className="text-2xl font-bold mb-4 text-foreground">
+      Política de Privacidade — Aplicativo TrainerX64
+    </h2>
+
+    <p className="mb-4">
+      <strong>Versão:</strong> 1.0<br />
+      <strong>Última Atualização:</strong> Versão 1.1<br />
+      <strong>Data de Publicação:</strong> 05 de julho de 2026
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      1. Introdução
+    </h3>
+
+    <p className="mb-4">
+      Esta Política de Privacidade descreve como o TrainerX64 coleta,
+      utiliza, armazena e protege os dados pessoais de seus usuários.
+      Ao utilizar o aplicativo, o usuário declara estar ciente das
+      práticas aqui descritas e concorda com o tratamento de seus dados
+      conforme esta Política e a Lei Geral de Proteção de Dados (LGPD –
+      Lei nº 13.709/2018).
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      2. Dados Coletados
+    </h3>
+
+    <p className="mb-2">
+      Durante a utilização do aplicativo poderão ser coletados:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Nome completo;</li>
+      <li>Endereço de e-mail;</li>
+      <li>Senha protegida por mecanismos de segurança;</li>
+      <li>Tipo de usuário (Aluno ou Personal Trainer);</li>
+      <li>Fichas de treino cadastradas;</li>
+      <li>Histórico de treinos realizados;</li>
+      <li>Evolução física registrada;</li>
+      <li>Feedbacks referentes aos exercícios;</li>
+      <li>Data e horário de acesso ao aplicativo;</li>
+      <li>Informações técnicas necessárias para o funcionamento da plataforma.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      3. Finalidade da Coleta
+    </h3>
+
+    <p className="mb-2">
+      Os dados coletados são utilizados para:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Permitir a criação e gerenciamento da conta;</li>
+      <li>Disponibilizar as funcionalidades do aplicativo;</li>
+      <li>Gerenciar fichas de treino;</li>
+      <li>Acompanhar a evolução dos alunos;</li>
+      <li>Facilitar a comunicação entre aluno e personal trainer;</li>
+      <li>Melhorar a experiência de utilização;</li>
+      <li>Garantir a segurança da plataforma;</li>
+      <li>Cumprir obrigações legais quando aplicável.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      4. Compartilhamento de Dados
+    </h3>
+
+    <p className="mb-3">
+      O TrainerX64 não comercializa dados pessoais dos usuários.
+    </p>
+
+    <p className="mb-2">
+      As informações poderão ser compartilhadas apenas:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Entre o aluno e o Personal Trainer responsável;</li>
+      <li>Quando houver obrigação legal;</li>
+      <li>Quando necessário para prevenção de fraudes e proteção do sistema.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      5. Armazenamento e Segurança
+    </h3>
+
+    <p className="mb-4">
+      O TrainerX64 adota medidas técnicas e administrativas destinadas à
+      proteção dos dados pessoais contra acessos não autorizados,
+      alterações, perda ou divulgação indevida.
+      Apesar dos esforços empregados, nenhum sistema pode garantir
+      segurança absoluta.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      6. Responsabilidades do Usuário
+    </h3>
+
+    <p className="mb-2">
+      O usuário compromete-se a:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Manter sua senha em sigilo;</li>
+      <li>Não compartilhar sua conta com terceiros;</li>
+      <li>Fornecer informações verdadeiras;</li>
+      <li>Manter seus dados sempre atualizados;</li>
+      <li>Utilizar o aplicativo de forma responsável.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      7. Direitos do Usuário
+    </h3>
+
+    <p className="mb-2">
+      Nos termos da LGPD, o usuário poderá solicitar:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Confirmação da existência de tratamento dos dados;</li>
+      <li>Acesso às informações armazenadas;</li>
+      <li>Correção de dados incorretos;</li>
+      <li>Atualização cadastral;</li>
+      <li>Exclusão dos dados, quando legalmente possível;</li>
+      <li>Informações sobre o tratamento realizado.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      8. Retenção dos Dados
+    </h3>
+
+    <p className="mb-4">
+      Os dados serão armazenados apenas pelo período necessário ao
+      funcionamento do aplicativo ou conforme exigido pela legislação
+      vigente.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      9. Atualizações desta Política
+    </h3>
+
+    <p className="mb-4">
+      Esta Política de Privacidade poderá ser alterada sempre que houver
+      mudanças nas funcionalidades do aplicativo, na legislação aplicável
+      ou na forma de tratamento dos dados pessoais.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      10. Contato
+    </h3>
+
+    <p className="mb-4">
+      Em caso de dúvidas relacionadas à privacidade e ao tratamento de
+      dados pessoais, o usuário poderá entrar em contato pelos canais
+      oficiais disponibilizados pela equipe do TrainerX64.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      11. Disposições Finais
+    </h3>
+
+    <p>
+      Ao utilizar o TrainerX64, o usuário declara que leu,
+      compreendeu e concorda com esta Política de Privacidade,
+      autorizando o tratamento de seus dados para as finalidades
+      descritas neste documento, em conformidade com a Lei Geral
+      de Proteção de Dados Pessoais (LGPD).
+    </p>
+  </>
+);
 
 
 function FinanceModal({
