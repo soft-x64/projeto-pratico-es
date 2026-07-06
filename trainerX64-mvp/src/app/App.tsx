@@ -5,6 +5,11 @@ import {
   type AtualizarExercicioTreinoDTO,
 } from "../services/treinoExercicioService";
 
+import { 
+  mensalidadeService,
+  type Mensalidade,
+} from "../services/mensalidadeService";
+
 import {
   exercicioService,
   type Exercicio,
@@ -1492,6 +1497,7 @@ function AlunoDetail({
   onEdit,
   onDelete,
   onOpenEvaluations,
+  onOpenFinance,
   deleting,
 }: {
   student: Student;
@@ -1500,6 +1506,7 @@ function AlunoDetail({
   onEdit: () => void;
   onDelete: () => void;
   onOpenEvaluations: () => void;
+  onOpenFinance: () => void;
   deleting: boolean;
 }) {
   const ac=AC("personal");
@@ -1561,7 +1568,7 @@ function AlunoDetail({
             {icon:<Plus size={18}/>,label:"Criar treino",action:()=>onNav("criar-treino")},
             {icon:<TrendingUp size={18}/>,label:"Ver evolução",action:onOpenEvaluations},
             {icon:<ClipboardList size={18}/>,label:"Reg. avaliação",action:onOpenEvaluations},
-            {icon:<CreditCard size={18}/>,label:"Mensalidade",action:()=>setToast({msg:"Status de mensalidade atualizado.",type:"info"})},
+            { icon: <CreditCard size={18} />, label: "Mensalidade", action: onOpenFinance },
           ].map(a=>(
             <button
               key={a.label}
@@ -2834,6 +2841,101 @@ function Profile({ user,onLogout }:{user:AppUser;onLogout:()=>void}) {
 const TERMS_MD = (<><p className="mb-3"><strong className="text-foreground">1. Aceitação dos Termos</strong></p><p className="mb-3">Ao criar uma conta no TrainerX64, você concorda com estes Termos de Uso.</p><p className="mb-3"><strong className="text-foreground">2. Uso do Serviço</strong></p><p className="mb-3">O TrainerX64 é uma plataforma de gestão de treinos. O usuário é responsável pela veracidade das informações.</p><p className="mb-3"><strong className="text-foreground">3. Responsabilidade</strong></p><p>Consulte sempre um profissional antes de iniciar qualquer programa de exercícios.</p></>);
 const PRIV_MD  = (<><p className="mb-3"><strong className="text-foreground">1. Dados Coletados</strong></p><p className="mb-3">Coletamos nome, e-mail, dados de treino e medidas físicas fornecidas voluntariamente.</p><p className="mb-3"><strong className="text-foreground">2. LGPD</strong></p><p>Em conformidade com a Lei 13.709/2018, você tem direito de acessar, corrigir e excluir seus dados.</p></>);
 
+
+
+function FinanceModal({
+  student,
+  alunosInadimplentes,
+  onClose,
+  onCadastrar,
+  onDarBaixa,
+  saving,
+}: {
+  student: Student;
+  alunosInadimplentes: any[];
+  onClose: () => void;
+  onCadastrar: (alunoId: string, valor: number, dataVencimento: string) => Promise<boolean>;
+  onDarBaixa: (id: string) => Promise<void>;
+  saving: boolean;
+}) {
+  const [valor, setValor] = useState("");
+  const [vencimento, setVencimento] = useState(new Date().toISOString().slice(0, 10));
+  const ac = AC("personal");
+
+  // Localiza as faturas pendentes desse aluno que vieram do banco de dados
+  const dadosInadimplente = alunosInadimplentes.find(a => a.id === student.id);
+  const faturasPendentes = dadosInadimplente?.mensalidades ?? [];
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!valor || Number(valor) <= 0) return;
+    const sucesso = await onCadastrar(student.id, Number(valor), vencimento);
+    if (sucesso) {
+      setValor("");
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center">
+      <div className="w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl bg-card border border-border p-6 pb-10">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-montserrat font-bold text-xl text-foreground">Financeiro: {student.name}</h2>
+            <p className="text-xs text-muted-foreground font-inter">Status cadastral: {student.status}</p>
+          </div>
+          <button onClick={onClose}><X size={24} className="text-muted-foreground" /></button>
+        </div>
+
+        {/* Formulário de Cobrança */}
+        <form onSubmit={handleSubmit} className="bg-background border border-border p-4 rounded-2xl mb-6 flex flex-col gap-3">
+          <p className="text-xs font-montserrat font-bold text-foreground uppercase tracking-wider">Gerar Nova Cobrança</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-inter text-muted-foreground">Valor (R$)</label>
+              <input type="number" value={valor} onChange={e => setValor(e.target.value)} placeholder="150.00" className="h-10 rounded-xl bg-card border border-border px-3 text-sm text-foreground outline-none focus:border-accent" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-inter text-muted-foreground">Vencimento</label>
+              <input type="date" value={vencimento} onChange={e => setVencimento(e.target.value)} className="h-10 rounded-xl bg-card border border-border px-3 text-sm text-foreground outline-none focus:border-accent" />
+            </div>
+          </div>
+          <button type="submit" disabled={saving || !valor} className="h-10 rounded-xl font-inter font-bold text-xs text-black flex items-center justify-center gap-1 disabled:opacity-40" style={{ background: ac }}>
+            {saving ? <RefreshCw size={14} className="animate-spin text-white" /> : <Plus size={14} />}
+            Lançar Mensalidade
+          </button>
+        </form>
+
+        {/* Listagem de Pendências financeiras */}
+        <div>
+          <p className="text-xs font-montserrat font-bold text-foreground uppercase tracking-wider mb-3">Mensalidades em Aberto</p>
+          {faturasPendentes.length === 0 ? (
+            <p className="text-sm text-muted-foreground font-inter italic bg-background p-4 rounded-2xl text-center border border-border">
+              Nenhuma mensalidade pendente encontrada para este aluno.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {faturasPendentes.map((fatura: any) => (
+                <div key={fatura.id} className="bg-background border border-border p-3 rounded-xl flex items-center justify-between">
+                  <div>
+                    <p className="font-montserrat font-bold text-sm text-destructive">R$ {fatura.valor.toFixed(2)}</p>
+                    <p className="text-xs font-inter text-muted-foreground">Vence em: {new Date(fatura.dataVencimento).toLocaleDateString('pt-BR')}</p>
+                  </div>
+                  <button onClick={() => onDarBaixa(fatura.id)} disabled={saving} className="h-8 px-3 rounded-lg text-xs font-inter font-semibold bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-black transition-colors flex items-center gap-1">
+                    {saving ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
+                    Recebido
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 // ─── App Root ─────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -2866,6 +2968,13 @@ export default function App() {
   const [exerciciosDoTreino, setExerciciosDoTreino] = useState<TreinoExercicio[]>([]);
   const [loadingExerciciosDoTreino, setLoadingExerciciosDoTreino] = useState(false);
   const [savingExercicioTreino, setSavingExercicioTreino] = useState(false);
+
+
+  // ─── Estados do Módulo Financeiro ───────────────────────────────────────
+  const [alunosInadimplentes, setAlunosInadimplentes] = useState<any[]>([]);
+  const [loadingFinanceiro, setLoadingFinanceiro] = useState(false);
+  const [savingMensalidade, setSavingMensalidade] = useState(false);
+  const [financeStudent, setFinanceStudent] = useState<Student | null>(null);
 
   useEffect(() => {
     async function carregarExercicios() {
@@ -2901,6 +3010,10 @@ export default function App() {
       }
     }
     carregarTreinos();
+  }, []);
+
+  useEffect(() => {
+    carregarAlunosInadimplentes();
   }, []);
 
   // ─── Ações de Exercícios ──────────────────────────────────────────────────
@@ -3010,6 +3123,70 @@ export default function App() {
       });
     } finally {
       setLoadingTreinos(false);
+    }
+  }
+
+  // ─── Funções de Ação do Módulo Financeiro ─────────────────────────────────
+  async function carregarAlunosInadimplentes() {
+    try {
+      setLoadingFinanceiro(true);
+      const data = await mensalidadeService.listarPendentes();
+      setAlunosInadimplentes(data);
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao carregar pendências financeiras.",
+        type: "error",
+      });
+    } finally {
+      setLoadingFinanceiro(false);
+    }
+  }
+
+  async function handleCadastrarMensalidade(alunoId: string, valor: number, dataVencimento: string): Promise<boolean> {
+    try {
+      setSavingMensalidade(true);
+      await mensalidadeService.cadastrar({ alunoId, valor, dataVencimento });
+      setGToast({ msg: "Mensalidade gerada com sucesso!", type: "success" });
+      
+      // Atualiza as listas locais para refletir o novo status instantaneamente
+      await carregarAlunosInadimplentes();
+      const alunosAtualizados = await alunoService.listarAlunos();
+      setStudents(alunosAtualizados);
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao cadastrar mensalidade.",
+        type: "error",
+      });
+      return false;
+    } finally {
+      setSavingMensalidade(false);
+    }
+  }
+
+  async function handleDarBaixaMensalidade(mensalidadeId: string): Promise<void> {
+    try {
+      setSavingMensalidade(true);
+      await mensalidadeService.darBaixa(mensalidadeId);
+      setGToast({ msg: "Mensalidade marcada como recebida com sucesso!", type: "success" });
+      
+      // Atualiza o financeiro e o perfil dos alunos após o pagamento
+      await carregarAlunosInadimplentes();
+      const alunosAtualizados = await alunoService.listarAlunos();
+      setStudents(alunosAtualizados);
+      
+      // Se o aluno estiver selecionado na tela de detalhes, atualiza o status dele visualmente
+      if (selS) {
+        const alunoAtualizado = alunosAtualizados.find(a => a.id === selS.id);
+        if (alunoAtualizado) setSelS(alunoAtualizado);
+      }
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao registrar recebimento.",
+        type: "error",
+      });
+    } finally {
+      setSavingMensalidade(false);
     }
   }
 
@@ -3263,6 +3440,7 @@ export default function App() {
           onEdit={()=>setStudentFormMode("edit")}
           onDelete={()=>handleDeleteStudent(selS.id)}
           onOpenEvaluations={()=>setScreen("evolution")}
+          onOpenFinance={() => setFinanceStudent(selS)}
           deleting={deletingStudent}
         />
       )}
@@ -3338,6 +3516,20 @@ export default function App() {
       {navScreens.includes(screen)&&user&&(
         <BottomNav active={screen} onNav={nav} ut={ut}/>
       )}
+
+
+      {/* Modal de Gestão Financeira */}
+      {financeStudent && (
+        <FinanceModal
+          student={financeStudent}
+          alunosInadimplentes={alunosInadimplentes}
+          onClose={() => setFinanceStudent(null)}
+          onCadastrar={handleCadastrarMensalidade}
+          onDarBaixa={handleDarBaixaMensalidade}
+          saving={savingMensalidade}
+        />
+      )}
+      
     </div>
   );
 }
