@@ -13,12 +13,14 @@ import {
 import {
   exercicioService,
   type Exercicio,
+  type CategoriaExercicio,
   type CriarExercicioDTO,
   type AtualizarExercicioDTO,
 } from "../services/exercicioService";
 import {
   treinoService,
   type Treino,
+  type StatusTreino,
   type CriarTreinoDTO,
   type AtualizarTreinoDTO,
 } from "../services/treinoService";
@@ -1612,166 +1614,434 @@ function AlunoDetail({
 
 // ─── Criar Treino ─────────────────────────────────────────────────────────────
 
-function CriarTreino({ 
-  onBack, 
-  exercicios, 
-  loadingExercicios 
-}: { 
-  onBack: () => void; 
-  exercicios: Exercicio[]; 
-  loadingExercicios: boolean; 
+type ExercicioSelecionadoForm = AdicionarExercicioTreinoDTO;
+
+function CriarTreino({
+  onBack,
+  exercicios,
+  loadingExercicios,
+  saving,
+  onSubmit,
+}: {
+  onBack: () => void;
+  exercicios: Exercicio[];
+  loadingExercicios: boolean;
+  saving: boolean;
+  onSubmit: (
+    treino: CriarTreinoDTO,
+    exercicios: AdicionarExercicioTreinoDTO[],
+  ) => Promise<boolean>;
 }) {
-  const [student,setStudent]=useState("");
-  const [wname,setWname]=useState("");
-  const [cat,setCat]=useState("");
-  const [desc,setDesc]=useState("");
-  const [exs,setExs]=useState<string[]>([]);
-  const [showModal,setShowModal]=useState(false);
-  const [exSearch,setExSearch]=useState("");
-  const [exFilter,setExFilter]=useState("Todos");
-  const [errs,setErrs]=useState<Record<string,string>>({});
-  const [toast,setToast]=useState<{msg:string;type:"success"|"error"}|null>(null);
-  const ac=AC("personal");
-  const canSave=wname.trim()&&cat&&exs.length>0;
-  
-  // Filtrando usando as propriedades REAIS do banco (nome e categoria)
-  const filtered = exercicios.filter(e => 
-    e.nome.toLowerCase().includes(exSearch.toLowerCase()) &&
-    (exFilter === "Todos" || e.categoria === exFilter)
+  const [wname, setWname] = useState("");
+  const [objetivo, setObjetivo] = useState("");
+  const [desc, setDesc] = useState("");
+  const [duracao, setDuracao] = useState("");
+  const [status, setStatus] = useState<StatusTreino>("disponivel");
+  const [selecionados, setSelecionados] = useState<ExercicioSelecionadoForm[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [exSearch, setExSearch] = useState("");
+  const [exFilter, setExFilter] = useState("Todos");
+  const [errs, setErrs] = useState<Record<string, string>>({});
+  const ac = AC("personal");
+
+  const filtered = exercicios.filter((exercicio) =>
+    exercicio.nome.toLowerCase().includes(exSearch.toLowerCase()) &&
+    (exFilter === "Todos" || exercicio.categoria === exFilter)
   );
 
-  const save=()=>{
-    const e:Record<string,string>={};
-    if(!wname.trim()) e.wname="Nome obrigatório.";
-    if(!cat) e.cat="Categoria obrigatória.";
-    if(!exs.length) e.ex="Adicione ao menos 1 exercício.";
-    setErrs(e); if(Object.keys(e).length) return;
-    setToast({msg:"Treino criado com sucesso.",type:"success"});
-    setTimeout(onBack,1500);
-  };
+  function adicionarExercicio(exercicio: Exercicio) {
+    if (selecionados.some((item) => item.exercicioId === exercicio.id)) {
+      return;
+    }
+
+    setSelecionados((prev) => [
+      ...prev,
+      {
+        exercicioId: exercicio.id,
+        ordem: prev.length + 1,
+        series: 3,
+        repeticoes: 10,
+        carga: 0,
+      },
+    ]);
+    setShowModal(false);
+  }
+
+  function atualizarSelecionado(
+    exercicioId: string,
+    campo: "series" | "repeticoes" | "carga",
+    valor: number,
+  ) {
+    setSelecionados((prev) =>
+      prev.map((item) =>
+        item.exercicioId === exercicioId
+          ? { ...item, [campo]: valor }
+          : item,
+      ),
+    );
+  }
+
+  function removerSelecionado(exercicioId: string) {
+    setSelecionados((prev) =>
+      prev
+        .filter((item) => item.exercicioId !== exercicioId)
+        .map((item, index) => ({ ...item, ordem: index + 1 })),
+    );
+  }
+
+  async function save() {
+    const errors: Record<string, string> = {};
+
+    if (!wname.trim()) errors.wname = "Nome obrigatório.";
+    if (!objetivo.trim()) errors.objetivo = "Objetivo obrigatório.";
+    if (duracao && (!Number.isInteger(Number(duracao)) || Number(duracao) <= 0)) {
+      errors.duracao = "A duração deve ser um número inteiro maior que zero.";
+    }
+    if (!selecionados.length) errors.ex = "Adicione ao menos 1 exercício.";
+    if (
+      selecionados.some(
+        (item) =>
+          item.series < 1 ||
+          item.repeticoes < 1 ||
+          (item.carga !== undefined && item.carga < 0),
+      )
+    ) {
+      errors.ex = "Revise séries, repetições e carga dos exercícios.";
+    }
+
+    setErrs(errors);
+    if (Object.keys(errors).length) return;
+
+    const sucesso = await onSubmit(
+      {
+        nome: wname.trim(),
+        objetivo: objetivo.trim(),
+        descricao: desc.trim() || undefined,
+        duracao: duracao ? Number(duracao) : undefined,
+        status,
+      },
+      selecionados,
+    );
+
+    if (sucesso) onBack();
+  }
 
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
-      {toast&&<Toast message={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
-      {showModal&&(
-        <div className="fixed inset-0 z-40 bg-black/80 flex items-end justify-center" onClick={()=>setShowModal(false)}>
-          <div className="bg-card rounded-t-3xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-5 pb-10" onClick={e=>e.stopPropagation()}>
+      {showModal && (
+        <div className="fixed inset-0 z-40 bg-black/80 flex items-end justify-center" onClick={() => setShowModal(false)}>
+          <div className="bg-card rounded-t-3xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-5 pb-10" onClick={(event) => event.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-montserrat font-bold text-xl text-foreground">Selecionar Exercício</h2>
-              <button onClick={()=>setShowModal(false)} aria-label="Fechar"><X size={24} className="text-muted-foreground"/></button>
+              <h2 className="font-montserrat font-bold text-xl text-foreground">Selecionar exercício</h2>
+              <button onClick={() => setShowModal(false)} aria-label="Fechar"><X size={24} className="text-muted-foreground"/></button>
             </div>
+
             <div className="flex items-center gap-3 bg-background border border-border rounded-2xl px-4 h-11 mb-3">
               <Search size={16} className="text-muted-foreground"/>
-              <input value={exSearch} onChange={e=>setExSearch(e.target.value)} placeholder="Buscar..."
-                className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm outline-none" aria-label="Buscar exercício"/>
+              <input
+                value={exSearch}
+                onChange={(event) => setExSearch(event.target.value)}
+                placeholder="Buscar exercício..."
+                className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm outline-none"
+                aria-label="Buscar exercício"
+              />
             </div>
+
             <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-              {["Todos","Peito","Costas","Pernas","Ombros","Braços"].map(f=>(
-                <button key={f} onClick={()=>setExFilter(f)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-inter font-medium whitespace-nowrap transition-all ${exFilter===f?"text-black":"bg-muted text-muted-foreground"}`}
-                  style={exFilter===f?{background:ac}:undefined} aria-pressed={exFilter===f}>{f}</button>
+              {["Todos", "Peito", "Costas", "Pernas", "Braços", "Ombros", "Abdômen", "Glúteos", "Panturrilha", "Outro"].map((filtro) => (
+                <button
+                  key={filtro}
+                  onClick={() => setExFilter(filtro)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-inter font-medium whitespace-nowrap transition-all ${exFilter === filtro ? "text-black" : "bg-muted text-muted-foreground"}`}
+                  style={exFilter === filtro ? { background: ac } : undefined}
+                  aria-pressed={exFilter === filtro}
+                >
+                  {filtro}
+                </button>
               ))}
             </div>
-            
-            {/* Tratando o carregamento dinâmico do banco */}
+
             {loadingExercicios ? (
               <div className="flex flex-col items-center gap-2 py-8">
-                <RefreshCw size={22} className="animate-spin text-muted-foreground" />
+                <RefreshCw size={22} className="animate-spin text-muted-foreground"/>
                 <p className="text-xs text-muted-foreground font-inter">Buscando exercícios no banco...</p>
               </div>
-            ) : filtered.length===0 ? (
+            ) : filtered.length === 0 ? (
               <p className="text-center text-muted-foreground text-sm py-8">Nenhum exercício encontrado.</p>
-            ) : filtered.map(ex=>(
-                <button key={ex.id} onClick={()=>{if(!exs.includes(ex.nome))setExs(p=>[...p,ex.nome]);setShowModal(false);}}
-                  className="flex items-center gap-3 bg-background border border-border rounded-2xl px-4 py-3 text-left hover:border-primary transition-all w-full mb-2">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:AC_BG("personal",0.15)}}>
-                    <Dumbbell size={18} style={{color:ac}}/>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-inter font-semibold text-sm text-foreground">{ex.nome}</p>
-                    <p className="text-xs text-muted-foreground font-inter truncate">{ex.descricao || "Sem descrição"}</p>
-                  </div>
-                  <span className="text-xs font-inter px-2 py-1 rounded-full bg-muted text-muted-foreground flex-shrink-0">{ex.categoria}</span>
-                  {exs.includes(ex.nome)&&<Check size={16} style={{color:ac}}/>}
-                </button>
-              ))
-            }
+            ) : (
+              filtered.map((exercicio) => {
+                const adicionado = selecionados.some((item) => item.exercicioId === exercicio.id);
+                return (
+                  <button
+                    key={exercicio.id}
+                    disabled={adicionado}
+                    onClick={() => adicionarExercicio(exercicio)}
+                    className="flex items-center gap-3 bg-background border border-border rounded-2xl px-4 py-3 text-left hover:border-primary transition-all w-full mb-2 disabled:opacity-50"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: AC_BG("personal", 0.15) }}>
+                      <Dumbbell size={18} style={{ color: ac }}/>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-inter font-semibold text-sm text-foreground">{exercicio.nome}</p>
+                      <p className="text-xs text-muted-foreground font-inter truncate">{exercicio.descricao || "Sem descrição"}</p>
+                    </div>
+                    {adicionado ? <Check size={16} style={{ color: ac }}/> : <Plus size={16} className="text-muted-foreground"/>}
+                  </button>
+                );
+              })
+            )}
           </div>
         </div>
       )}
+
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center gap-4 mb-6">
           <BackBtn onClick={onBack}/>
-          <h1 className="font-montserrat font-bold text-2xl text-foreground">Criar Treino</h1>
+          <div>
+            <h1 className="font-montserrat font-bold text-2xl text-foreground">Criar treino</h1>
+            <p className="text-xs text-muted-foreground font-inter mt-1">Os dados serão salvos no PostgreSQL.</p>
+          </div>
         </div>
+
         <div className="flex flex-col gap-4">
-          <div>
-            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Aluno (opcional)</label>
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              {["Nenhum",...STUDENTS.map(s=>s.name)].map(n=>{
-                const v=n==="Nenhum"?"":n; const s=student===v;
-                return <button key={n} onClick={()=>setStudent(v)}
-                  className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all flex-shrink-0 ${s?"text-black":"bg-card border border-border text-muted-foreground"}`}
-                  style={s?{background:ac}:undefined} aria-pressed={s}>{n}</button>;
-              })}
-            </div>
-          </div>
           <Fld label="Nome do treino *" value={wname} onChange={setWname} placeholder="Ex: Upper A" error={errs.wname} icon={<Dumbbell size={18}/>}/>
+          <Fld label="Objetivo *" value={objetivo} onChange={setObjetivo} placeholder="Ex: Hipertrofia" error={errs.objetivo} icon={<Target size={18}/>}/>
+          <Fld label="Duração estimada (min)" value={duracao} onChange={setDuracao} placeholder="Ex: 65" type="number" error={errs.duracao} icon={<Clock size={18}/>}/>
+
           <div>
-            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Categoria *</label>
-            <div className="flex flex-wrap gap-2">
-              {["Hipertrofia","Emagrecimento","Condicionamento","Mobilidade","Reabilitação"].map(c=>(
-                <button key={c} onClick={()=>setCat(c)}
-                  className={`px-4 py-2 rounded-full text-sm font-inter transition-all ${cat===c?"text-black font-semibold":"bg-card border border-border text-muted-foreground"}`}
-                  style={cat===c?{background:ac}:undefined} aria-pressed={cat===c}>{c}</button>
-              ))}
-            </div>
-            {errs.cat&&<p className="text-xs text-destructive mt-1">{errs.cat}</p>}
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Status</label>
+            <select
+              value={status}
+              onChange={(event) => setStatus(event.target.value as StatusTreino)}
+              className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none focus:border-primary"
+            >
+              <option value="disponivel">Disponível</option>
+              <option value="andamento">Em andamento</option>
+              <option value="concluido">Concluído</option>
+            </select>
           </div>
+
           <div>
-            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Descrição (opcional)</label>
-            <textarea value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Objetivo, observações..."
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Descrição</label>
+            <textarea
+              value={desc}
+              onChange={(event) => setDesc(event.target.value)}
+              placeholder="Objetivo, observações..."
               className="w-full rounded-2xl bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-primary transition-colors resize-none"
-              rows={3} aria-label="Descrição"/>
+              rows={3}
+            />
           </div>
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-montserrat font-semibold text-muted-foreground">Exercícios *</label>
-              <span className="text-xs font-inter text-muted-foreground">{exs.length} adicionado{exs.length!==1?"s":""}</span>
+              <span className="text-xs font-inter text-muted-foreground">{selecionados.length} adicionado{selecionados.length !== 1 ? "s" : ""}</span>
             </div>
-            {exs.length===0
-              ? <div className="bg-card border border-dashed border-border rounded-2xl py-8 flex flex-col items-center gap-2 mb-2">
-                  <Dumbbell size={28} className="text-muted-foreground"/>
-                  <p className="text-sm font-inter text-muted-foreground">Nenhum exercício adicionado</p>
-                </div>
-              : <div className="flex flex-col gap-2 mb-2">
-                  {exs.map((ex,i)=>(
-                    <div key={i} className="bg-card border border-border rounded-xl px-4 py-3 flex items-center justify-between">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{background:AC_BG("personal",0.15)}}>
-                          <Dumbbell size={14} style={{color:ac}}/>
+
+            {selecionados.length === 0 ? (
+              <div className="bg-card border border-dashed border-border rounded-2xl py-8 flex flex-col items-center gap-2 mb-2">
+                <Dumbbell size={28} className="text-muted-foreground"/>
+                <p className="text-sm font-inter text-muted-foreground">Nenhum exercício adicionado</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3 mb-2">
+                {selecionados.map((item) => {
+                  const exercicio = exercicios.find((ex) => ex.id === item.exercicioId);
+                  if (!exercicio) return null;
+
+                  return (
+                    <div key={item.exercicioId} className="bg-card border border-border rounded-2xl p-4">
+                      <div className="flex items-center justify-between gap-3 mb-3">
+                        <div className="min-w-0">
+                          <p className="font-inter font-semibold text-sm text-foreground truncate">{item.ordem}. {exercicio.nome}</p>
+                          <p className="text-xs text-muted-foreground">{exercicio.categoria}</p>
                         </div>
-                        <span className="text-sm font-inter font-medium text-foreground truncate">{ex}</span>
+                        <button onClick={() => removerSelecionado(item.exercicioId)} aria-label={`Remover ${exercicio.nome}`}>
+                          <X size={18} className="text-destructive"/>
+                        </button>
                       </div>
-                      <button onClick={()=>setExs(p=>p.filter((_,j)=>j!==i))} aria-label={`Remover ${ex}`}>
-                        <X size={16} className="text-muted-foreground hover:text-destructive transition-colors"/>
-                      </button>
+
+                      <div className="grid grid-cols-3 gap-2">
+                        <div>
+                          <label className="text-[11px] text-muted-foreground">Séries</label>
+                          <input
+                            type="number"
+                            min={1}
+                            value={item.series}
+                            onChange={(event) => atualizarSelecionado(item.exercicioId, "series", Number(event.target.value))}
+                            className="w-full h-10 rounded-xl bg-background border border-border px-3 text-foreground outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-muted-foreground">Reps</label>
+                          <input
+                            type="number"
+                            min={1}
+                            value={item.repeticoes}
+                            onChange={(event) => atualizarSelecionado(item.exercicioId, "repeticoes", Number(event.target.value))}
+                            className="w-full h-10 rounded-xl bg-background border border-border px-3 text-foreground outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-muted-foreground">Carga</label>
+                          <input
+                            type="number"
+                            min={0}
+                            step="0.5"
+                            value={item.carga ?? 0}
+                            onChange={(event) => atualizarSelecionado(item.exercicioId, "carga", Number(event.target.value))}
+                            className="w-full h-10 rounded-xl bg-background border border-border px-3 text-foreground outline-none"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-            }
-            {errs.ex&&<p className="text-xs text-destructive mb-2">{errs.ex}</p>}
-            <button onClick={()=>setShowModal(true)}
-              className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-sm font-inter font-semibold text-muted-foreground hover:border-primary hover:text-primary transition-all">
+                  );
+                })}
+              </div>
+            )}
+
+            {errs.ex && <p className="text-xs text-destructive mb-2">{errs.ex}</p>}
+            <button
+              onClick={() => setShowModal(true)}
+              className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-sm font-inter font-semibold text-muted-foreground hover:border-primary hover:text-primary transition-all"
+            >
               <Plus size={18}/> Adicionar exercício
             </button>
           </div>
-          <button onClick={save} disabled={!canSave}
-            className="w-full h-14 rounded-2xl font-montserrat font-bold text-base text-black flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed mt-1"
-            style={{background:canSave?ac:"#2a2a2a"}} aria-disabled={!canSave}>
-            <Check size={20}/> Salvar treino
-          </button>
-          {!canSave&&<p className="text-xs text-muted-foreground text-center font-inter">Preencha nome, categoria e adicione ao menos 1 exercício.</p>}
+
+          <PBtn onClick={save} loading={saving} disabled={saving} ut="personal">
+            <Check size={18}/> Salvar treino e exercícios
+          </PBtn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Gerenciador de Exercícios ────────────────────────────────────────────────
+
+function ExerciseManagerModal({
+  exercicios,
+  saving,
+  deleting,
+  onClose,
+  onCreate,
+  onUpdate,
+  onDelete,
+}: {
+  exercicios: Exercicio[];
+  saving: boolean;
+  deleting: boolean;
+  onClose: () => void;
+  onCreate: (data: CriarExercicioDTO) => Promise<boolean>;
+  onUpdate: (id: string, data: AtualizarExercicioDTO) => Promise<boolean>;
+  onDelete: (id: string) => Promise<void>;
+}) {
+  const categorias: CategoriaExercicio[] = ["Peito", "Costas", "Pernas", "Braços", "Ombros", "Abdômen", "Glúteos", "Panturrilha", "Outro"];
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [nome, setNome] = useState("");
+  const [categoria, setCategoria] = useState<CategoriaExercicio>("Peito");
+  const [descricao, setDescricao] = useState("");
+  const [erro, setErro] = useState("");
+  const [search, setSearch] = useState("");
+
+  const lista = exercicios.filter((exercicio) =>
+    exercicio.nome.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  function limparFormulario() {
+    setEditingId(null);
+    setNome("");
+    setCategoria("Peito");
+    setDescricao("");
+    setErro("");
+  }
+
+  function iniciarEdicao(exercicio: Exercicio) {
+    setEditingId(exercicio.id);
+    setNome(exercicio.nome);
+    setCategoria(exercicio.categoria);
+    setDescricao(exercicio.descricao ?? "");
+    setErro("");
+  }
+
+  async function salvar() {
+    if (!nome.trim()) {
+      setErro("Informe o nome do exercício.");
+      return;
+    }
+
+    const data = {
+      nome: nome.trim(),
+      categoria,
+      descricao: descricao.trim() || undefined,
+    };
+
+    const sucesso = editingId
+      ? await onUpdate(editingId, data)
+      : await onCreate(data);
+
+    if (sucesso) limparFormulario();
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center" onClick={onClose}>
+      <div className="bg-background rounded-t-3xl w-full max-w-lg max-h-[92vh] overflow-y-auto p-6 pb-10 border border-border" onClick={(event) => event.stopPropagation()}>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="font-montserrat font-bold text-xl text-foreground">Gerenciar exercícios</h2>
+            <p className="text-xs text-muted-foreground mt-1">CRUD real de exercícios.</p>
+          </div>
+          <button onClick={onClose} aria-label="Fechar"><X size={24} className="text-muted-foreground"/></button>
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl p-4 mb-5 flex flex-col gap-3">
+          <p className="font-montserrat font-semibold text-sm text-foreground">{editingId ? "Editar exercício" : "Novo exercício"}</p>
+          <Fld label="Nome" value={nome} onChange={setNome} placeholder="Ex: Supino inclinado"/>
+          <div>
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-1.5">Categoria</label>
+            <select
+              value={categoria}
+              onChange={(event) => setCategoria(event.target.value as CategoriaExercicio)}
+              className="h-14 w-full rounded-2xl bg-background border border-border px-4 text-foreground outline-none"
+            >
+              {categorias.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
+          </div>
+          <Fld label="Descrição" value={descricao} onChange={setDescricao} placeholder="Descrição técnica opcional"/>
+          {erro && <p className="text-xs text-destructive">{erro}</p>}
+          <div className="grid grid-cols-2 gap-2">
+            {editingId ? <SBtn onClick={limparFormulario}>Cancelar edição</SBtn> : <SBtn onClick={onClose}>Fechar</SBtn>}
+            <PBtn onClick={salvar} loading={saving} ut="personal">{editingId ? "Atualizar" : "Cadastrar"}</PBtn>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12 mb-3">
+          <Search size={18} className="text-muted-foreground"/>
+          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar exercício..." className="flex-1 bg-transparent text-foreground outline-none text-sm"/>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          {lista.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">Nenhum exercício cadastrado.</p>
+          ) : lista.map((exercicio) => (
+            <div key={exercicio.id} className="bg-card border border-border rounded-2xl p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-inter font-semibold text-sm text-foreground">{exercicio.nome}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{exercicio.categoria} · {exercicio.descricao || "Sem descrição"}</p>
+                </div>
+                <div className="flex gap-2 flex-shrink-0">
+                  <button onClick={() => iniciarEdicao(exercicio)} className="w-9 h-9 rounded-xl border border-border flex items-center justify-center" aria-label={`Editar ${exercicio.nome}`}>
+                    <Settings size={16} className="text-accent"/>
+                  </button>
+                  <button disabled={deleting} onClick={() => onDelete(exercicio.id)} className="w-9 h-9 rounded-xl border border-destructive flex items-center justify-center disabled:opacity-50" aria-label={`Excluir ${exercicio.nome}`}>
+                    <X size={16} className="text-destructive"/>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -1780,122 +2050,132 @@ function CriarTreino({
 
 // ─── Workouts ─────────────────────────────────────────────────────────────────
 
-function Workouts({ 
-  treinos, 
-  onSelect, 
-  ut 
-}: { 
-  treinos: Treino[]; 
-  onSelect: (id: string) => void; 
-  ut: UserType 
+function Workouts({
+  treinos,
+  loading,
+  exercicios,
+  savingExercicio,
+  deletingExercicio,
+  onSelect,
+  onCreateWorkout,
+  onCreateExercicio,
+  onUpdateExercicio,
+  onDeleteExercicio,
+  ut,
+}: {
+  treinos: Treino[];
+  loading: boolean;
+  exercicios: Exercicio[];
+  savingExercicio: boolean;
+  deletingExercicio: boolean;
+  onSelect: (id: string) => void;
+  onCreateWorkout: () => void;
+  onCreateExercicio: (data: CriarExercicioDTO) => Promise<boolean>;
+  onUpdateExercicio: (id: string, data: AtualizarExercicioDTO) => Promise<boolean>;
+  onDeleteExercicio: (id: string) => Promise<void>;
+  ut: UserType;
 }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("Todos");
+  const [showExercises, setShowExercises] = useState(false);
   const ac = AC(ut);
-  
-  // Agora filtra a lista REALS de treinos vinda do banco
-  const list = treinos.filter(w => 
-    w.nome.toLowerCase().includes(search.toLowerCase()) &&
-    (filter === "Todos" || w.objetivo === filter)
+
+  const list = treinos.filter((treino) =>
+    treino.nome.toLowerCase().includes(search.toLowerCase()) &&
+    (filter === "Todos" || treino.objetivo === filter)
   );
 
   return (
     <div className="min-h-screen bg-background pb-36">
+      {showExercises && (
+        <ExerciseManagerModal
+          exercicios={exercicios}
+          saving={savingExercicio}
+          deleting={deletingExercicio}
+          onClose={() => setShowExercises(false)}
+          onCreate={onCreateExercicio}
+          onUpdate={onUpdateExercicio}
+          onDelete={onDeleteExercicio}
+        />
+      )}
+
       <div className="px-6 pt-14 pb-4">
         <h1 className="font-montserrat font-bold text-3xl text-foreground mb-0.5">Treinos</h1>
         <p className="text-muted-foreground text-sm font-inter">
-          {ut === "personal" ? "Gerencie rotinas e programas" : "Suas rotinas disponíveis"}
+          {ut === "personal" ? "Gerencie treinos e exercícios reais" : "Suas rotinas disponíveis"}
         </p>
       </div>
 
-      <div className="px-6 mb-4">
-        {ut === "personal" ? (
-          <div className="grid grid-cols-2 gap-3">
-            <button className="h-12 rounded-2xl border border-border flex items-center justify-center gap-2 text-foreground hover:border-primary transition-all font-inter font-semibold text-sm">
-              <Plus size={18}/> Nova Rotina
-            </button>
-            <button className="h-12 rounded-2xl flex items-center justify-center gap-2 text-black font-inter font-semibold text-sm" style={{ background: ac }}>
-              <Search size={18}/> Explorar
-            </button>
-          </div>
-        ) : (
-          <button className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground hover:border-accent hover:text-accent transition-all font-inter font-semibold text-sm">
-            <Play size={18}/> Iniciar Treinamento Livre
+      {ut === "personal" && (
+        <div className="px-6 mb-4 grid grid-cols-2 gap-3">
+          <button onClick={onCreateWorkout} className="h-12 rounded-2xl border border-border flex items-center justify-center gap-2 text-foreground hover:border-primary transition-all font-inter font-semibold text-sm">
+            <Plus size={18}/> Nova rotina
           </button>
-        )}
-      </div>
+          <button onClick={() => setShowExercises(true)} className="h-12 rounded-2xl flex items-center justify-center gap-2 text-black font-inter font-semibold text-sm" style={{ background: ac }}>
+            <Dumbbell size={18}/> Exercícios
+          </button>
+        </div>
+      )}
 
       <div className="px-6 mb-3">
         <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12">
           <Search size={18} className="text-muted-foreground"/>
-          <input 
-            value={search} 
-            onChange={e => setSearch(e.target.value)} 
-            placeholder="Buscar treino..."
-            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" 
-            aria-label="Buscar treino"
-          />
+          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar treino..." className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" aria-label="Buscar treino"/>
           {search && <button onClick={() => setSearch("")} aria-label="Limpar"><X size={16} className="text-muted-foreground"/></button>}
         </div>
       </div>
 
       <div className="px-6 mb-4 overflow-x-auto">
         <div className="flex gap-2 pb-1">
-          {["Todos", "Hipertrofia", "Emagrecimento", "Condicionamento"].map(f => (
-            <button 
-              key={f} 
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter === f ? "text-black" : "bg-card border border-border text-muted-foreground"}`}
-              style={filter === f ? { background: ac } : undefined} 
-              aria-pressed={filter === f}
+          {["Todos", "Hipertrofia", "Emagrecimento", "Condicionamento", "Mobilidade", "Reabilitação"].map((filtro) => (
+            <button
+              key={filtro}
+              onClick={() => setFilter(filtro)}
+              className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter === filtro ? "text-black" : "bg-card border border-border text-muted-foreground"}`}
+              style={filter === filtro ? { background: ac } : undefined}
+              aria-pressed={filter === filtro}
             >
-              {f}
+              {filtro}
             </button>
           ))}
         </div>
       </div>
 
       <div className="px-6 flex flex-col gap-3">
-        <p className="font-montserrat font-semibold text-sm text-foreground">
-          {ut === "personal" ? "Modelos de treino" : "Minhas rotinas"}{filter !== "Todos" && ` · ${filter}`}
-        </p>
+        <p className="font-montserrat font-semibold text-sm text-foreground">{ut === "personal" ? "Treinos cadastrados" : "Minhas rotinas"}</p>
 
-        {list.length === 0 ? (
+        {loading ? (
           <div className="flex flex-col items-center gap-3 py-12">
-            <Dumbbell size={40} className="text-muted-foreground"/>
-            <p className="font-inter text-muted-foreground text-center">Nenhum treino encontrado.</p>
+            <RefreshCw size={28} className="animate-spin text-muted-foreground"/>
+            <p className="text-sm text-muted-foreground">Carregando treinos...</p>
+          </div>
+        ) : list.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <Dumbbell size={38} className="text-muted-foreground"/>
+            <p className="text-sm font-inter text-muted-foreground">Nenhum treino encontrado.</p>
+            {ut === "personal" && <button onClick={onCreateWorkout} className="text-sm font-semibold" style={{ color: ac }}>Criar primeiro treino</button>}
           </div>
         ) : (
-          list.map(treino => (
-            /* AQUI ENTRA O CÓDIGO DO MAP ATUALIZADO COM O SEU CLIQUE DA API */
-            <div 
-              key={treino.id} 
-              onClick={() => onSelect(treino.id)} 
-              className="bg-card border border-border rounded-2xl p-4 flex flex-col gap-3 cursor-pointer hover:border-primary transition-colors"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0 pr-2">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <h3 className="font-montserrat font-bold text-lg text-foreground">{treino.nome}</h3>
-                    <Badge status={treino.status}/>
-                  </div>
-                  <p className="text-sm font-inter text-muted-foreground">{treino.objetivo}</p>
+          list.map((treino) => (
+            <div key={treino.id} className="bg-card border border-border rounded-2xl p-4">
+              <div className="flex items-start justify-between mb-3">
+                <div className="min-w-0 pr-2">
+                  <h3 className="font-montserrat font-bold text-lg text-foreground truncate">{treino.nome}</h3>
+                  <p className="text-xs font-inter text-muted-foreground mt-0.5">{treino.objetivo} · {treino.duracao ? `${treino.duracao} min` : "Sem duração"}</p>
                 </div>
-                <button className="text-muted-foreground p-1 flex-shrink-0" aria-label="Mais opções">
-                  <MoreVertical size={18}/>
-                </button>
+                <Badge status={treino.status}/>
               </div>
-              
-              <div className="flex items-center gap-4 text-xs font-inter text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Dumbbell size={12}/>
-                  {treino._count?.exercicios ?? 0} exercícios
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock size={12}/>
-                  {treino.duracao ? `${treino.duracao} min` : "N/A"}
-                </span>
+
+              {treino.descricao && <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{treino.descricao}</p>}
+
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                <span className="flex items-center gap-1"><Dumbbell size={13}/>{treino._count?.exercicios ?? treino.exercicios?.length ?? 0} exercícios</span>
+                <span className="text-accent">Persistido no banco</span>
               </div>
+
+              <button onClick={() => onSelect(treino.id)} className="w-full h-11 rounded-xl font-inter font-semibold text-sm text-black flex items-center justify-center gap-2 active:scale-95" style={{ background: ac }}>
+                <ChevronRight size={17}/> {ut === "personal" ? "Abrir e gerenciar" : "Ver rotina"}
+              </button>
             </div>
           ))
         )}
@@ -1906,114 +2186,227 @@ function Workouts({
 
 // ─── Workout Detail ───────────────────────────────────────────────────────────
 
-function WorkoutDetail({ 
-  workout, 
-  onBack, 
-  onToast, 
-  ut 
-}: { 
-  workout: Treino; 
-  onBack: () => void; 
-  onToast: (msg: string, t: "success" | "error" | "info") => void; 
-  ut: UserType 
+function WorkoutDetail({
+  workout,
+  exercicios,
+  loadingExercicios,
+  savingTreino,
+  deletingTreino,
+  savingVinculo,
+  onBack,
+  onUpdateTreino,
+  onDeleteTreino,
+  onAddExercicio,
+  onUpdateExercicio,
+  onRemoveExercicio,
+  onToast,
+  ut,
+}: {
+  workout: Treino;
+  exercicios: Exercicio[];
+  loadingExercicios: boolean;
+  savingTreino: boolean;
+  deletingTreino: boolean;
+  savingVinculo: boolean;
+  onBack: () => void;
+  onUpdateTreino: (id: string, data: AtualizarTreinoDTO) => Promise<boolean>;
+  onDeleteTreino: (id: string) => Promise<void>;
+  onAddExercicio: (treinoId: string, data: AdicionarExercicioTreinoDTO) => Promise<boolean>;
+  onUpdateExercicio: (treinoId: string, vinculoId: string, data: AtualizarExercicioTreinoDTO) => Promise<boolean>;
+  onRemoveExercicio: (treinoId: string, vinculoId: string) => Promise<void>;
+  onToast: (msg: string, type: "success" | "error" | "info") => void;
+  ut: UserType;
 }) {
   const [cf, setCf] = useState("Volume");
+  const [showEdit, setShowEdit] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [nome, setNome] = useState(workout.nome);
+  const [objetivo, setObjetivo] = useState(workout.objetivo);
+  const [descricao, setDescricao] = useState(workout.descricao ?? "");
+  const [duracao, setDuracao] = useState(workout.duracao?.toString() ?? "");
+  const [status, setStatus] = useState<StatusTreino>(workout.status);
+  const [selectedExerciseId, setSelectedExerciseId] = useState("");
+  const [series, setSeries] = useState("3");
+  const [repeticoes, setRepeticoes] = useState("10");
+  const [carga, setCarga] = useState("0");
   const ac = AC(ut);
-  
-  // Pegamos a lista real de exercícios vinculados ao treino
   const exerciciosVinculados = workout.exercicios ?? [];
-  const totalExercicios = exerciciosVinculados.length;
+  const idsVinculados = new Set(exerciciosVinculados.map((item) => item.exercicioId));
+  const exerciciosDisponiveis = exercicios.filter((item) => !idsVinculados.has(item.id));
+
+  useEffect(() => {
+    setNome(workout.nome);
+    setObjetivo(workout.objetivo);
+    setDescricao(workout.descricao ?? "");
+    setDuracao(workout.duracao?.toString() ?? "");
+    setStatus(workout.status);
+  }, [workout]);
 
   const chartData = [
     { w: "S1", v: 3200 },
     { w: "S2", v: 3800 },
     { w: "S3", v: 3600 },
     { w: "S4", v: 4500 },
-    { w: "S5", v: 4100 }
+    { w: "S5", v: 4100 },
   ];
+
+  async function salvarTreino() {
+    if (!nome.trim() || !objetivo.trim()) {
+      onToast("Nome e objetivo são obrigatórios.", "error");
+      return;
+    }
+    if (duracao && (!Number.isInteger(Number(duracao)) || Number(duracao) <= 0)) {
+      onToast("A duração deve ser um número inteiro maior que zero.", "error");
+      return;
+    }
+
+    const sucesso = await onUpdateTreino(workout.id, {
+      nome: nome.trim(),
+      objetivo: objetivo.trim(),
+      descricao: descricao.trim() || undefined,
+      duracao: duracao ? Number(duracao) : undefined,
+      status,
+    });
+    if (sucesso) setShowEdit(false);
+  }
+
+  async function adicionarExercicio() {
+    if (!selectedExerciseId) {
+      onToast("Selecione um exercício.", "error");
+      return;
+    }
+    if (Number(series) < 1 || Number(repeticoes) < 1 || Number(carga) < 0) {
+      onToast("Revise séries, repetições e carga.", "error");
+      return;
+    }
+
+    const sucesso = await onAddExercicio(workout.id, {
+      exercicioId: selectedExerciseId,
+      ordem: exerciciosVinculados.length + 1,
+      series: Number(series),
+      repeticoes: Number(repeticoes),
+      carga: Number(carga),
+    });
+
+    if (sucesso) {
+      setShowAdd(false);
+      setSelectedExerciseId("");
+      setSeries("3");
+      setRepeticoes("10");
+      setCarga("0");
+    }
+  }
+
+  async function editarVinculo(item: TreinoExercicio) {
+    const novasSeries = window.prompt("Séries:", String(item.series));
+    if (novasSeries === null) return;
+    const novasReps = window.prompt("Repetições:", String(item.repeticoes));
+    if (novasReps === null) return;
+    const novaCarga = window.prompt("Carga (kg):", String(item.carga ?? 0));
+    if (novaCarga === null) return;
+
+    await onUpdateExercicio(workout.id, item.id, {
+      series: Number(novasSeries),
+      repeticoes: Number(novasReps),
+      carga: Number(novaCarga),
+    });
+  }
 
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
+      {showEdit && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center" onClick={() => setShowEdit(false)}>
+          <div className="bg-background rounded-t-3xl w-full max-w-lg p-6 pb-10 border border-border max-h-[90vh] overflow-y-auto" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5"><h2 className="font-montserrat font-bold text-xl text-foreground">Editar treino</h2><button onClick={() => setShowEdit(false)}><X size={24} className="text-muted-foreground"/></button></div>
+            <div className="flex flex-col gap-4">
+              <Fld label="Nome" value={nome} onChange={setNome}/>
+              <Fld label="Objetivo" value={objetivo} onChange={setObjetivo}/>
+              <Fld label="Duração (min)" value={duracao} onChange={setDuracao} type="number"/>
+              <Fld label="Descrição" value={descricao} onChange={setDescricao}/>
+              <select value={status} onChange={(event) => setStatus(event.target.value as StatusTreino)} className="h-14 rounded-2xl bg-card border border-border px-4 text-foreground outline-none">
+                <option value="disponivel">Disponível</option><option value="andamento">Em andamento</option><option value="concluido">Concluído</option>
+              </select>
+              <PBtn onClick={salvarTreino} loading={savingTreino} ut={ut}>Salvar alterações</PBtn>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAdd && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center" onClick={() => setShowAdd(false)}>
+          <div className="bg-background rounded-t-3xl w-full max-w-lg p-6 pb-10 border border-border" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5"><h2 className="font-montserrat font-bold text-xl text-foreground">Adicionar exercício</h2><button onClick={() => setShowAdd(false)}><X size={24} className="text-muted-foreground"/></button></div>
+            {loadingExercicios ? <p className="text-sm text-muted-foreground">Carregando exercícios...</p> : (
+              <div className="flex flex-col gap-4">
+                <select value={selectedExerciseId} onChange={(event) => setSelectedExerciseId(event.target.value)} className="h-14 rounded-2xl bg-card border border-border px-4 text-foreground outline-none">
+                  <option value="">Selecione um exercício</option>
+                  {exerciciosDisponiveis.map((item) => <option key={item.id} value={item.id}>{item.nome} · {item.categoria}</option>)}
+                </select>
+                <div className="grid grid-cols-3 gap-2">
+                  <Fld label="Séries" value={series} onChange={setSeries} type="number"/>
+                  <Fld label="Reps" value={repeticoes} onChange={setRepeticoes} type="number"/>
+                  <Fld label="Carga" value={carga} onChange={setCarga} type="number"/>
+                </div>
+                <PBtn onClick={adicionarExercicio} loading={savingVinculo} ut={ut}>Adicionar à ficha</PBtn>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between mb-4">
           <BackBtn onClick={onBack}/>
           <p className="font-montserrat font-semibold text-sm text-muted-foreground">Rotina</p>
-          <div className="flex gap-3">
-            <button aria-label="Compartilhar"><Share2 size={20} className="text-muted-foreground"/></button>
-            <button aria-label="Mais opções"><MoreVertical size={20} className="text-muted-foreground"/></button>
-          </div>
+          {ut === "personal" ? (
+            <div className="flex gap-2">
+              <button onClick={() => setShowEdit(true)} aria-label="Editar treino" className="w-10 h-10 rounded-xl border border-border flex items-center justify-center"><Settings size={18} className="text-accent"/></button>
+              <button disabled={deletingTreino} onClick={() => onDeleteTreino(workout.id)} aria-label="Excluir treino" className="w-10 h-10 rounded-xl border border-destructive flex items-center justify-center disabled:opacity-50"><X size={18} className="text-destructive"/></button>
+            </div>
+          ) : <button aria-label="Compartilhar" onClick={() => onToast("Compartilhamento ainda não implementado no MVP.", "info")}><Share2 size={20} className="text-muted-foreground"/></button>}
         </div>
-        
-        <h1 className="font-montserrat font-bold text-3xl text-foreground">{workout.nome}</h1>
-        <p className="text-muted-foreground text-sm font-inter mt-1">Mentalidade TrainerX64 · {workout.objetivo}</p>
-        
-        {workout.descricao && (
-          <p className="text-xs text-gray-400 mt-2 italic bg-card p-3 rounded-xl border border-border">
-            {workout.descricao}
-          </p>
-        )}
 
+        <h1 className="font-montserrat font-bold text-3xl text-foreground">{workout.nome}</h1>
+        <p className="text-muted-foreground text-sm font-inter mt-1">TrainerX64 · {workout.objetivo}</p>
+        {workout.descricao && <p className="text-xs text-gray-400 mt-2 italic bg-card p-3 rounded-xl border border-border">{workout.descricao}</p>}
         <div className="flex gap-4 mt-4 text-xs font-inter text-muted-foreground">
           <span className="flex items-center gap-1"><Clock size={12}/>{workout.duracao ? `${workout.duracao} min` : "N/A"}</span>
-          <span className="flex items-center gap-1"><Dumbbell size={12}/>{totalExercicios} exercícios</span>
+          <span className="flex items-center gap-1"><Dumbbell size={12}/>{exerciciosVinculados.length} exercícios</span>
+          <Badge status={workout.status}/>
         </div>
       </div>
 
       <div className="px-6 mb-4">
         <div className="bg-card border border-border rounded-2xl p-4">
           <Caps items={["Volume", "Repetições", "Duração"]} active={cf} onChange={setCf} ut={ut}/>
-          <div className="mt-3">
-            <ResponsiveContainer width="100%" height={90}>
-              <LineChart data={chartData}>
-                <XAxis dataKey="w" tick={{ fill: "#a0a0a0", fontSize: 11 }} axisLine={false} tickLine={false}/>
-                <YAxis hide/>
-                <Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #2a2a2a", borderRadius: "12px", color: "#fff" }}/>
-                <Line type="monotone" dataKey="v" stroke={ac} strokeWidth={2.5} dot={false}/>
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <div className="mt-3"><ResponsiveContainer width="100%" height={90}><LineChart data={chartData}><XAxis dataKey="w" tick={{ fill: "#a0a0a0", fontSize: 11 }} axisLine={false} tickLine={false}/><YAxis hide/><Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #2a2a2a", borderRadius: "12px", color: "#fff" }}/><Line type="monotone" dataKey="v" stroke={ac} strokeWidth={2.5} dot={false}/></LineChart></ResponsiveContainer></div>
         </div>
       </div>
 
       <div className="px-6 flex flex-col gap-3">
-        <p className="font-montserrat font-bold text-lg text-foreground">Exercícios da Ficha</p>
-        
-        {totalExercicios === 0 ? (
-          <p className="text-sm text-muted-foreground italic text-center py-6">Nenhum exercício vinculado a este treino.</p>
-        ) : (
-          exerciciosVinculados.map((item) => (
-            <div key={item.id} className="bg-card border border-border rounded-2xl p-4 transition-all">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: AC_BG(ut, 0.15) }}>
-                    <Dumbbell size={20} style={{ color: ac }}/>
-                  </div>
-                  <div>
-                    {/* Acessa o nome do exercício de dentro do relacionamento M:N */}
-                    <h3 className="font-montserrat font-semibold text-sm text-foreground">{item.exercicio.nome}</h3>
-                    <p className="text-xs font-inter text-muted-foreground mt-0.5">{item.exercicio.categoria}</p>
-                  </div>
-                </div>
-              </div>
+        <div className="flex items-center justify-between">
+          <p className="font-montserrat font-bold text-lg text-foreground">Exercícios da ficha</p>
+          {ut === "personal" && <button onClick={() => setShowAdd(true)} className="text-xs font-semibold flex items-center gap-1" style={{ color: ac }}><Plus size={15}/> Adicionar</button>}
+        </div>
 
-              {/* Tabela de Séries com dados dinâmicos do banco */}
-              <div className="bg-background rounded-xl overflow-hidden mb-2" role="table">
-                <div className="grid grid-cols-4 px-3 py-2 border-b border-border" role="row">
-                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Ordem</span>
-                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Séries</span>
-                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Reps</span>
-                  <span className="text-xs font-inter font-semibold text-muted-foreground text-center">Carga</span>
-                </div>
-                <div className="grid grid-cols-4 px-3 py-2" role="row">
-                  <span className="text-sm font-inter text-foreground text-center">{item.ordem}º</span>
-                  <span className="text-sm font-inter text-foreground text-center font-bold text-accent">{item.series}</span>
-                  <span className="text-sm font-inter text-foreground text-center">{item.repeticoes}</span>
-                  <span className="text-sm font-inter text-foreground text-center font-semibold text-primary">{item.carga ?? 0} kg</span>
-                </div>
+        {exerciciosVinculados.length === 0 ? (
+          <p className="text-sm text-muted-foreground italic text-center py-6">Nenhum exercício vinculado a este treino.</p>
+        ) : exerciciosVinculados.map((item) => (
+          <div key={item.id} className="bg-card border border-border rounded-2xl p-4">
+            <div className="flex items-start justify-between mb-3 gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: AC_BG(ut, 0.12) }}><Dumbbell size={22} style={{ color: ac }}/></div>
+                <div className="min-w-0"><h3 className="font-montserrat font-bold text-sm text-foreground truncate">{item.ordem}. {item.exercicio.nome}</h3><p className="text-[11px] text-muted-foreground mt-0.5">{item.exercicio.categoria}</p></div>
               </div>
+              {ut === "personal" && <div className="flex gap-2"><button disabled={savingVinculo} onClick={() => editarVinculo(item)} className="w-9 h-9 rounded-xl border border-border flex items-center justify-center"><Settings size={15} className="text-accent"/></button><button disabled={savingVinculo} onClick={() => onRemoveExercicio(workout.id, item.id)} className="w-9 h-9 rounded-xl border border-destructive flex items-center justify-center"><X size={15} className="text-destructive"/></button></div>}
             </div>
-          ))
-        )}
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="bg-background rounded-xl p-3"><p className="text-xs text-muted-foreground">Séries</p><p className="font-montserrat font-bold text-foreground">{item.series}</p></div>
+              <div className="bg-background rounded-xl p-3"><p className="text-xs text-muted-foreground">Reps</p><p className="font-montserrat font-bold text-foreground">{item.repeticoes}</p></div>
+              <div className="bg-background rounded-xl p-3"><p className="text-xs text-muted-foreground">Carga</p><p className="font-montserrat font-bold text-foreground">{item.carga ?? 0} kg</p></div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -3299,7 +3692,7 @@ function FinanceModal({
 export default function App() {
   const [screen,setScreen]=useState<Screen>("welcome");
   const [user,setUser]=useState<AppUser|null>(null);
-  const [selW,setSelW]=useState<Workout|null>(null);
+  const [selW,setSelW]=useState<Treino|null>(null);
   const [selS,setSelS]=useState<Student|null>(null);
   const [modal,setModal]=useState<"terms"|"privacy"|null>(null);
   const [gToast,setGToast]=useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
@@ -3320,7 +3713,6 @@ export default function App() {
   const [loadingTreinos, setLoadingTreinos] = useState(true);
   const [savingTreino, setSavingTreino] = useState(false);
   const [deletingTreino, setDeletingTreino] = useState(false);
-  const [treinoSelecionado, setTreinoSelecionado] = useState<Treino | null>(null);
 
   // ─── Estados do Vínculo Treino ↔ Exercício ──────────────────────────────
   const [exerciciosDoTreino, setExerciciosDoTreino] = useState<TreinoExercicio[]>([]);
@@ -3440,7 +3832,9 @@ export default function App() {
     try {
       setSavingTreino(true);
       const treinoAtualizado = await treinoService.atualizarTreino(treinoId, data);
-      setTreinos((prev) => prev.map((t) => t.id === treinoId ? treinoAtualizado : t));
+      const treinoCompleto = await treinoService.buscarTreinoPorId(treinoId);
+      setTreinos((prev) => prev.map((t) => t.id === treinoId ? { ...treinoAtualizado, _count: { exercicios: treinoCompleto.exercicios?.length ?? 0 } } : t));
+      if (selW?.id === treinoId) setSelW(treinoCompleto);
       setGToast({ msg: "Treino atualizado com sucesso.", type: "success" });
       return true;
     } catch (error) {
@@ -3458,6 +3852,10 @@ export default function App() {
       setDeletingTreino(true);
       await treinoService.excluirTreino(treinoId);
       setTreinos((prev) => prev.filter((t) => t.id !== treinoId));
+      if (selW?.id === treinoId) {
+        setSelW(null);
+        setScreen("workouts");
+      }
       setGToast({ msg: "Treino excluído com sucesso.", type: "success" });
     } catch (error) {
       setGToast({ msg: error instanceof Error ? error.message : "Erro ao excluir treino.", type: "error" });
@@ -3548,6 +3946,18 @@ export default function App() {
     }
   }
 
+  async function atualizarTreinoSelecionado(treinoId: string): Promise<void> {
+    const treinoCompleto = await treinoService.buscarTreinoPorId(treinoId);
+    setSelW(treinoCompleto);
+    setTreinos((prev) =>
+      prev.map((treino) =>
+        treino.id === treinoId
+          ? { ...treino, _count: { exercicios: treinoCompleto.exercicios?.length ?? 0 } }
+          : treino,
+      ),
+    );
+  }
+
   // ─── Funções de Ação do Vínculo ──────────────────────────────────────────
   async function carregarExerciciosDoTreino(treinoId: string): Promise<void> {
     try {
@@ -3572,6 +3982,7 @@ export default function App() {
       setExerciciosDoTreino((prev) =>
         [...prev, novoVinculo].sort((a, b) => a.ordem - b.ordem)
       );
+      await atualizarTreinoSelecionado(treinoId);
 
       setGToast({ msg: "Exercício adicionado ao treino com sucesso.", type: "success" });
       return true;
@@ -3596,6 +4007,7 @@ export default function App() {
           .map((item) => item.id === vinculoId ? vinculoAtualizado : item)
           .sort((a, b) => a.ordem - b.ordem)
       );
+      await atualizarTreinoSelecionado(treinoId);
 
       setGToast({ msg: "Exercício do treino atualizado com sucesso.", type: "success" });
       return true;
@@ -3617,6 +4029,7 @@ export default function App() {
     try {
       await treinoExercicioService.removerExercicioDoTreino(treinoId, vinculoId);
       setExerciciosDoTreino((prev) => prev.filter((item) => item.id !== vinculoId));
+      await atualizarTreinoSelecionado(treinoId);
       setGToast({ msg: "Exercício removido do treino com sucesso.", type: "success" });
     } catch (error) {
       setGToast({
@@ -3626,15 +4039,21 @@ export default function App() {
     }
   }
 
-  // Função de Fluxo Completo (Item 36)
-  async function criarTreinoComExercicios(treinoData: CriarTreinoDTO, exerciciosSelecionados: AdicionarExercicioTreinoDTO[]): Promise<boolean> {
+  // ─── Fluxo completo: cria treino e vincula exercícios ─────────────────────
+  async function criarTreinoComExercicios(
+    treinoData: CriarTreinoDTO,
+    exerciciosSelecionados: AdicionarExercicioTreinoDTO[],
+  ): Promise<boolean> {
     try {
+      setSavingTreino(true);
       const treino = await treinoService.criarTreino(treinoData);
 
       for (const exercicio of exerciciosSelecionados) {
         await treinoExercicioService.adicionarExercicioAoTreino(treino.id, exercicio);
       }
 
+      const treinoCompleto = await treinoService.buscarTreinoPorId(treino.id);
+      setTreinos((prev) => [treinoCompleto, ...prev.filter((item) => item.id !== treino.id)]);
       setGToast({ msg: "Treino e exercícios cadastrados com sucesso.", type: "success" });
       return true;
     } catch (error) {
@@ -3643,6 +4062,8 @@ export default function App() {
         type: "error",
       });
       return false;
+    } finally {
+      setSavingTreino(false);
     }
   }
   
@@ -3806,15 +4227,25 @@ export default function App() {
       {screen==="criar-treino"&&(
         <CriarTreino
           onBack={()=>setScreen(ut==="personal"?"workouts":"dashboard")}
-          exercicios={exercicios} 
+          exercicios={exercicios}
           loadingExercicios={loadingExercicios}
+          saving={savingTreino}
+          onSubmit={criarTreinoComExercicios}
         />
       )}
 
       {screen==="workouts"&&(
         <Workouts
           treinos={treinos}
+          loading={loadingTreinos}
+          exercicios={exercicios}
+          savingExercicio={savingExercicio}
+          deletingExercicio={deletingExercicio}
           onSelect={handleSelectTreino}
+          onCreateWorkout={()=>setScreen("criar-treino")}
+          onCreateExercicio={handleCreateExercicio}
+          onUpdateExercicio={handleUpdateExercicio}
+          onDeleteExercicio={handleDeleteExercicio}
           ut={ut}
         />
       )}
@@ -3822,7 +4253,17 @@ export default function App() {
       {screen==="workout-detail"&&selW&&(
         <WorkoutDetail
           workout={selW}
+          exercicios={exercicios}
+          loadingExercicios={loadingExercicios}
+          savingTreino={savingTreino}
+          deletingTreino={deletingTreino}
+          savingVinculo={savingExercicioTreino}
           onBack={()=>setScreen("workouts")}
+          onUpdateTreino={handleUpdateTreino}
+          onDeleteTreino={handleDeleteTreino}
+          onAddExercicio={handleAddExercicioTreino}
+          onUpdateExercicio={handleUpdateExercicioTreino}
+          onRemoveExercicio={handleRemoveExercicioTreino}
           onToast={(m,t)=>setGToast({msg:m,type:t})}
           ut={ut}
         />
