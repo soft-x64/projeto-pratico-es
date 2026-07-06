@@ -2,9 +2,8 @@
 
 **Versão:** 1.0  
 **Última Atualização:** Versão 1.1  
-**Data de Publicação:** 09 de outubro de 2025  
 
-Seja bem-vindo ao **TrainerX64**. Estes Termos de Uso regulam o acesso e a utilização da plataforma desenvolvida para gerenciamento de academias e conexão entre alunos e personal trainers. Ao criar uma conta e utilizar nossos serviços, você concorda integralmente com as condições estabelecidas abaixo.
+Estes Termos de Uso regulam o acesso e a utilização da plataforma desenvolvida para gerenciamento de academias e conexão entre alunos e personal trainers. Ao criar uma conta e utilizar nossos serviços, você concorda integralmente com as condições estabelecidas abaixo.
 
 ---
 
