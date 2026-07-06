@@ -1,3 +1,42 @@
+import {
+  treinoExercicioService,
+  type TreinoExercicio,
+  type AdicionarExercicioTreinoDTO,
+  type AtualizarExercicioTreinoDTO,
+} from "../services/treinoExercicioService";
+
+import { 
+  mensalidadeService,
+  type Mensalidade,
+} from "../services/mensalidadeService";
+
+import {
+  exercicioService,
+  type Exercicio,
+  type CategoriaExercicio,
+  type CriarExercicioDTO,
+  type AtualizarExercicioDTO,
+} from "../services/exercicioService";
+import {
+  treinoService,
+  type Treino,
+  type StatusTreino,
+  type CriarTreinoDTO,
+  type AtualizarTreinoDTO,
+} from "../services/treinoService";
+
+import {
+  alunoService,
+  type AtualizarAlunoDTO,
+  type CriarAlunoDTO,
+  type StatusAluno,
+} from "../services/alunoService";
+import {
+  avaliacaoService,
+  type AvaliacaoFisica,
+  type CriarAvaliacaoDTO,
+  type AtualizarAvaliacaoDTO,
+} from "../services/avaliacaoService";
 import { useState, useEffect } from "react";
 import logoImg from "@/imports/trainerx64_logo_nome_melhorada.png";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
@@ -18,7 +57,6 @@ import {
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
 type Screen =
   | "welcome" | "login" | "register"
   | "dashboard" | "alunos" | "aluno-detail" | "criar-treino"
@@ -35,14 +73,81 @@ interface Workout {
   exerciseCount: number; status: "disponivel" | "andamento" | "concluido"; exercises: Exercise[];
 }
 interface Student {
-  id: string; name: string; status: "em-dia" | "pendente" | "mensalidade" | "sem-atividade";
-  workout: string; lastSeen: string; weight: number; height: number; age: number;
-  goal: string; level: string;
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  status: "em-dia" | "pendente" | "mensalidade" | "sem-atividade";
+  workout?: string;
+  lastSeen: string;
+  weight: number;
+  height: number;
+  age: number;
+  goal: string;
+  level: string;
 }
 interface Notif {
   id: string; type: "treino" | "financeiro" | "mensagem" | "evolucao";
   title: string; description: string; time: string; read: boolean;
 }
+
+interface RegisterStepOneData {
+  name: string;
+  email: string;
+  pw: string;
+  confirm: string;
+}
+
+interface RegisterStepTwoData {
+  atype: UserType | "";
+  goal: string;
+  terms: boolean;
+}
+
+function validateRegisterStepOne(data: RegisterStepOneData): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  if (!data.name.trim()) {
+    errors.name = "Nome obrigatório.";
+  }
+
+  if (!data.email) {
+    errors.email = "E-mail obrigatório.";
+  } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+    errors.email = "E-mail inválido.";
+  }
+
+  if (!data.pw) {
+    errors.pw = "Senha obrigatória.";
+  } else if (data.pw.length < 6) {
+    errors.pw = "Mínimo 6 caracteres.";
+  }
+
+  if (data.pw !== data.confirm) {
+    errors.confirm = "As senhas não conferem.";
+  }
+
+  return errors;
+}
+
+function validateRegisterStepTwo(data: RegisterStepTwoData): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  if (!data.atype) {
+    errors.atype = "Selecione o tipo.";
+  }
+
+  if (!data.goal) {
+    errors.goal = "Selecione um objetivo.";
+  }
+
+  if (!data.terms) {
+    errors.terms = "Aceite os Termos de Uso e a Política de Privacidade.";
+  }
+
+  return errors;
+}
+
 interface ChatMsg {
   id: string;
   from: UserType;
@@ -54,11 +159,11 @@ interface ChatMsg {
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
 const STUDENTS: Student[] = [
-  { id:"s1", name:"Gustavo", status:"em-dia",        workout:"Upper",     lastSeen:"Hoje",   weight:82, height:178, age:27, goal:"Hipertrofia",    level:"Intermediário" },
-  { id:"s2", name:"Serena",  status:"pendente",      workout:"Full Body", lastSeen:"Ontem",  weight:65, height:165, age:24, goal:"Emagrecimento",  level:"Iniciante"     },
-  { id:"s3", name:"Gabriel", status:"mensalidade",   workout:"Pull 1",    lastSeen:"3 dias", weight:75, height:172, age:30, goal:"Condicionamento",level:"Avançado"      },
-  { id:"s4", name:"Lucas",   status:"sem-atividade", workout:"Leg Day",   lastSeen:"7 dias", weight:90, height:182, age:32, goal:"Hipertrofia",    level:"Intermediário" },
-  { id:"s5", name:"Carla",   status:"em-dia",        workout:"Push 2",    lastSeen:"Hoje",   weight:58, height:160, age:26, goal:"Saúde",          level:"Iniciante"     },
+  { id:"s1", name:"Gustavo", email:"gustavo@trainerx64.local", phone:"92999990001", status:"em-dia",        workout:"Upper",     lastSeen:"Hoje",   weight:82, height:178, age:27, goal:"Hipertrofia",    level:"Intermediário" },
+  { id:"s2", name:"Serena", email:"serena@trainerx64.local", phone:"92999990002", status:"pendente",      workout:"Full Body", lastSeen:"Ontem",  weight:65, height:165, age:24, goal:"Emagrecimento",  level:"Iniciante"     },
+  { id:"s3", name:"Gabriel", email:"gabriel@trainerx64.local", phone:"92999990003", status:"mensalidade",   workout:"Pull 1",    lastSeen:"3 dias", weight:75, height:172, age:30, goal:"Condicionamento",level:"Avançado"      },
+  { id:"s4", name:"Lucas", email:"lucas@trainerx64.local", phone:"92999990004", status:"sem-atividade", workout:"Leg Day",   lastSeen:"7 dias", weight:90, height:182, age:32, goal:"Hipertrofia",    level:"Intermediário" },
+  { id:"s5", name:"Carla", email:"carla@trainerx64.local", phone:"92999990005", status:"em-dia",        workout:"Push 2",    lastSeen:"Hoje",   weight:58, height:160, age:26, goal:"Saúde",          level:"Iniciante"     },
 ];
 
 const WORKOUTS: Workout[] = [
@@ -701,21 +806,28 @@ function Register({ onDone,onLogin,onShowModal }:
     ["feedbackSonoro","Feedback sonoro/vibratório"],["descricoesAlternativas","Descrições alternativas"],
   ];
 
-  const v1=()=>{
-    const e:Record<string,string>={};
-    if(!name.trim()) e.name="Nome obrigatório.";
-    if(!email) e.email="E-mail obrigatório."; else if(!/\S+@\S+\.\S+/.test(email)) e.email="E-mail inválido.";
-    if(!pw) e.pw="Senha obrigatória."; else if(pw.length<6) e.pw="Mínimo 6 caracteres.";
-    if(pw!==confirm) e.confirm="As senhas não conferem.";
-    setErrs(e); return !Object.keys(e).length;
-  };
-  const v2=()=>{
-    const e:Record<string,string>={};
-    if(!atype) e.atype="Selecione o tipo.";
-    if(!goal) e.goal="Selecione um objetivo.";
-    if(!terms) e.terms="Aceite os Termos de Uso e a Política de Privacidade.";
-    setErrs(e); return !Object.keys(e).length;
-  };
+  const v1 = () => {
+  const errors = validateRegisterStepOne({
+    name,
+    email,
+    pw,
+    confirm,
+  });
+
+  setErrs(errors);
+  return Object.keys(errors).length === 0;
+};
+
+  const v2 = () => {
+  const errors = validateRegisterStepTwo({
+    atype,
+    goal,
+    terms,
+  });
+
+  setErrs(errors);
+  return Object.keys(errors).length === 0;
+};
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-y-auto">
@@ -838,7 +950,7 @@ function Register({ onDone,onLogin,onShowModal }:
 
 // ─── Personal Dashboard ───────────────────────────────────────────────────────
 
-function PersonalDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
+function PersonalDash({ user,onNav,students }:{user:AppUser;onNav:(s:Screen)=>void;students:Student[]}) {
   const [period,setPeriod]=useState("Semana");
   const ac=AC("personal");
   return (
@@ -859,7 +971,7 @@ function PersonalDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
       <div className="px-6 flex flex-col gap-5">
         <Caps items={["Semana","Mês","3 meses"]} active={period} onChange={setPeriod} ut="personal"/>
         <div className="grid grid-cols-3 gap-3">
-          <StatCard icon={<Users size={18}/>}        label="Alunos ativos"  value="8"  color={ac}/>
+          <StatCard icon={<Users size={18}/>}        label="Alunos ativos"  value={String(students.length)}  color={ac}/>
           <StatCard icon={<ClipboardList size={18}/>} label="Treinos pend."  value="3"  color="#f59e0b"/>
           <StatCard icon={<Star size={18}/>}          label="Avaliações"     value="2"  color={ac}/>
         </div>
@@ -896,7 +1008,7 @@ function PersonalDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
             <h2 className="font-montserrat font-bold text-base text-foreground">Alunos recentes</h2>
             <button className="text-xs font-inter" style={{color:ac}} onClick={()=>onNav("alunos")}>Ver todos</button>
           </div>
-          {STUDENTS.slice(0,4).map(s=>(
+          {students.slice(0,4).map(s=>(
             <div key={s.id} className="bg-card border border-border rounded-2xl px-4 py-3 mb-2 flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center font-montserrat font-bold text-sm text-black flex-shrink-0"
@@ -1000,56 +1112,373 @@ function AlunoDash({ user,onNav }:{user:AppUser;onNav:(s:Screen)=>void}) {
   );
 }
 
+// ─── Formulário de Aluno ──────────────────────────────────────────────────────
+
+function StudentInput({
+  label,
+  value,
+  onChange,
+  type = "text",
+  required = false,
+  min,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  required?: boolean;
+  min?: number;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-sm font-montserrat font-semibold text-muted-foreground">
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value}
+        required={required}
+        min={min}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none transition-colors focus:border-accent"
+      />
+    </div>
+  );
+}
+
+function StudentForm({
+  student,
+  saving,
+  onCancel,
+  onSubmit,
+}: {
+  student?: Student | null;
+  saving: boolean;
+  onCancel: () => void;
+  onSubmit: (
+    data: CriarAlunoDTO | AtualizarAlunoDTO,
+  ) => Promise<boolean>;
+}) {
+  const [nome, setNome] = useState(student?.name ?? "");
+  const [email, setEmail] = useState(student?.email ?? "");
+  const [telefone, setTelefone] = useState(student?.phone ?? "");
+  const [status, setStatus] = useState<StatusAluno>(
+    student?.status ?? "em-dia",
+  );
+  const [treino, setTreino] = useState(student?.workout ?? "");
+  const [objetivo, setObjetivo] = useState(student?.goal ?? "");
+  const [nivel, setNivel] = useState(student?.level ?? "Iniciante");
+  const [peso, setPeso] = useState(student?.weight?.toString() ?? "");
+  const [altura, setAltura] = useState(student?.height?.toString() ?? "");
+  const [idade, setIdade] = useState(student?.age?.toString() ?? "");
+  const [error, setError] = useState("");
+
+  const ac = AC("personal");
+
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+    setError("");
+
+    if (
+      !nome.trim() ||
+      !email.trim() ||
+      !objetivo.trim() ||
+      !nivel.trim() ||
+      !peso ||
+      !altura ||
+      !idade
+    ) {
+      setError("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email.trim())) {
+      setError("Informe um e-mail válido.");
+      return;
+    }
+
+    if (
+      Number(peso) <= 0 ||
+      Number(altura) <= 0 ||
+      Number(idade) <= 0
+    ) {
+      setError("Peso, altura e idade devem ser maiores que zero.");
+      return;
+    }
+
+    const sucesso = await onSubmit({
+      nome: nome.trim(),
+      email: email.trim().toLowerCase(),
+      telefone: telefone.trim() || undefined,
+      status,
+      treino: treino.trim() || undefined,
+      objetivo: objetivo.trim(),
+      nivel,
+      peso: Number(peso),
+      altura: Number(altura),
+      idade: Number(idade),
+    });
+
+    if (sucesso) {
+      onCancel();
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label={student ? "Editar aluno" : "Cadastrar aluno"}
+    >
+      <div className="w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl bg-background border border-border p-6 pb-10">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="font-montserrat font-bold text-2xl text-foreground">
+              {student ? "Editar aluno" : "Novo aluno"}
+            </h2>
+            <p className="text-sm text-muted-foreground font-inter mt-1">
+              {student
+                ? "Atualize os dados cadastrados."
+                : "Preencha os dados para cadastrar um novo aluno."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={saving}
+            className="w-11 h-11 rounded-2xl bg-card border border-border flex items-center justify-center text-muted-foreground disabled:opacity-50"
+            aria-label="Fechar formulário"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <StudentInput
+            label="Nome completo"
+            value={nome}
+            onChange={setNome}
+            required
+          />
+
+          <StudentInput
+            label="E-mail"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            required
+          />
+
+          <StudentInput
+            label="Telefone"
+            value={telefone}
+            onChange={setTelefone}
+          />
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground">
+              Status
+            </label>
+            <select
+              value={status}
+              onChange={(event) =>
+                setStatus(event.target.value as StatusAluno)
+              }
+              className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none focus:border-accent"
+            >
+              <option value="em-dia">Em dia</option>
+              <option value="pendente">Avaliação pendente</option>
+              <option value="mensalidade">Mensalidade</option>
+              <option value="sem-atividade">Sem atividade</option>
+            </select>
+          </div>
+
+          <StudentInput
+            label="Treino atual"
+            value={treino}
+            onChange={setTreino}
+          />
+
+          <StudentInput
+            label="Objetivo"
+            value={objetivo}
+            onChange={setObjetivo}
+            required
+          />
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground">
+              Nível
+            </label>
+            <select
+              value={nivel}
+              onChange={(event) => setNivel(event.target.value)}
+              className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none focus:border-accent"
+            >
+              <option value="Iniciante">Iniciante</option>
+              <option value="Intermediário">Intermediário</option>
+              <option value="Avançado">Avançado</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <StudentInput
+              label="Peso (kg)"
+              type="number"
+              min={1}
+              value={peso}
+              onChange={setPeso}
+              required
+            />
+            <StudentInput
+              label="Altura (cm)"
+              type="number"
+              min={1}
+              value={altura}
+              onChange={setAltura}
+              required
+            />
+            <StudentInput
+              label="Idade"
+              type="number"
+              min={1}
+              value={idade}
+              onChange={setIdade}
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="text-sm text-destructive flex items-center gap-2">
+              <AlertCircle size={16} />
+              {error}
+            </p>
+          )}
+
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <SBtn onClick={onCancel}>Cancelar</SBtn>
+            <button
+              type="submit"
+              disabled={saving}
+              className="h-14 rounded-2xl font-montserrat font-bold text-sm text-black flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+              style={{ background: saving ? "#2a2a2a" : ac }}
+            >
+              {saving ? (
+                <>
+                  <RefreshCw size={18} className="animate-spin text-white" />
+                  <span className="text-white">Salvando...</span>
+                </>
+              ) : student ? (
+                "Salvar alterações"
+              ) : (
+                "Cadastrar aluno"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 // ─── Alunos List ──────────────────────────────────────────────────────────────
 
-function AlunosList({ onSelect }:{onSelect:(s:Student)=>void}) {
+function AlunosList({
+  students,
+  loading,
+  onSelect,
+  onCreateStudent,
+}: {
+  students: Student[];
+  loading: boolean;
+  onSelect: (student: Student) => void;
+  onCreateStudent: () => void;
+}) {
   const [filter,setFilter]=useState("Todos");
   const [search,setSearch]=useState("");
   const ac=AC("personal");
   const SM:Record<string,string>={"Em dia":"em-dia","Pendente":"pendente","Mensalidade":"mensalidade"};
-  const list=STUDENTS.filter(s=>s.name.toLowerCase().includes(search.toLowerCase())&&(filter==="Todos"||s.status===SM[filter]));
+  const list=students.filter(s=>s.name.toLowerCase().includes(search.toLowerCase())&&(filter==="Todos"||s.status===SM[filter]));
+
   return (
     <div className="min-h-screen bg-background pb-36">
       <div className="px-6 pt-14 pb-4" style={{background:"linear-gradient(180deg,rgba(0,230,118,0.06) 0%,transparent 100%)"}}>
         <div className="flex items-center justify-between mb-1">
           <h1 className="font-montserrat font-bold text-3xl text-foreground">Meus Alunos</h1>
-          <button className="w-11 h-11 rounded-2xl flex items-center justify-center text-black transition-all active:scale-95"
-            style={{background:ac}} aria-label="Adicionar aluno"><UserPlus size={20}/></button>
+          <button
+            onClick={onCreateStudent}
+            className="w-11 h-11 rounded-2xl flex items-center justify-center text-black transition-all active:scale-95"
+            style={{background:ac}}
+            aria-label="Cadastrar novo aluno"
+            title="Cadastrar novo aluno"
+          >
+            <UserPlus size={20}/>
+          </button>
         </div>
-        <p className="text-muted-foreground text-sm font-inter">{STUDENTS.length} alunos cadastrados</p>
+        <p className="text-muted-foreground text-sm font-inter">{students.length} alunos cadastrados</p>
       </div>
+
       <div className="px-6 mb-3">
         <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12">
           <Search size={18} className="text-muted-foreground"/>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar aluno..."
-            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" aria-label="Buscar aluno"/>
+          <input
+            value={search}
+            onChange={e=>setSearch(e.target.value)}
+            placeholder="Buscar aluno..."
+            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none"
+            aria-label="Buscar aluno"
+          />
           {search&&<button onClick={()=>setSearch("")} aria-label="Limpar"><X size={16} className="text-muted-foreground"/></button>}
         </div>
       </div>
+
       <div className="px-6 mb-4 overflow-x-auto">
         <div className="flex gap-2 pb-1">
           {["Todos","Em dia","Pendente","Mensalidade"].map(f=>(
             <button key={f} onClick={()=>setFilter(f)}
               className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter===f?"text-black":"bg-card border border-border text-muted-foreground"}`}
-              style={filter===f?{background:ac}:undefined} aria-pressed={filter===f}>{f}</button>
+              style={filter===f?{background:ac}:undefined}
+              aria-pressed={filter===f}
+            >
+              {f}
+            </button>
           ))}
         </div>
       </div>
+
       <div className="px-6 flex flex-col gap-2">
-        {list.length===0 ? (
-          <div className="flex flex-col items-center gap-3 py-12"><Users size={40} className="text-muted-foreground"/>
-            <p className="font-inter text-muted-foreground text-center">Nenhum aluno encontrado.</p></div>
+        {loading ? (
+          <div className="flex flex-col items-center gap-3 py-12">
+            <RefreshCw size={32} className="text-muted-foreground animate-spin"/>
+            <p className="font-inter text-muted-foreground text-center">Carregando alunos...</p>
+          </div>
+        ) : list.length===0 ? (
+          <div className="flex flex-col items-center gap-3 py-12">
+            <Users size={40} className="text-muted-foreground"/>
+            <p className="font-inter text-muted-foreground text-center">Nenhum aluno encontrado.</p>
+          </div>
         ) : list.map(s=>(
-          <button key={s.id} onClick={()=>onSelect(s)}
-            className="bg-card border border-border rounded-2xl px-4 py-3.5 flex items-center justify-between w-full hover:border-primary transition-all text-left">
+          <button
+            key={s.id}
+            onClick={()=>onSelect(s)}
+            className="bg-card border border-border rounded-2xl px-4 py-3.5 flex items-center justify-between w-full hover:border-primary transition-all text-left"
+          >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center font-montserrat font-bold text-sm text-black flex-shrink-0"
-                style={{background:s.status==="em-dia"?ac:s.status==="pendente"?"#f59e0b":s.status==="mensalidade"?"#ef4444":"#2a2a2a"}}>
+              <div
+                className="w-11 h-11 rounded-2xl flex items-center justify-center font-montserrat font-bold text-sm text-black flex-shrink-0"
+                style={{background:s.status==="em-dia"?ac:s.status==="pendente"?"#f59e0b":s.status==="mensalidade"?"#ef4444":"#2a2a2a"}}
+              >
                 {s.name[0]}
               </div>
               <div className="min-w-0">
                 <p className="font-montserrat font-bold text-sm text-foreground">{s.name}</p>
-                <p className="text-xs font-inter text-muted-foreground truncate">{s.workout} · Visto {s.lastSeen}</p>
+                <p className="text-xs font-inter text-muted-foreground truncate">
+                  {s.workout || "Sem treino"} · Visto {s.lastSeen}
+                </p>
                 <Badge status={s.status}/>
               </div>
             </div>
@@ -1063,9 +1492,28 @@ function AlunosList({ onSelect }:{onSelect:(s:Student)=>void}) {
 
 // ─── Aluno Detail ─────────────────────────────────────────────────────────────
 
-function AlunoDetail({ student,onBack,onNav }:{student:Student;onBack:()=>void;onNav:(s:Screen)=>void}) {
+function AlunoDetail({
+  student,
+  onBack,
+  onNav,
+  onEdit,
+  onDelete,
+  onOpenEvaluations,
+  onOpenFinance,
+  deleting,
+}: {
+  student: Student;
+  onBack: () => void;
+  onNav: (s: Screen) => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onOpenEvaluations: () => void;
+  onOpenFinance: () => void;
+  deleting: boolean;
+}) {
   const ac=AC("personal");
   const [toast,setToast]=useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
+
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
       {toast&&<Toast message={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
@@ -1073,42 +1521,92 @@ function AlunoDetail({ student,onBack,onNav }:{student:Student;onBack:()=>void;o
         <div className="flex items-center justify-between mb-6">
           <BackBtn onClick={onBack}/>
           <p className="font-montserrat font-semibold text-sm text-muted-foreground">Perfil do Aluno</p>
-          <button aria-label="Mais opções"><MoreVertical size={20} className="text-muted-foreground"/></button>
+          <button onClick={onEdit} aria-label="Editar aluno" title="Editar aluno">
+            <Settings size={20} className="text-muted-foreground"/>
+          </button>
         </div>
+
         <div className="bg-card border border-border rounded-2xl p-5 flex items-center gap-4 mb-5">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center font-montserrat font-bold text-2xl text-black flex-shrink-0"
-            style={{background:ac}}>{student.name[0]}</div>
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center font-montserrat font-bold text-2xl text-black flex-shrink-0"
+            style={{background:ac}}
+          >
+            {student.name[0]}
+          </div>
           <div className="flex-1 min-w-0">
             <h1 className="font-montserrat font-bold text-xl text-foreground">{student.name}</h1>
             <Badge status={student.status}/>
-            <p className="text-xs font-inter text-muted-foreground mt-1">Treino: {student.workout}</p>
+            <p className="text-xs font-inter text-muted-foreground mt-1">
+              Treino: {student.workout || "Sem treino vinculado"}
+            </p>
           </div>
         </div>
+
+        <div className="bg-card border border-border rounded-2xl p-4 mb-5 flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Mail size={16} style={{color:ac}}/>
+            <span className="break-all">{student.email}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <User size={16} style={{color:ac}}/>
+            <span>{student.phone || "Telefone não informado"}</span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <StatCard icon={<Weight size={16}/>} label="Peso"   value={`${student.weight} kg`} color={ac}/>
-          <StatCard icon={<Ruler size={16}/>}  label="Altura" value={`${student.height} cm`} color={ac}/>
-          <StatCard icon={<User size={16}/>}   label="Idade"  value={`${student.age} anos`}  color={ac}/>
+          <StatCard icon={<Weight size={16}/>} label="Peso" value={`${student.weight} kg`} color={ac}/>
+          <StatCard icon={<Ruler size={16}/>} label="Altura" value={`${student.height} cm`} color={ac}/>
+          <StatCard icon={<User size={16}/>} label="Idade" value={`${student.age} anos`} color={ac}/>
         </div>
+
         <div className="grid grid-cols-3 gap-3 mb-5">
-          <StatCard icon={<Star size={16}/>}     label="Nível"    value={student.level}    color={ac}/>
-          <StatCard icon={<Target size={16}/>}   label="Objetivo" value={student.goal}     color={ac}/>
-          <StatCard icon={<Activity size={16}/>} label="Visto"    value={student.lastSeen} color={ac}/>
+          <StatCard icon={<Star size={16}/>} label="Nível" value={student.level} color={ac}/>
+          <StatCard icon={<Target size={16}/>} label="Objetivo" value={student.goal} color={ac}/>
+          <StatCard icon={<Activity size={16}/>} label="Visto" value={student.lastSeen} color={ac}/>
         </div>
+
         <div className="grid grid-cols-2 gap-3 mb-5">
           {[
-            {icon:<Plus size={18}/>,         label:"Criar treino",   action:()=>onNav("criar-treino")},
-            {icon:<TrendingUp size={18}/>,   label:"Ver evolução",   action:()=>onNav("evolution")},
-            {icon:<ClipboardList size={18}/>,label:"Reg. avaliação", action:()=>setToast({msg:"Avaliação registrada com sucesso.",type:"success"})},
-            {icon:<CreditCard size={18}/>,   label:"Mensalidade",    action:()=>setToast({msg:"Status de mensalidade atualizado.",type:"info"})},
+            {icon:<Plus size={18}/>,label:"Criar treino",action:()=>onNav("criar-treino")},
+            {icon:<TrendingUp size={18}/>,label:"Ver evolução",action:onOpenEvaluations},
+            {icon:<ClipboardList size={18}/>,label:"Reg. avaliação",action:onOpenEvaluations},
+            { icon: <CreditCard size={18} />, label: "Mensalidade", action: onOpenFinance },
           ].map(a=>(
-            <button key={a.label} onClick={a.action}
-              className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 hover:border-primary transition-all text-left">
+            <button
+              key={a.label}
+              onClick={a.action}
+              className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 hover:border-primary transition-all text-left"
+            >
               <span style={{color:ac}}>{a.icon}</span>
               <span className="text-sm font-inter font-medium text-foreground leading-tight">{a.label}</span>
             </button>
           ))}
         </div>
-        <PBtn onClick={()=>onNav("criar-treino")} ut="personal"><Plus size={20}/> Criar novo treino</PBtn>
+
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="w-full h-14 rounded-2xl font-montserrat font-bold text-base text-black flex items-center justify-center gap-2 transition-all active:scale-95"
+            style={{background:ac}}
+          >
+            <Settings size={19}/> Editar aluno
+          </button>
+
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={deleting}
+            className="w-full h-14 rounded-2xl font-montserrat font-bold text-base border border-destructive text-destructive flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+          >
+            {deleting ? (
+              <RefreshCw size={19} className="animate-spin"/>
+            ) : (
+              <X size={19}/>
+            )}
+            {deleting ? "Excluindo..." : "Excluir aluno"}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1116,146 +1614,434 @@ function AlunoDetail({ student,onBack,onNav }:{student:Student;onBack:()=>void;o
 
 // ─── Criar Treino ─────────────────────────────────────────────────────────────
 
-function CriarTreino({ onBack }:{onBack:()=>void}) {
-  const [student,setStudent]=useState("");
-  const [wname,setWname]=useState("");
-  const [cat,setCat]=useState("");
-  const [desc,setDesc]=useState("");
-  const [exs,setExs]=useState<string[]>([]);
-  const [showModal,setShowModal]=useState(false);
-  const [exSearch,setExSearch]=useState("");
-  const [exFilter,setExFilter]=useState("Todos");
-  const [errs,setErrs]=useState<Record<string,string>>({});
-  const [toast,setToast]=useState<{msg:string;type:"success"|"error"}|null>(null);
-  const ac=AC("personal");
-  const canSave=wname.trim()&&cat&&exs.length>0;
-  const filtered=ALL_EX.filter(e=>e.name.toLowerCase().includes(exSearch.toLowerCase())&&(exFilter==="Todos"||e.cat===exFilter));
+type ExercicioSelecionadoForm = AdicionarExercicioTreinoDTO;
 
-  const save=()=>{
-    const e:Record<string,string>={};
-    if(!wname.trim()) e.wname="Nome obrigatório.";
-    if(!cat) e.cat="Categoria obrigatória.";
-    if(!exs.length) e.ex="Adicione ao menos 1 exercício.";
-    setErrs(e); if(Object.keys(e).length) return;
-    setToast({msg:"Treino criado com sucesso.",type:"success"});
-    setTimeout(onBack,1500);
-  };
+function CriarTreino({
+  onBack,
+  exercicios,
+  loadingExercicios,
+  saving,
+  onSubmit,
+}: {
+  onBack: () => void;
+  exercicios: Exercicio[];
+  loadingExercicios: boolean;
+  saving: boolean;
+  onSubmit: (
+    treino: CriarTreinoDTO,
+    exercicios: AdicionarExercicioTreinoDTO[],
+  ) => Promise<boolean>;
+}) {
+  const [wname, setWname] = useState("");
+  const [objetivo, setObjetivo] = useState("");
+  const [desc, setDesc] = useState("");
+  const [duracao, setDuracao] = useState("");
+  const [status, setStatus] = useState<StatusTreino>("disponivel");
+  const [selecionados, setSelecionados] = useState<ExercicioSelecionadoForm[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [exSearch, setExSearch] = useState("");
+  const [exFilter, setExFilter] = useState("Todos");
+  const [errs, setErrs] = useState<Record<string, string>>({});
+  const ac = AC("personal");
+
+  const filtered = exercicios.filter((exercicio) =>
+    exercicio.nome.toLowerCase().includes(exSearch.toLowerCase()) &&
+    (exFilter === "Todos" || exercicio.categoria === exFilter)
+  );
+
+  function adicionarExercicio(exercicio: Exercicio) {
+    if (selecionados.some((item) => item.exercicioId === exercicio.id)) {
+      return;
+    }
+
+    setSelecionados((prev) => [
+      ...prev,
+      {
+        exercicioId: exercicio.id,
+        ordem: prev.length + 1,
+        series: 3,
+        repeticoes: 10,
+        carga: 0,
+      },
+    ]);
+    setShowModal(false);
+  }
+
+  function atualizarSelecionado(
+    exercicioId: string,
+    campo: "series" | "repeticoes" | "carga",
+    valor: number,
+  ) {
+    setSelecionados((prev) =>
+      prev.map((item) =>
+        item.exercicioId === exercicioId
+          ? { ...item, [campo]: valor }
+          : item,
+      ),
+    );
+  }
+
+  function removerSelecionado(exercicioId: string) {
+    setSelecionados((prev) =>
+      prev
+        .filter((item) => item.exercicioId !== exercicioId)
+        .map((item, index) => ({ ...item, ordem: index + 1 })),
+    );
+  }
+
+  async function save() {
+    const errors: Record<string, string> = {};
+
+    if (!wname.trim()) errors.wname = "Nome obrigatório.";
+    if (!objetivo.trim()) errors.objetivo = "Objetivo obrigatório.";
+    if (duracao && (!Number.isInteger(Number(duracao)) || Number(duracao) <= 0)) {
+      errors.duracao = "A duração deve ser um número inteiro maior que zero.";
+    }
+    if (!selecionados.length) errors.ex = "Adicione ao menos 1 exercício.";
+    if (
+      selecionados.some(
+        (item) =>
+          item.series < 1 ||
+          item.repeticoes < 1 ||
+          (item.carga !== undefined && item.carga < 0),
+      )
+    ) {
+      errors.ex = "Revise séries, repetições e carga dos exercícios.";
+    }
+
+    setErrs(errors);
+    if (Object.keys(errors).length) return;
+
+    const sucesso = await onSubmit(
+      {
+        nome: wname.trim(),
+        objetivo: objetivo.trim(),
+        descricao: desc.trim() || undefined,
+        duracao: duracao ? Number(duracao) : undefined,
+        status,
+      },
+      selecionados,
+    );
+
+    if (sucesso) onBack();
+  }
 
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
-      {toast&&<Toast message={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
-      {showModal&&(
-        <div className="fixed inset-0 z-40 bg-black/80 flex items-end justify-center" onClick={()=>setShowModal(false)}>
-          <div className="bg-card rounded-t-3xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-5 pb-10" onClick={e=>e.stopPropagation()}>
+      {showModal && (
+        <div className="fixed inset-0 z-40 bg-black/80 flex items-end justify-center" onClick={() => setShowModal(false)}>
+          <div className="bg-card rounded-t-3xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-5 pb-10" onClick={(event) => event.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-montserrat font-bold text-xl text-foreground">Selecionar Exercício</h2>
-              <button onClick={()=>setShowModal(false)} aria-label="Fechar"><X size={24} className="text-muted-foreground"/></button>
+              <h2 className="font-montserrat font-bold text-xl text-foreground">Selecionar exercício</h2>
+              <button onClick={() => setShowModal(false)} aria-label="Fechar"><X size={24} className="text-muted-foreground"/></button>
             </div>
+
             <div className="flex items-center gap-3 bg-background border border-border rounded-2xl px-4 h-11 mb-3">
               <Search size={16} className="text-muted-foreground"/>
-              <input value={exSearch} onChange={e=>setExSearch(e.target.value)} placeholder="Buscar..."
-                className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm outline-none" aria-label="Buscar exercício"/>
+              <input
+                value={exSearch}
+                onChange={(event) => setExSearch(event.target.value)}
+                placeholder="Buscar exercício..."
+                className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm outline-none"
+                aria-label="Buscar exercício"
+              />
             </div>
+
             <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-              {["Todos","Peito","Costas","Pernas","Ombros","Braços"].map(f=>(
-                <button key={f} onClick={()=>setExFilter(f)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-inter font-medium whitespace-nowrap transition-all ${exFilter===f?"text-black":"bg-muted text-muted-foreground"}`}
-                  style={exFilter===f?{background:ac}:undefined} aria-pressed={exFilter===f}>{f}</button>
+              {["Todos", "Peito", "Costas", "Pernas", "Braços", "Ombros", "Abdômen", "Glúteos", "Panturrilha", "Outro"].map((filtro) => (
+                <button
+                  key={filtro}
+                  onClick={() => setExFilter(filtro)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-inter font-medium whitespace-nowrap transition-all ${exFilter === filtro ? "text-black" : "bg-muted text-muted-foreground"}`}
+                  style={exFilter === filtro ? { background: ac } : undefined}
+                  aria-pressed={exFilter === filtro}
+                >
+                  {filtro}
+                </button>
               ))}
             </div>
-            {filtered.length===0
-              ? <p className="text-center text-muted-foreground text-sm py-8">Nenhum exercício encontrado.</p>
-              : filtered.map(ex=>(
-                <button key={ex.name} onClick={()=>{if(!exs.includes(ex.name))setExs(p=>[...p,ex.name]);setShowModal(false);}}
-                  className="flex items-center gap-3 bg-background border border-border rounded-2xl px-4 py-3 text-left hover:border-primary transition-all w-full mb-2">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:AC_BG("personal",0.15)}}>
-                    <Dumbbell size={18} style={{color:ac}}/>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-inter font-semibold text-sm text-foreground">{ex.name}</p>
-                    <p className="text-xs text-muted-foreground font-inter">{ex.desc}</p>
-                  </div>
-                  <span className="text-xs font-inter px-2 py-1 rounded-full bg-muted text-muted-foreground flex-shrink-0">{ex.cat}</span>
-                  {exs.includes(ex.name)&&<Check size={16} style={{color:ac}}/>}
-                </button>
-              ))
-            }
+
+            {loadingExercicios ? (
+              <div className="flex flex-col items-center gap-2 py-8">
+                <RefreshCw size={22} className="animate-spin text-muted-foreground"/>
+                <p className="text-xs text-muted-foreground font-inter">Buscando exercícios no banco...</p>
+              </div>
+            ) : filtered.length === 0 ? (
+              <p className="text-center text-muted-foreground text-sm py-8">Nenhum exercício encontrado.</p>
+            ) : (
+              filtered.map((exercicio) => {
+                const adicionado = selecionados.some((item) => item.exercicioId === exercicio.id);
+                return (
+                  <button
+                    key={exercicio.id}
+                    disabled={adicionado}
+                    onClick={() => adicionarExercicio(exercicio)}
+                    className="flex items-center gap-3 bg-background border border-border rounded-2xl px-4 py-3 text-left hover:border-primary transition-all w-full mb-2 disabled:opacity-50"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: AC_BG("personal", 0.15) }}>
+                      <Dumbbell size={18} style={{ color: ac }}/>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-inter font-semibold text-sm text-foreground">{exercicio.nome}</p>
+                      <p className="text-xs text-muted-foreground font-inter truncate">{exercicio.descricao || "Sem descrição"}</p>
+                    </div>
+                    {adicionado ? <Check size={16} style={{ color: ac }}/> : <Plus size={16} className="text-muted-foreground"/>}
+                  </button>
+                );
+              })
+            )}
           </div>
         </div>
       )}
+
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center gap-4 mb-6">
           <BackBtn onClick={onBack}/>
-          <h1 className="font-montserrat font-bold text-2xl text-foreground">Criar Treino</h1>
+          <div>
+            <h1 className="font-montserrat font-bold text-2xl text-foreground">Criar treino</h1>
+            <p className="text-xs text-muted-foreground font-inter mt-1">Os dados serão salvos no PostgreSQL.</p>
+          </div>
         </div>
+
         <div className="flex flex-col gap-4">
-          <div>
-            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Aluno (opcional)</label>
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              {["Nenhum",...STUDENTS.map(s=>s.name)].map(n=>{
-                const v=n==="Nenhum"?"":n; const s=student===v;
-                return <button key={n} onClick={()=>setStudent(v)}
-                  className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all flex-shrink-0 ${s?"text-black":"bg-card border border-border text-muted-foreground"}`}
-                  style={s?{background:ac}:undefined} aria-pressed={s}>{n}</button>;
-              })}
-            </div>
-          </div>
           <Fld label="Nome do treino *" value={wname} onChange={setWname} placeholder="Ex: Upper A" error={errs.wname} icon={<Dumbbell size={18}/>}/>
+          <Fld label="Objetivo *" value={objetivo} onChange={setObjetivo} placeholder="Ex: Hipertrofia" error={errs.objetivo} icon={<Target size={18}/>}/>
+          <Fld label="Duração estimada (min)" value={duracao} onChange={setDuracao} placeholder="Ex: 65" type="number" error={errs.duracao} icon={<Clock size={18}/>}/>
+
           <div>
-            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Categoria *</label>
-            <div className="flex flex-wrap gap-2">
-              {["Hipertrofia","Emagrecimento","Condicionamento","Mobilidade","Reabilitação"].map(c=>(
-                <button key={c} onClick={()=>setCat(c)}
-                  className={`px-4 py-2 rounded-full text-sm font-inter transition-all ${cat===c?"text-black font-semibold":"bg-card border border-border text-muted-foreground"}`}
-                  style={cat===c?{background:ac}:undefined} aria-pressed={cat===c}>{c}</button>
-              ))}
-            </div>
-            {errs.cat&&<p className="text-xs text-destructive mt-1">{errs.cat}</p>}
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Status</label>
+            <select
+              value={status}
+              onChange={(event) => setStatus(event.target.value as StatusTreino)}
+              className="h-14 w-full rounded-2xl bg-card border border-border px-4 text-foreground outline-none focus:border-primary"
+            >
+              <option value="disponivel">Disponível</option>
+              <option value="andamento">Em andamento</option>
+              <option value="concluido">Concluído</option>
+            </select>
           </div>
+
           <div>
-            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Descrição (opcional)</label>
-            <textarea value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Objetivo, observações..."
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-2">Descrição</label>
+            <textarea
+              value={desc}
+              onChange={(event) => setDesc(event.target.value)}
+              placeholder="Objetivo, observações..."
               className="w-full rounded-2xl bg-card border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-primary transition-colors resize-none"
-              rows={3} aria-label="Descrição"/>
+              rows={3}
+            />
           </div>
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-montserrat font-semibold text-muted-foreground">Exercícios *</label>
-              <span className="text-xs font-inter text-muted-foreground">{exs.length} adicionado{exs.length!==1?"s":""}</span>
+              <span className="text-xs font-inter text-muted-foreground">{selecionados.length} adicionado{selecionados.length !== 1 ? "s" : ""}</span>
             </div>
-            {exs.length===0
-              ? <div className="bg-card border border-dashed border-border rounded-2xl py-8 flex flex-col items-center gap-2 mb-2">
-                  <Dumbbell size={28} className="text-muted-foreground"/>
-                  <p className="text-sm font-inter text-muted-foreground">Nenhum exercício adicionado</p>
-                </div>
-              : <div className="flex flex-col gap-2 mb-2">
-                  {exs.map((ex,i)=>(
-                    <div key={i} className="bg-card border border-border rounded-xl px-4 py-3 flex items-center justify-between">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{background:AC_BG("personal",0.15)}}>
-                          <Dumbbell size={14} style={{color:ac}}/>
+
+            {selecionados.length === 0 ? (
+              <div className="bg-card border border-dashed border-border rounded-2xl py-8 flex flex-col items-center gap-2 mb-2">
+                <Dumbbell size={28} className="text-muted-foreground"/>
+                <p className="text-sm font-inter text-muted-foreground">Nenhum exercício adicionado</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3 mb-2">
+                {selecionados.map((item) => {
+                  const exercicio = exercicios.find((ex) => ex.id === item.exercicioId);
+                  if (!exercicio) return null;
+
+                  return (
+                    <div key={item.exercicioId} className="bg-card border border-border rounded-2xl p-4">
+                      <div className="flex items-center justify-between gap-3 mb-3">
+                        <div className="min-w-0">
+                          <p className="font-inter font-semibold text-sm text-foreground truncate">{item.ordem}. {exercicio.nome}</p>
+                          <p className="text-xs text-muted-foreground">{exercicio.categoria}</p>
                         </div>
-                        <span className="text-sm font-inter font-medium text-foreground truncate">{ex}</span>
+                        <button onClick={() => removerSelecionado(item.exercicioId)} aria-label={`Remover ${exercicio.nome}`}>
+                          <X size={18} className="text-destructive"/>
+                        </button>
                       </div>
-                      <button onClick={()=>setExs(p=>p.filter((_,j)=>j!==i))} aria-label={`Remover ${ex}`}>
-                        <X size={16} className="text-muted-foreground hover:text-destructive transition-colors"/>
-                      </button>
+
+                      <div className="grid grid-cols-3 gap-2">
+                        <div>
+                          <label className="text-[11px] text-muted-foreground">Séries</label>
+                          <input
+                            type="number"
+                            min={1}
+                            value={item.series}
+                            onChange={(event) => atualizarSelecionado(item.exercicioId, "series", Number(event.target.value))}
+                            className="w-full h-10 rounded-xl bg-background border border-border px-3 text-foreground outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-muted-foreground">Reps</label>
+                          <input
+                            type="number"
+                            min={1}
+                            value={item.repeticoes}
+                            onChange={(event) => atualizarSelecionado(item.exercicioId, "repeticoes", Number(event.target.value))}
+                            className="w-full h-10 rounded-xl bg-background border border-border px-3 text-foreground outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-muted-foreground">Carga</label>
+                          <input
+                            type="number"
+                            min={0}
+                            step="0.5"
+                            value={item.carga ?? 0}
+                            onChange={(event) => atualizarSelecionado(item.exercicioId, "carga", Number(event.target.value))}
+                            className="w-full h-10 rounded-xl bg-background border border-border px-3 text-foreground outline-none"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-            }
-            {errs.ex&&<p className="text-xs text-destructive mb-2">{errs.ex}</p>}
-            <button onClick={()=>setShowModal(true)}
-              className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-sm font-inter font-semibold text-muted-foreground hover:border-primary hover:text-primary transition-all">
+                  );
+                })}
+              </div>
+            )}
+
+            {errs.ex && <p className="text-xs text-destructive mb-2">{errs.ex}</p>}
+            <button
+              onClick={() => setShowModal(true)}
+              className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-sm font-inter font-semibold text-muted-foreground hover:border-primary hover:text-primary transition-all"
+            >
               <Plus size={18}/> Adicionar exercício
             </button>
           </div>
-          <button onClick={save} disabled={!canSave}
-            className="w-full h-14 rounded-2xl font-montserrat font-bold text-base text-black flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed mt-1"
-            style={{background:canSave?ac:"#2a2a2a"}} aria-disabled={!canSave}>
-            <Check size={20}/> Salvar treino
-          </button>
-          {!canSave&&<p className="text-xs text-muted-foreground text-center font-inter">Preencha nome, categoria e adicione ao menos 1 exercício.</p>}
+
+          <PBtn onClick={save} loading={saving} disabled={saving} ut="personal">
+            <Check size={18}/> Salvar treino e exercícios
+          </PBtn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Gerenciador de Exercícios ────────────────────────────────────────────────
+
+function ExerciseManagerModal({
+  exercicios,
+  saving,
+  deleting,
+  onClose,
+  onCreate,
+  onUpdate,
+  onDelete,
+}: {
+  exercicios: Exercicio[];
+  saving: boolean;
+  deleting: boolean;
+  onClose: () => void;
+  onCreate: (data: CriarExercicioDTO) => Promise<boolean>;
+  onUpdate: (id: string, data: AtualizarExercicioDTO) => Promise<boolean>;
+  onDelete: (id: string) => Promise<void>;
+}) {
+  const categorias: CategoriaExercicio[] = ["Peito", "Costas", "Pernas", "Braços", "Ombros", "Abdômen", "Glúteos", "Panturrilha", "Outro"];
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [nome, setNome] = useState("");
+  const [categoria, setCategoria] = useState<CategoriaExercicio>("Peito");
+  const [descricao, setDescricao] = useState("");
+  const [erro, setErro] = useState("");
+  const [search, setSearch] = useState("");
+
+  const lista = exercicios.filter((exercicio) =>
+    exercicio.nome.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  function limparFormulario() {
+    setEditingId(null);
+    setNome("");
+    setCategoria("Peito");
+    setDescricao("");
+    setErro("");
+  }
+
+  function iniciarEdicao(exercicio: Exercicio) {
+    setEditingId(exercicio.id);
+    setNome(exercicio.nome);
+    setCategoria(exercicio.categoria);
+    setDescricao(exercicio.descricao ?? "");
+    setErro("");
+  }
+
+  async function salvar() {
+    if (!nome.trim()) {
+      setErro("Informe o nome do exercício.");
+      return;
+    }
+
+    const data = {
+      nome: nome.trim(),
+      categoria,
+      descricao: descricao.trim() || undefined,
+    };
+
+    const sucesso = editingId
+      ? await onUpdate(editingId, data)
+      : await onCreate(data);
+
+    if (sucesso) limparFormulario();
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center" onClick={onClose}>
+      <div className="bg-background rounded-t-3xl w-full max-w-lg max-h-[92vh] overflow-y-auto p-6 pb-10 border border-border" onClick={(event) => event.stopPropagation()}>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="font-montserrat font-bold text-xl text-foreground">Gerenciar exercícios</h2>
+            <p className="text-xs text-muted-foreground mt-1">CRUD real de exercícios.</p>
+          </div>
+          <button onClick={onClose} aria-label="Fechar"><X size={24} className="text-muted-foreground"/></button>
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl p-4 mb-5 flex flex-col gap-3">
+          <p className="font-montserrat font-semibold text-sm text-foreground">{editingId ? "Editar exercício" : "Novo exercício"}</p>
+          <Fld label="Nome" value={nome} onChange={setNome} placeholder="Ex: Supino inclinado"/>
+          <div>
+            <label className="text-sm font-montserrat font-semibold text-muted-foreground block mb-1.5">Categoria</label>
+            <select
+              value={categoria}
+              onChange={(event) => setCategoria(event.target.value as CategoriaExercicio)}
+              className="h-14 w-full rounded-2xl bg-background border border-border px-4 text-foreground outline-none"
+            >
+              {categorias.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
+          </div>
+          <Fld label="Descrição" value={descricao} onChange={setDescricao} placeholder="Descrição técnica opcional"/>
+          {erro && <p className="text-xs text-destructive">{erro}</p>}
+          <div className="grid grid-cols-2 gap-2">
+            {editingId ? <SBtn onClick={limparFormulario}>Cancelar edição</SBtn> : <SBtn onClick={onClose}>Fechar</SBtn>}
+            <PBtn onClick={salvar} loading={saving} ut="personal">{editingId ? "Atualizar" : "Cadastrar"}</PBtn>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12 mb-3">
+          <Search size={18} className="text-muted-foreground"/>
+          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar exercício..." className="flex-1 bg-transparent text-foreground outline-none text-sm"/>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          {lista.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">Nenhum exercício cadastrado.</p>
+          ) : lista.map((exercicio) => (
+            <div key={exercicio.id} className="bg-card border border-border rounded-2xl p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-inter font-semibold text-sm text-foreground">{exercicio.nome}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{exercicio.categoria} · {exercicio.descricao || "Sem descrição"}</p>
+                </div>
+                <div className="flex gap-2 flex-shrink-0">
+                  <button onClick={() => iniciarEdicao(exercicio)} className="w-9 h-9 rounded-xl border border-border flex items-center justify-center" aria-label={`Editar ${exercicio.nome}`}>
+                    <Settings size={16} className="text-accent"/>
+                  </button>
+                  <button disabled={deleting} onClick={() => onDelete(exercicio.id)} className="w-9 h-9 rounded-xl border border-destructive flex items-center justify-center disabled:opacity-50" aria-label={`Excluir ${exercicio.nome}`}>
+                    <X size={16} className="text-destructive"/>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -1264,75 +2050,135 @@ function CriarTreino({ onBack }:{onBack:()=>void}) {
 
 // ─── Workouts ─────────────────────────────────────────────────────────────────
 
-function Workouts({ onSelect,ut }:{onSelect:(w:Workout)=>void;ut:UserType}) {
-  const [search,setSearch]=useState("");
-  const [filter,setFilter]=useState("Todos");
-  const ac=AC(ut);
-  const list=WORKOUTS.filter(w=>w.name.toLowerCase().includes(search.toLowerCase())&&(filter==="Todos"||w.goal===filter));
+function Workouts({
+  treinos,
+  loading,
+  exercicios,
+  savingExercicio,
+  deletingExercicio,
+  onSelect,
+  onCreateWorkout,
+  onCreateExercicio,
+  onUpdateExercicio,
+  onDeleteExercicio,
+  ut,
+}: {
+  treinos: Treino[];
+  loading: boolean;
+  exercicios: Exercicio[];
+  savingExercicio: boolean;
+  deletingExercicio: boolean;
+  onSelect: (id: string) => void;
+  onCreateWorkout: () => void;
+  onCreateExercicio: (data: CriarExercicioDTO) => Promise<boolean>;
+  onUpdateExercicio: (id: string, data: AtualizarExercicioDTO) => Promise<boolean>;
+  onDeleteExercicio: (id: string) => Promise<void>;
+  ut: UserType;
+}) {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("Todos");
+  const [showExercises, setShowExercises] = useState(false);
+  const ac = AC(ut);
+
+  const list = treinos.filter((treino) =>
+    treino.nome.toLowerCase().includes(search.toLowerCase()) &&
+    (filter === "Todos" || treino.objetivo === filter)
+  );
+
   return (
     <div className="min-h-screen bg-background pb-36">
+      {showExercises && (
+        <ExerciseManagerModal
+          exercicios={exercicios}
+          saving={savingExercicio}
+          deleting={deletingExercicio}
+          onClose={() => setShowExercises(false)}
+          onCreate={onCreateExercicio}
+          onUpdate={onUpdateExercicio}
+          onDelete={onDeleteExercicio}
+        />
+      )}
+
       <div className="px-6 pt-14 pb-4">
         <h1 className="font-montserrat font-bold text-3xl text-foreground mb-0.5">Treinos</h1>
-        <p className="text-muted-foreground text-sm font-inter">{ut==="personal"?"Gerencie rotinas e programas":"Suas rotinas disponíveis"}</p>
+        <p className="text-muted-foreground text-sm font-inter">
+          {ut === "personal" ? "Gerencie treinos e exercícios reais" : "Suas rotinas disponíveis"}
+        </p>
       </div>
-      <div className="px-6 mb-4">
-        {ut==="personal"
-          ? <div className="grid grid-cols-2 gap-3">
-              <button className="h-12 rounded-2xl border border-border flex items-center justify-center gap-2 text-foreground hover:border-primary transition-all font-inter font-semibold text-sm"><Plus size={18}/> Nova Rotina</button>
-              <button className="h-12 rounded-2xl flex items-center justify-center gap-2 text-black font-inter font-semibold text-sm" style={{background:ac}}><Search size={18}/> Explorar</button>
-            </div>
-          : <button className="w-full h-12 rounded-2xl border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground hover:border-accent hover:text-accent transition-all font-inter font-semibold text-sm">
-              <Play size={18}/> Iniciar Treinamento Livre
-            </button>
-        }
-      </div>
+
+      {ut === "personal" && (
+        <div className="px-6 mb-4 grid grid-cols-2 gap-3">
+          <button onClick={onCreateWorkout} className="h-12 rounded-2xl border border-border flex items-center justify-center gap-2 text-foreground hover:border-primary transition-all font-inter font-semibold text-sm">
+            <Plus size={18}/> Nova rotina
+          </button>
+          <button onClick={() => setShowExercises(true)} className="h-12 rounded-2xl flex items-center justify-center gap-2 text-black font-inter font-semibold text-sm" style={{ background: ac }}>
+            <Dumbbell size={18}/> Exercícios
+          </button>
+        </div>
+      )}
+
       <div className="px-6 mb-3">
         <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 h-12">
           <Search size={18} className="text-muted-foreground"/>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar treino..."
-            className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" aria-label="Buscar treino"/>
-          {search&&<button onClick={()=>setSearch("")} aria-label="Limpar"><X size={16} className="text-muted-foreground"/></button>}
+          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar treino..." className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground text-sm font-inter outline-none" aria-label="Buscar treino"/>
+          {search && <button onClick={() => setSearch("")} aria-label="Limpar"><X size={16} className="text-muted-foreground"/></button>}
         </div>
       </div>
+
       <div className="px-6 mb-4 overflow-x-auto">
         <div className="flex gap-2 pb-1">
-          {["Todos","Hipertrofia","Emagrecimento","Condicionamento"].map(f=>(
-            <button key={f} onClick={()=>setFilter(f)}
-              className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter===f?"text-black":"bg-card border border-border text-muted-foreground"}`}
-              style={filter===f?{background:ac}:undefined} aria-pressed={filter===f}>{f}</button>
+          {["Todos", "Hipertrofia", "Emagrecimento", "Condicionamento", "Mobilidade", "Reabilitação"].map((filtro) => (
+            <button
+              key={filtro}
+              onClick={() => setFilter(filtro)}
+              className={`px-4 py-2 rounded-full text-sm font-inter font-medium whitespace-nowrap transition-all ${filter === filtro ? "text-black" : "bg-card border border-border text-muted-foreground"}`}
+              style={filter === filtro ? { background: ac } : undefined}
+              aria-pressed={filter === filtro}
+            >
+              {filtro}
+            </button>
           ))}
         </div>
       </div>
+
       <div className="px-6 flex flex-col gap-3">
-        <p className="font-montserrat font-semibold text-sm text-foreground">
-          {ut==="personal"?"Modelos de treino":"Minhas rotinas"}{filter!=="Todos"&&` · ${filter}`}
-        </p>
-        {list.length===0
-          ? <div className="flex flex-col items-center gap-3 py-12"><Dumbbell size={40} className="text-muted-foreground"/><p className="font-inter text-muted-foreground text-center">Nenhum treino encontrado.</p></div>
-          : list.map(w=>(
-            <div key={w.id} className="bg-card border border-border rounded-2xl p-4 flex flex-col gap-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0 pr-2">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <h3 className="font-montserrat font-bold text-lg text-foreground">{w.name}</h3>
-                    <Badge status={w.status}/>
-                  </div>
-                  <p className="text-sm font-inter text-muted-foreground">{w.goal}</p>
+        <p className="font-montserrat font-semibold text-sm text-foreground">{ut === "personal" ? "Treinos cadastrados" : "Minhas rotinas"}</p>
+
+        {loading ? (
+          <div className="flex flex-col items-center gap-3 py-12">
+            <RefreshCw size={28} className="animate-spin text-muted-foreground"/>
+            <p className="text-sm text-muted-foreground">Carregando treinos...</p>
+          </div>
+        ) : list.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <Dumbbell size={38} className="text-muted-foreground"/>
+            <p className="text-sm font-inter text-muted-foreground">Nenhum treino encontrado.</p>
+            {ut === "personal" && <button onClick={onCreateWorkout} className="text-sm font-semibold" style={{ color: ac }}>Criar primeiro treino</button>}
+          </div>
+        ) : (
+          list.map((treino) => (
+            <div key={treino.id} className="bg-card border border-border rounded-2xl p-4">
+              <div className="flex items-start justify-between mb-3">
+                <div className="min-w-0 pr-2">
+                  <h3 className="font-montserrat font-bold text-lg text-foreground truncate">{treino.nome}</h3>
+                  <p className="text-xs font-inter text-muted-foreground mt-0.5">{treino.objetivo} · {treino.duracao ? `${treino.duracao} min` : "Sem duração"}</p>
                 </div>
-                <button className="text-muted-foreground p-1 flex-shrink-0" aria-label="Mais opções"><MoreVertical size={18}/></button>
+                <Badge status={treino.status}/>
               </div>
-              <div className="flex items-center gap-4 text-xs font-inter text-muted-foreground">
-                <span className="flex items-center gap-1"><Dumbbell size={12}/>{w.exerciseCount} exercícios</span>
-                <span className="flex items-center gap-1"><Clock size={12}/>{w.duration}</span>
+
+              {treino.descricao && <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{treino.descricao}</p>}
+
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                <span className="flex items-center gap-1"><Dumbbell size={13}/>{treino._count?.exercicios ?? treino.exercicios?.length ?? 0} exercícios</span>
+                <span className="text-accent">Persistido no banco</span>
               </div>
-              <button onClick={()=>onSelect(w)}
-                className="w-full h-12 rounded-xl flex items-center justify-center gap-2 font-inter font-semibold text-sm text-black transition-all active:scale-95"
-                style={{background:ac}}>
-                {ut==="personal"?<><ClipboardList size={16}/> Atribuir ao aluno</>:<><Play size={16}/> Iniciar Rotina</>}
+
+              <button onClick={() => onSelect(treino.id)} className="w-full h-11 rounded-xl font-inter font-semibold text-sm text-black flex items-center justify-center gap-2 active:scale-95" style={{ background: ac }}>
+                <ChevronRight size={17}/> {ut === "personal" ? "Abrir e gerenciar" : "Ver rotina"}
               </button>
             </div>
           ))
-        }
+        )}
       </div>
     </div>
   );
@@ -1340,113 +2186,227 @@ function Workouts({ onSelect,ut }:{onSelect:(w:Workout)=>void;ut:UserType}) {
 
 // ─── Workout Detail ───────────────────────────────────────────────────────────
 
-function WorkoutDetail({ workout,onBack,onToast,ut }:
-  {workout:Workout;onBack:()=>void;onToast:(msg:string,t:"success"|"error"|"info")=>void;ut:UserType}) {
-  const [exs,setExs]=useState(workout.exercises);
-  const [cf,setCf]=useState("Volume");
-  const ac=AC(ut);
-  const done=exs.filter(e=>e.completed).length;
-  const pct=exs.length?(done/exs.length)*100:0;
-  const toggle=(id:string)=>setExs(p=>p.map(e=>{if(e.id!==id)return e;onToast(e.completed?"Exercício desmarcado.":"Exercício marcado como concluído.","success");return {...e,completed:!e.completed};}));
-  const finish=()=>{
-    if(!done){onToast("Conclua ao menos um exercício antes de finalizar.","error");return;}
-    onToast(done<exs.length?`Treino finalizado com ${done} de ${exs.length} exercícios.`:"Treino concluído com sucesso.",done<exs.length?"info":"success");
-  };
-  const chartData=[{w:"S1",v:3200},{w:"S2",v:3800},{w:"S3",v:3600},{w:"S4",v:4500},{w:"S5",v:4100}];
+function WorkoutDetail({
+  workout,
+  exercicios,
+  loadingExercicios,
+  savingTreino,
+  deletingTreino,
+  savingVinculo,
+  onBack,
+  onUpdateTreino,
+  onDeleteTreino,
+  onAddExercicio,
+  onUpdateExercicio,
+  onRemoveExercicio,
+  onToast,
+  ut,
+}: {
+  workout: Treino;
+  exercicios: Exercicio[];
+  loadingExercicios: boolean;
+  savingTreino: boolean;
+  deletingTreino: boolean;
+  savingVinculo: boolean;
+  onBack: () => void;
+  onUpdateTreino: (id: string, data: AtualizarTreinoDTO) => Promise<boolean>;
+  onDeleteTreino: (id: string) => Promise<void>;
+  onAddExercicio: (treinoId: string, data: AdicionarExercicioTreinoDTO) => Promise<boolean>;
+  onUpdateExercicio: (treinoId: string, vinculoId: string, data: AtualizarExercicioTreinoDTO) => Promise<boolean>;
+  onRemoveExercicio: (treinoId: string, vinculoId: string) => Promise<void>;
+  onToast: (msg: string, type: "success" | "error" | "info") => void;
+  ut: UserType;
+}) {
+  const [cf, setCf] = useState("Volume");
+  const [showEdit, setShowEdit] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [nome, setNome] = useState(workout.nome);
+  const [objetivo, setObjetivo] = useState(workout.objetivo);
+  const [descricao, setDescricao] = useState(workout.descricao ?? "");
+  const [duracao, setDuracao] = useState(workout.duracao?.toString() ?? "");
+  const [status, setStatus] = useState<StatusTreino>(workout.status);
+  const [selectedExerciseId, setSelectedExerciseId] = useState("");
+  const [series, setSeries] = useState("3");
+  const [repeticoes, setRepeticoes] = useState("10");
+  const [carga, setCarga] = useState("0");
+  const ac = AC(ut);
+  const exerciciosVinculados = workout.exercicios ?? [];
+  const idsVinculados = new Set(exerciciosVinculados.map((item) => item.exercicioId));
+  const exerciciosDisponiveis = exercicios.filter((item) => !idsVinculados.has(item.id));
+
+  useEffect(() => {
+    setNome(workout.nome);
+    setObjetivo(workout.objetivo);
+    setDescricao(workout.descricao ?? "");
+    setDuracao(workout.duracao?.toString() ?? "");
+    setStatus(workout.status);
+  }, [workout]);
+
+  const chartData = [
+    { w: "S1", v: 3200 },
+    { w: "S2", v: 3800 },
+    { w: "S3", v: 3600 },
+    { w: "S4", v: 4500 },
+    { w: "S5", v: 4100 },
+  ];
+
+  async function salvarTreino() {
+    if (!nome.trim() || !objetivo.trim()) {
+      onToast("Nome e objetivo são obrigatórios.", "error");
+      return;
+    }
+    if (duracao && (!Number.isInteger(Number(duracao)) || Number(duracao) <= 0)) {
+      onToast("A duração deve ser um número inteiro maior que zero.", "error");
+      return;
+    }
+
+    const sucesso = await onUpdateTreino(workout.id, {
+      nome: nome.trim(),
+      objetivo: objetivo.trim(),
+      descricao: descricao.trim() || undefined,
+      duracao: duracao ? Number(duracao) : undefined,
+      status,
+    });
+    if (sucesso) setShowEdit(false);
+  }
+
+  async function adicionarExercicio() {
+    if (!selectedExerciseId) {
+      onToast("Selecione um exercício.", "error");
+      return;
+    }
+    if (Number(series) < 1 || Number(repeticoes) < 1 || Number(carga) < 0) {
+      onToast("Revise séries, repetições e carga.", "error");
+      return;
+    }
+
+    const sucesso = await onAddExercicio(workout.id, {
+      exercicioId: selectedExerciseId,
+      ordem: exerciciosVinculados.length + 1,
+      series: Number(series),
+      repeticoes: Number(repeticoes),
+      carga: Number(carga),
+    });
+
+    if (sucesso) {
+      setShowAdd(false);
+      setSelectedExerciseId("");
+      setSeries("3");
+      setRepeticoes("10");
+      setCarga("0");
+    }
+  }
+
+  async function editarVinculo(item: TreinoExercicio) {
+    const novasSeries = window.prompt("Séries:", String(item.series));
+    if (novasSeries === null) return;
+    const novasReps = window.prompt("Repetições:", String(item.repeticoes));
+    if (novasReps === null) return;
+    const novaCarga = window.prompt("Carga (kg):", String(item.carga ?? 0));
+    if (novaCarga === null) return;
+
+    await onUpdateExercicio(workout.id, item.id, {
+      series: Number(novasSeries),
+      repeticoes: Number(novasReps),
+      carga: Number(novaCarga),
+    });
+  }
+
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
+      {showEdit && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center" onClick={() => setShowEdit(false)}>
+          <div className="bg-background rounded-t-3xl w-full max-w-lg p-6 pb-10 border border-border max-h-[90vh] overflow-y-auto" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5"><h2 className="font-montserrat font-bold text-xl text-foreground">Editar treino</h2><button onClick={() => setShowEdit(false)}><X size={24} className="text-muted-foreground"/></button></div>
+            <div className="flex flex-col gap-4">
+              <Fld label="Nome" value={nome} onChange={setNome}/>
+              <Fld label="Objetivo" value={objetivo} onChange={setObjetivo}/>
+              <Fld label="Duração (min)" value={duracao} onChange={setDuracao} type="number"/>
+              <Fld label="Descrição" value={descricao} onChange={setDescricao}/>
+              <select value={status} onChange={(event) => setStatus(event.target.value as StatusTreino)} className="h-14 rounded-2xl bg-card border border-border px-4 text-foreground outline-none">
+                <option value="disponivel">Disponível</option><option value="andamento">Em andamento</option><option value="concluido">Concluído</option>
+              </select>
+              <PBtn onClick={salvarTreino} loading={savingTreino} ut={ut}>Salvar alterações</PBtn>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAdd && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center" onClick={() => setShowAdd(false)}>
+          <div className="bg-background rounded-t-3xl w-full max-w-lg p-6 pb-10 border border-border" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5"><h2 className="font-montserrat font-bold text-xl text-foreground">Adicionar exercício</h2><button onClick={() => setShowAdd(false)}><X size={24} className="text-muted-foreground"/></button></div>
+            {loadingExercicios ? <p className="text-sm text-muted-foreground">Carregando exercícios...</p> : (
+              <div className="flex flex-col gap-4">
+                <select value={selectedExerciseId} onChange={(event) => setSelectedExerciseId(event.target.value)} className="h-14 rounded-2xl bg-card border border-border px-4 text-foreground outline-none">
+                  <option value="">Selecione um exercício</option>
+                  {exerciciosDisponiveis.map((item) => <option key={item.id} value={item.id}>{item.nome} · {item.categoria}</option>)}
+                </select>
+                <div className="grid grid-cols-3 gap-2">
+                  <Fld label="Séries" value={series} onChange={setSeries} type="number"/>
+                  <Fld label="Reps" value={repeticoes} onChange={setRepeticoes} type="number"/>
+                  <Fld label="Carga" value={carga} onChange={setCarga} type="number"/>
+                </div>
+                <PBtn onClick={adicionarExercicio} loading={savingVinculo} ut={ut}>Adicionar à ficha</PBtn>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between mb-4">
           <BackBtn onClick={onBack}/>
           <p className="font-montserrat font-semibold text-sm text-muted-foreground">Rotina</p>
-          <div className="flex gap-3">
-            <button aria-label="Compartilhar"><Share2 size={20} className="text-muted-foreground"/></button>
-            <button aria-label="Mais opções"><MoreVertical size={20} className="text-muted-foreground"/></button>
-          </div>
+          {ut === "personal" ? (
+            <div className="flex gap-2">
+              <button onClick={() => setShowEdit(true)} aria-label="Editar treino" className="w-10 h-10 rounded-xl border border-border flex items-center justify-center"><Settings size={18} className="text-accent"/></button>
+              <button disabled={deletingTreino} onClick={() => onDeleteTreino(workout.id)} aria-label="Excluir treino" className="w-10 h-10 rounded-xl border border-destructive flex items-center justify-center disabled:opacity-50"><X size={18} className="text-destructive"/></button>
+            </div>
+          ) : <button aria-label="Compartilhar" onClick={() => onToast("Compartilhamento ainda não implementado no MVP.", "info")}><Share2 size={20} className="text-muted-foreground"/></button>}
         </div>
-        <h1 className="font-montserrat font-bold text-3xl text-foreground">{workout.name}</h1>
-        <p className="text-muted-foreground text-sm font-inter mt-1">Criado por TrainerX64 · {workout.goal}</p>
-        <div className="mt-4 mb-1">
-          <div className="flex justify-between text-xs font-inter text-muted-foreground mb-2"><span>Progresso</span><span>{done}/{exs.length} exercícios</span></div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div className="h-full rounded-full transition-all" style={{width:`${pct}%`,background:ac}}
-              role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${Math.round(pct)}%`}/>
-          </div>
-        </div>
-        <div className="flex gap-4 mt-3 text-xs font-inter text-muted-foreground">
-          <span className="flex items-center gap-1"><Clock size={12}/>{workout.duration}</span>
-          <span className="flex items-center gap-1"><Dumbbell size={12}/>{workout.exerciseCount} exercícios</span>
+
+        <h1 className="font-montserrat font-bold text-3xl text-foreground">{workout.nome}</h1>
+        <p className="text-muted-foreground text-sm font-inter mt-1">TrainerX64 · {workout.objetivo}</p>
+        {workout.descricao && <p className="text-xs text-gray-400 mt-2 italic bg-card p-3 rounded-xl border border-border">{workout.descricao}</p>}
+        <div className="flex gap-4 mt-4 text-xs font-inter text-muted-foreground">
+          <span className="flex items-center gap-1"><Clock size={12}/>{workout.duracao ? `${workout.duracao} min` : "N/A"}</span>
+          <span className="flex items-center gap-1"><Dumbbell size={12}/>{exerciciosVinculados.length} exercícios</span>
+          <Badge status={workout.status}/>
         </div>
       </div>
+
       <div className="px-6 mb-4">
         <div className="bg-card border border-border rounded-2xl p-4">
-          <Caps items={["Volume","Repetições","Duração"]} active={cf} onChange={setCf} ut={ut}/>
-          <div className="mt-3">
-            <ResponsiveContainer width="100%" height={90}>
-              <LineChart data={chartData}>
-                <XAxis dataKey="w" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
-                <YAxis hide/>
-                <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
-                <Line type="monotone" dataKey="v" stroke={ac} strokeWidth={2.5} dot={false}/>
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <Caps items={["Volume", "Repetições", "Duração"]} active={cf} onChange={setCf} ut={ut}/>
+          <div className="mt-3"><ResponsiveContainer width="100%" height={90}><LineChart data={chartData}><XAxis dataKey="w" tick={{ fill: "#a0a0a0", fontSize: 11 }} axisLine={false} tickLine={false}/><YAxis hide/><Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #2a2a2a", borderRadius: "12px", color: "#fff" }}/><Line type="monotone" dataKey="v" stroke={ac} strokeWidth={2.5} dot={false}/></LineChart></ResponsiveContainer></div>
         </div>
       </div>
-      <div className="px-6 mb-4">
-        <button onClick={finish}
-          className="w-full h-14 rounded-2xl font-montserrat font-bold text-base text-black flex items-center justify-center gap-2 transition-all active:scale-95"
-          style={{background:ac}}>
-          {ut==="personal"?<><ClipboardList size={20}/> Atribuir treino</>:<><Play size={20}/> Iniciar Rotina</>}
-        </button>
-      </div>
+
       <div className="px-6 flex flex-col gap-3">
-        <p className="font-montserrat font-bold text-lg text-foreground">Exercícios</p>
-        {exs.map(ex=>(
-          <div key={ex.id} className="bg-card border rounded-2xl p-4 transition-all"
-            style={{border:ex.completed?`1px solid ${ac}`:"1px solid #2a2a2a",background:ex.completed?AC_BG(ut,0.04):undefined}}>
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:AC_BG(ut,0.15)}}>
-                  <Dumbbell size={20} style={{color:ac}}/>
-                </div>
-                <div>
-                  <h3 className="font-montserrat font-semibold text-sm text-foreground">{ex.name}</h3>
-                  <p className="text-xs font-inter text-muted-foreground mt-0.5">{ex.sets.length} séries</p>
-                </div>
+        <div className="flex items-center justify-between">
+          <p className="font-montserrat font-bold text-lg text-foreground">Exercícios da ficha</p>
+          {ut === "personal" && <button onClick={() => setShowAdd(true)} className="text-xs font-semibold flex items-center gap-1" style={{ color: ac }}><Plus size={15}/> Adicionar</button>}
+        </div>
+
+        {exerciciosVinculados.length === 0 ? (
+          <p className="text-sm text-muted-foreground italic text-center py-6">Nenhum exercício vinculado a este treino.</p>
+        ) : exerciciosVinculados.map((item) => (
+          <div key={item.id} className="bg-card border border-border rounded-2xl p-4">
+            <div className="flex items-start justify-between mb-3 gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: AC_BG(ut, 0.12) }}><Dumbbell size={22} style={{ color: ac }}/></div>
+                <div className="min-w-0"><h3 className="font-montserrat font-bold text-sm text-foreground truncate">{item.ordem}. {item.exercicio.nome}</h3><p className="text-[11px] text-muted-foreground mt-0.5">{item.exercicio.categoria}</p></div>
               </div>
-              {ex.completed&&<CheckCircle size={20} style={{color:ac}} aria-label="Concluído"/>}
+              {ut === "personal" && <div className="flex gap-2"><button disabled={savingVinculo} onClick={() => editarVinculo(item)} className="w-9 h-9 rounded-xl border border-border flex items-center justify-center"><Settings size={15} className="text-accent"/></button><button disabled={savingVinculo} onClick={() => onRemoveExercicio(workout.id, item.id)} className="w-9 h-9 rounded-xl border border-destructive flex items-center justify-center"><X size={15} className="text-destructive"/></button></div>}
             </div>
-            <div className="bg-background rounded-xl overflow-hidden mb-3" role="table" aria-label={`Séries de ${ex.name}`}>
-              <div className="grid grid-cols-3 px-3 py-2 border-b border-border" role="row">
-                {["Série","KG","Reps"].map(h=><span key={h} className="text-xs font-inter font-semibold text-muted-foreground text-center" role="columnheader">{h}</span>)}
-              </div>
-              {ex.sets.map(s=>(
-                <div key={s.serie} className="grid grid-cols-3 px-3 py-2 border-b border-border last:border-0" role="row">
-                  <span className="text-sm font-inter text-foreground text-center" role="cell">{s.serie}</span>
-                  <span className="text-sm font-inter font-semibold text-foreground text-center" role="cell">{s.kg}</span>
-                  <span className="text-sm font-inter text-foreground text-center" role="cell">{s.reps}</span>
-                </div>
-              ))}
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="bg-background rounded-xl p-3"><p className="text-xs text-muted-foreground">Séries</p><p className="font-montserrat font-bold text-foreground">{item.series}</p></div>
+              <div className="bg-background rounded-xl p-3"><p className="text-xs text-muted-foreground">Reps</p><p className="font-montserrat font-bold text-foreground">{item.repeticoes}</p></div>
+              <div className="bg-background rounded-xl p-3"><p className="text-xs text-muted-foreground">Carga</p><p className="font-montserrat font-bold text-foreground">{item.carga ?? 0} kg</p></div>
             </div>
-            <div className="flex gap-2">
-              <button className="flex-1 h-10 rounded-xl border border-border flex items-center justify-center gap-1.5 text-xs font-inter font-semibold text-muted-foreground hover:border-accent hover:text-accent transition-all" aria-label={`Ver execução de ${ex.name}`}>
-                <Play size={14}/> Ver execução
-              </button>
-              {ut==="aluno"&&(
-                <button onClick={()=>toggle(ex.id)}
-                  className="flex-1 h-10 rounded-xl flex items-center justify-center gap-1.5 text-xs font-inter font-semibold transition-all active:scale-95"
-                  style={{background:ex.completed?"#2a2a2a":ac,color:ex.completed?"#a0a0a0":"#000"}} aria-pressed={ex.completed}>
-                  <Check size={14}/> {ex.completed?"Desmarcar":"Concluído"}
-                </button>
-              )}
-            </div>
-            <p className="text-[11px] text-muted-foreground font-inter mt-2 flex items-center gap-1">
-              <Info size={10}/> Integração futura com Cloudinary para vídeos demonstrativos.
-            </p>
           </div>
         ))}
-        {ut==="aluno"&&<SBtn onClick={finish}>Finalizar treino</SBtn>}
       </div>
     </div>
   );
@@ -1454,93 +2414,472 @@ function WorkoutDetail({ workout,onBack,onToast,ut }:
 
 // ─── Evolution ────────────────────────────────────────────────────────────────
 
-function Evolution({ ut }:{ut:UserType}) {
+function EvaluationInput({
+  label,
+  value,
+  onChange,
+  required = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-xs font-montserrat font-semibold text-muted-foreground">
+        {label}
+      </label>
+      <input
+        type="number"
+        step="0.1"
+        min="0"
+        required={required}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-11 rounded-xl bg-background border border-border px-3 text-foreground text-sm outline-none focus:border-accent transition-colors"
+      />
+    </div>
+  );
+}
+
+function Evolution({
+  ut,
+  student,
+  onBack,
+}: {
+  ut: UserType;
+  student?: Student | null;
+  onBack?: () => void;
+}) {
   const [period,setPeriod]=useState("Mês");
-  const [form,setForm]=useState({peso:"",altura:"",cintura:"",braco:"",perna:"",obs:""});
-  const [errs,setErrs]=useState<Record<string,string>>({});
+  const [evaluations,setEvaluations]=useState<AvaliacaoFisica[]>([]);
+  const [loading,setLoading]=useState(false);
+  const [saving,setSaving]=useState(false);
+  const [deletingId,setDeletingId]=useState<string|null>(null);
+  const [editing,setEditing]=useState<AvaliacaoFisica|null>(null);
   const [toast,setToast]=useState<{msg:string;type:"success"|"error"}|null>(null);
-  const [hist,setHist]=useState([
-    {date:"Jun 2026",peso:74.6,cintura:82,braco:38,perna:60},
-    {date:"Mai 2026",peso:75.1,cintura:83,braco:37.5,perna:59.5},
-    {date:"Abr 2026",peso:75.8,cintura:84,braco:37,perna:59},
-  ]);
-  const ac=AC(ut);
-  const save=()=>{
-    const e:Record<string,string>={};
-    if(!form.peso||parseFloat(form.peso)<=0) e.peso="Peso inválido.";
-    setErrs(e);
-    if(Object.keys(e).length){setToast({msg:"Informe valores válidos para registrar sua evolução.",type:"error"});return;}
-    setHist(p=>[{date:new Date().toLocaleDateString("pt-BR",{month:"short",year:"numeric"}),
-      peso:parseFloat(form.peso),cintura:parseFloat(form.cintura)||0,
-      braco:parseFloat(form.braco)||0,perna:parseFloat(form.perna)||0},...p]);
-    setForm({peso:"",altura:"",cintura:"",braco:"",perna:"",obs:""});
-    setToast({msg:"Evolução registrada com sucesso.",type:"success"});
+
+  const emptyForm = {
+    peso:"",
+    altura:"",
+    percentualGordura:"",
+    massaMuscular:"",
+    braco:"",
+    peitoral:"",
+    cintura:"",
+    quadril:"",
+    coxa:"",
+    panturrilha:"",
+    observacoes:"",
+    dataAvaliacao:new Date().toISOString().slice(0,10),
   };
+
+  const [form,setForm]=useState(emptyForm);
+  const ac=AC(ut);
+  const realMode=ut==="personal"&&!!student;
+
+  useEffect(()=>{
+    if(!realMode||!student) return;
+
+    async function carregarAvaliacoes() {
+      try {
+        setLoading(true);
+        const data=await avaliacaoService.listarAvaliacoesDoAluno(student.id);
+        setEvaluations(data);
+      } catch(error) {
+        setToast({
+          msg:error instanceof Error?error.message:"Erro ao carregar avaliações.",
+          type:"error",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarAvaliacoes();
+  },[realMode,student?.id]);
+
+  useEffect(()=>{
+    if(!editing) return;
+
+    setForm({
+      peso:String(editing.peso),
+      altura:String(editing.altura),
+      percentualGordura:editing.percentualGordura?.toString()??"",
+      massaMuscular:editing.massaMuscular?.toString()??"",
+      braco:editing.braco?.toString()??"",
+      peitoral:editing.peitoral?.toString()??"",
+      cintura:editing.cintura?.toString()??"",
+      quadril:editing.quadril?.toString()??"",
+      coxa:editing.coxa?.toString()??"",
+      panturrilha:editing.panturrilha?.toString()??"",
+      observacoes:editing.observacoes??"",
+      dataAvaliacao:new Date(editing.dataAvaliacao).toISOString().slice(0,10),
+    });
+  },[editing]);
+
+  function resetForm() {
+    setEditing(null);
+    setForm({
+      ...emptyForm,
+      dataAvaliacao:new Date().toISOString().slice(0,10),
+    });
+  }
+
+  function optionalNumber(value:string):number|undefined {
+    return value.trim()===""?undefined:Number(value);
+  }
+
+  async function save() {
+    if(!realMode||!student) {
+      setToast({
+        msg:"Para registrar uma avaliação real, acesse o perfil de um aluno pelo Personal.",
+        type:"error",
+      });
+      return;
+    }
+
+    if(!form.peso||Number(form.peso)<=0||!form.altura||Number(form.altura)<=0) {
+      setToast({msg:"Peso e altura devem ser maiores que zero.",type:"error"});
+      return;
+    }
+
+    const data:CriarAvaliacaoDTO={
+      peso:Number(form.peso),
+      altura:Number(form.altura),
+      percentualGordura:optionalNumber(form.percentualGordura),
+      massaMuscular:optionalNumber(form.massaMuscular),
+      braco:optionalNumber(form.braco),
+      peitoral:optionalNumber(form.peitoral),
+      cintura:optionalNumber(form.cintura),
+      quadril:optionalNumber(form.quadril),
+      coxa:optionalNumber(form.coxa),
+      panturrilha:optionalNumber(form.panturrilha),
+      observacoes:form.observacoes.trim()||undefined,
+      dataAvaliacao:new Date(`${form.dataAvaliacao}T12:00:00`).toISOString(),
+    };
+
+    try {
+      setSaving(true);
+
+      if(editing) {
+        const atualizada=await avaliacaoService.atualizarAvaliacao(
+          editing.id,
+          data as AtualizarAvaliacaoDTO,
+        );
+
+        setEvaluations(prev=>
+          prev.map(item=>item.id===atualizada.id?atualizada:item)
+        );
+
+        setToast({msg:"Avaliação atualizada com sucesso.",type:"success"});
+      } else {
+        const nova=await avaliacaoService.criarAvaliacao(student.id,data);
+        setEvaluations(prev=>[nova,...prev]);
+        setToast({msg:"Avaliação registrada com sucesso.",type:"success"});
+      }
+
+      resetForm();
+    } catch(error) {
+      setToast({
+        msg:error instanceof Error?error.message:"Erro ao salvar avaliação.",
+        type:"error",
+      });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function deleteEvaluation(id:string) {
+    const confirmar=window.confirm("Deseja realmente excluir esta avaliação física?");
+    if(!confirmar) return;
+
+    try {
+      setDeletingId(id);
+      await avaliacaoService.excluirAvaliacao(id);
+      setEvaluations(prev=>prev.filter(item=>item.id!==id));
+
+      if(editing?.id===id) {
+        resetForm();
+      }
+
+      setToast({msg:"Avaliação excluída com sucesso.",type:"success"});
+    } catch(error) {
+      setToast({
+        msg:error instanceof Error?error.message:"Erro ao excluir avaliação.",
+        type:"error",
+      });
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  const chartData=[...evaluations]
+    .reverse()
+    .map(item=>({
+      date:new Date(item.dataAvaliacao).toLocaleDateString("pt-BR",{month:"short"}),
+      peso:item.peso,
+    }));
+
+  const latest=evaluations[0];
+
   return (
     <div className="min-h-screen bg-background pb-36 overflow-y-auto">
       {toast&&<Toast message={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
+
       <div className="px-6 pt-14 pb-4">
-        <h1 className="font-montserrat font-bold text-3xl text-foreground">{ut==="aluno"?"Progresso":"Avaliação Física"}</h1>
-        <p className="text-muted-foreground text-sm font-inter mt-1">{ut==="aluno"?"Registre e acompanhe seu progresso físico.":"Registre e visualize a evolução dos alunos."}</p>
+        {realMode&&onBack&&(
+          <div className="mb-5">
+            <BackBtn onClick={onBack}/>
+          </div>
+        )}
+
+        <h1 className="font-montserrat font-bold text-3xl text-foreground">
+          {realMode?`Avaliações de ${student?.name}`:ut==="aluno"?"Progresso":"Avaliação Física"}
+        </h1>
+        <p className="text-muted-foreground text-sm font-inter mt-1">
+          {realMode
+            ?"Registre, edite e acompanhe o histórico físico deste aluno."
+            :ut==="aluno"
+              ?"Acompanhe seu progresso físico."
+              :"Selecione um aluno em Meus Alunos para registrar avaliações reais."}
+        </p>
       </div>
+
       <div className="px-6 flex flex-col gap-5">
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard icon={<Weight size={18}/>}   label="Peso atual"      value={`${hist[0]?.peso??"-"} kg`} color={ac}/>
-          <StatCard icon={<Calendar size={18}/>} label="Último registro" value={hist[0]?.date??"-"}         color={ac}/>
-          <StatCard icon={<Activity size={18}/>} label="Frequência"      value="3x" sub="Meta: 4x"          color={ac}/>
-          <StatCard icon={<Zap size={18}/>}      label="Volume total"    value="17.8k kg"                   color={ac}/>
-        </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
-          <p className="font-montserrat font-semibold text-sm text-foreground mb-3">Evolução de peso</p>
-          <Caps items={["Semana","Mês","3 meses","Ano"]} active={period} onChange={setPeriod} ut={ut}/>
-          <div className="mt-3">
-            <ResponsiveContainer width="100%" height={110}>
-              <LineChart data={MONTHS}>
-                <XAxis dataKey="m" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
-                <YAxis hide domain={["auto","auto"]}/>
-                <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
-                <Line type="monotone" dataKey="p" stroke={ac} strokeWidth={2.5} dot={false} name="Peso (kg)"/>
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
-          <p className="font-montserrat font-bold text-sm text-foreground mb-4">{ut==="aluno"?"Registrar evolução":"Registrar avaliação"}</p>
-          <div className="grid grid-cols-2 gap-3">
-            {[{k:"peso",l:"Peso (kg)",p:"75.0"},{k:"altura",l:"Altura (cm)",p:"175"},{k:"cintura",l:"Cintura (cm)",p:"82"},{k:"braco",l:"Braço (cm)",p:"38"},{k:"perna",l:"Perna (cm)",p:"60"}].map(f=>(
-              <div key={f.k} className="flex flex-col gap-1">
-                <label className="text-xs font-montserrat font-semibold text-muted-foreground">{f.l}</label>
-                <input type="number" value={form[f.k as keyof typeof form]} min="0"
-                  onChange={e=>setForm(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
-                  className={`h-11 rounded-xl bg-background border px-3 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-accent transition-colors ${errs[f.k]?"border-destructive":"border-border"}`}
-                  aria-label={f.l}/>
-              </div>
-            ))}
-            <div className="col-span-2 flex flex-col gap-1">
-              <label className="text-xs font-montserrat font-semibold text-muted-foreground">Observações</label>
-              <textarea value={form.obs} onChange={e=>setForm(p=>({...p,obs:e.target.value}))} placeholder="Observações opcionais..."
-                className="rounded-xl bg-background border border-border px-3 py-2 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-accent transition-colors resize-none"
-                rows={2} aria-label="Observações"/>
+        {realMode ? (
+          <>
+            <div className="grid grid-cols-2 gap-3">
+              <StatCard
+                icon={<Weight size={18}/>}
+                label="Peso atual"
+                value={latest?`${latest.peso} kg`:"-"}
+                color={ac}
+              />
+              <StatCard
+                icon={<Calendar size={18}/>}
+                label="Última avaliação"
+                value={latest
+                  ?new Date(latest.dataAvaliacao).toLocaleDateString("pt-BR")
+                  :"-"}
+                color={ac}
+              />
+              <StatCard
+                icon={<Activity size={18}/>}
+                label="Gordura corporal"
+                value={latest?.percentualGordura!=null?`${latest.percentualGordura}%`:"-"}
+                color={ac}
+              />
+              <StatCard
+                icon={<Zap size={18}/>}
+                label="Massa muscular"
+                value={latest?.massaMuscular!=null?`${latest.massaMuscular} kg`:"-"}
+                color={ac}
+              />
             </div>
-          </div>
-          <button onClick={save}
-            className="w-full h-12 rounded-2xl font-montserrat font-bold text-sm text-black flex items-center justify-center gap-2 transition-all active:scale-95 mt-4"
-            style={{background:ac}}>
-            <Check size={18}/> {ut==="aluno"?"Salvar evolução":"Registrar avaliação"}
-          </button>
-        </div>
-        <div>
-          <p className="font-montserrat font-bold text-sm text-foreground mb-3">Histórico</p>
-          {hist.map((e,i)=>(
-            <div key={i} className="bg-card border border-border rounded-2xl px-4 py-3 mb-2 flex items-center justify-between">
-              <div className="min-w-0">
-                <p className="font-montserrat font-semibold text-sm text-foreground">{e.date}</p>
-                <p className="text-xs font-inter text-muted-foreground mt-0.5 truncate">Cintura:{e.cintura} · Braço:{e.braco} · Perna:{e.perna} cm</p>
+
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="font-montserrat font-semibold text-sm text-foreground mb-3">
+                Evolução de peso
+              </p>
+              <Caps items={["Semana","Mês","3 meses","Ano"]} active={period} onChange={setPeriod} ut={ut}/>
+              <div className="mt-3">
+                {chartData.length>0 ? (
+                  <ResponsiveContainer width="100%" height={130}>
+                    <LineChart data={chartData}>
+                      <XAxis dataKey="date" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
+                      <YAxis hide domain={["auto","auto"]}/>
+                      <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
+                      <Line type="monotone" dataKey="peso" stroke={ac} strokeWidth={2.5} dot name="Peso (kg)"/>
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <p className="py-8 text-sm text-center text-muted-foreground">
+                    Nenhuma avaliação cadastrada para gerar o gráfico.
+                  </p>
+                )}
               </div>
-              <span className="text-2xl font-montserrat font-bold ml-4 flex-shrink-0" style={{color:ac}}>{e.peso}</span>
             </div>
-          ))}
-        </div>
+
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-4">
+                <p className="font-montserrat font-bold text-sm text-foreground">
+                  {editing?"Editar avaliação":"Registrar avaliação"}
+                </p>
+                {editing&&(
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="text-xs font-inter"
+                    style={{color:ac}}
+                  >
+                    Cancelar edição
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <EvaluationInput label="Peso (kg)" value={form.peso} onChange={value=>setForm(prev=>({...prev,peso:value}))} required/>
+                <EvaluationInput label="Altura (cm)" value={form.altura} onChange={value=>setForm(prev=>({...prev,altura:value}))} required/>
+                <EvaluationInput label="Gordura (%)" value={form.percentualGordura} onChange={value=>setForm(prev=>({...prev,percentualGordura:value}))}/>
+                <EvaluationInput label="Massa muscular (kg)" value={form.massaMuscular} onChange={value=>setForm(prev=>({...prev,massaMuscular:value}))}/>
+                <EvaluationInput label="Braço (cm)" value={form.braco} onChange={value=>setForm(prev=>({...prev,braco:value}))}/>
+                <EvaluationInput label="Peitoral (cm)" value={form.peitoral} onChange={value=>setForm(prev=>({...prev,peitoral:value}))}/>
+                <EvaluationInput label="Cintura (cm)" value={form.cintura} onChange={value=>setForm(prev=>({...prev,cintura:value}))}/>
+                <EvaluationInput label="Quadril (cm)" value={form.quadril} onChange={value=>setForm(prev=>({...prev,quadril:value}))}/>
+                <EvaluationInput label="Coxa (cm)" value={form.coxa} onChange={value=>setForm(prev=>({...prev,coxa:value}))}/>
+                <EvaluationInput label="Panturrilha (cm)" value={form.panturrilha} onChange={value=>setForm(prev=>({...prev,panturrilha:value}))}/>
+
+                <div className="col-span-2 flex flex-col gap-1">
+                  <label className="text-xs font-montserrat font-semibold text-muted-foreground">
+                    Data da avaliação
+                  </label>
+                  <input
+                    type="date"
+                    value={form.dataAvaliacao}
+                    onChange={event=>setForm(prev=>({...prev,dataAvaliacao:event.target.value}))}
+                    className="h-11 rounded-xl bg-background border border-border px-3 text-foreground text-sm outline-none focus:border-accent"
+                  />
+                </div>
+
+                <div className="col-span-2 flex flex-col gap-1">
+                  <label className="text-xs font-montserrat font-semibold text-muted-foreground">
+                    Observações
+                  </label>
+                  <textarea
+                    value={form.observacoes}
+                    onChange={event=>setForm(prev=>({...prev,observacoes:event.target.value}))}
+                    placeholder="Observações opcionais..."
+                    rows={3}
+                    className="rounded-xl bg-background border border-border px-3 py-2 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:border-accent resize-none"
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={save}
+                disabled={saving}
+                className="w-full h-12 rounded-2xl font-montserrat font-bold text-sm text-black flex items-center justify-center gap-2 transition-all active:scale-95 mt-4 disabled:opacity-50"
+                style={{background:ac}}
+              >
+                {saving
+                  ?<RefreshCw size={18} className="animate-spin"/>
+                  :<Check size={18}/>}
+                {saving
+                  ?"Salvando..."
+                  :editing
+                    ?"Salvar alterações"
+                    :"Registrar avaliação"}
+              </button>
+            </div>
+
+            <div>
+              <p className="font-montserrat font-bold text-sm text-foreground mb-3">
+                Histórico de avaliações
+              </p>
+
+              {loading ? (
+                <div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+                  <RefreshCw size={20} className="animate-spin"/>
+                  <span className="text-sm">Carregando avaliações...</span>
+                </div>
+              ) : evaluations.length===0 ? (
+                <div className="bg-card border border-border rounded-2xl p-6 text-center">
+                  <ClipboardList size={34} className="text-muted-foreground mx-auto mb-3"/>
+                  <p className="text-sm text-muted-foreground">
+                    Nenhuma avaliação física cadastrada.
+                  </p>
+                </div>
+              ) : evaluations.map(item=>(
+                <div
+                  key={item.id}
+                  className="bg-card border border-border rounded-2xl p-4 mb-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-montserrat font-semibold text-sm text-foreground">
+                        {new Date(item.dataAvaliacao).toLocaleDateString("pt-BR")}
+                      </p>
+                      <p className="text-xs font-inter text-muted-foreground mt-1">
+                        Peso: {item.peso} kg · Altura: {item.altura} cm
+                      </p>
+                      <p className="text-xs font-inter text-muted-foreground mt-1">
+                        Gordura: {item.percentualGordura??"-"}% · Massa muscular: {item.massaMuscular??"-"} kg
+                      </p>
+                      <p className="text-xs font-inter text-muted-foreground mt-1">
+                        Braço: {item.braco??"-"} · Cintura: {item.cintura??"-"} · Coxa: {item.coxa??"-"} cm
+                      </p>
+                      {item.observacoes&&(
+                        <p className="text-xs font-inter text-foreground mt-2">
+                          {item.observacoes}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <button
+                        type="button"
+                        onClick={()=>setEditing(item)}
+                        className="w-9 h-9 rounded-xl border border-border flex items-center justify-center"
+                        aria-label="Editar avaliação"
+                      >
+                        <Settings size={16} style={{color:ac}}/>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={()=>deleteEvaluation(item.id)}
+                        disabled={deletingId===item.id}
+                        className="w-9 h-9 rounded-xl border border-destructive/50 text-destructive flex items-center justify-center disabled:opacity-50"
+                        aria-label="Excluir avaliação"
+                      >
+                        {deletingId===item.id
+                          ?<RefreshCw size={16} className="animate-spin"/>
+                          :<X size={16}/>}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 gap-3">
+              <StatCard icon={<Weight size={18}/>} label="Peso atual" value="74.6 kg" color={ac}/>
+              <StatCard icon={<Calendar size={18}/>} label="Último registro" value="Jun 2026" color={ac}/>
+              <StatCard icon={<Activity size={18}/>} label="Frequência" value="3x" sub="Meta: 4x" color={ac}/>
+              <StatCard icon={<Zap size={18}/>} label="Volume total" value="17.8k kg" color={ac}/>
+            </div>
+
+            <div className="bg-card border border-border rounded-2xl p-4">
+              <p className="font-montserrat font-semibold text-sm text-foreground mb-3">
+                Evolução de peso
+              </p>
+              <Caps items={["Semana","Mês","3 meses","Ano"]} active={period} onChange={setPeriod} ut={ut}/>
+              <div className="mt-3">
+                <ResponsiveContainer width="100%" height={110}>
+                  <LineChart data={MONTHS}>
+                    <XAxis dataKey="m" tick={{fill:"#a0a0a0",fontSize:11}} axisLine={false} tickLine={false}/>
+                    <YAxis hide domain={["auto","auto"]}/>
+                    <Tooltip contentStyle={{background:"#1c1c1e",border:"1px solid #2a2a2a",borderRadius:"12px",color:"#fff"}}/>
+                    <Line type="monotone" dataKey="p" stroke={ac} strokeWidth={2.5} dot={false} name="Peso (kg)"/>
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="bg-card border border-border rounded-2xl p-5 text-center">
+              <ClipboardList size={34} className="text-muted-foreground mx-auto mb-3"/>
+              <p className="font-montserrat font-semibold text-sm text-foreground">
+                Dados demonstrativos do MVP
+              </p>
+              <p className="text-xs text-muted-foreground mt-2">
+                O CRUD real de avaliações é acessado pelo Personal no perfil de um aluno.
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -1892,20 +3231,934 @@ function Profile({ user,onLogout }:{user:AppUser;onLogout:()=>void}) {
 
 // ─── Modal Content ────────────────────────────────────────────────────────────
 
-const TERMS_MD = (<><p className="mb-3"><strong className="text-foreground">1. Aceitação dos Termos</strong></p><p className="mb-3">Ao criar uma conta no TrainerX64, você concorda com estes Termos de Uso.</p><p className="mb-3"><strong className="text-foreground">2. Uso do Serviço</strong></p><p className="mb-3">O TrainerX64 é uma plataforma de gestão de treinos. O usuário é responsável pela veracidade das informações.</p><p className="mb-3"><strong className="text-foreground">3. Responsabilidade</strong></p><p>Consulte sempre um profissional antes de iniciar qualquer programa de exercícios.</p></>);
-const PRIV_MD  = (<><p className="mb-3"><strong className="text-foreground">1. Dados Coletados</strong></p><p className="mb-3">Coletamos nome, e-mail, dados de treino e medidas físicas fornecidas voluntariamente.</p><p className="mb-3"><strong className="text-foreground">2. LGPD</strong></p><p>Em conformidade com a Lei 13.709/2018, você tem direito de acessar, corrigir e excluir seus dados.</p></>);
+const TERMS_MD = (
+  <>
+    <h2 className="text-2xl font-bold mb-4 text-foreground">
+      Termos de Uso — Aplicativo TrainerX64
+    </h2>
+
+    <p className="mb-4">
+      <strong>Versão:</strong> 1.0<br />
+      <strong>Última Atualização:</strong> Versão 1.1<br />
+      <strong>Data de Publicação:</strong> 05 de julho de 2026
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      1. Aceitação dos Termos
+    </h3>
+
+    <p className="mb-3">
+      Bem-vindo ao <strong>TrainerX64</strong>. Estes Termos de Uso estabelecem
+      as condições para utilização do aplicativo. Ao criar uma conta,
+      acessar ou utilizar qualquer funcionalidade do TrainerX64, o usuário
+      declara que leu, compreendeu e concorda integralmente com as
+      disposições deste documento.
+    </p>
+
+    <p className="mb-4">
+      Caso não concorde com estes Termos de Uso, recomenda-se não utilizar
+      o aplicativo.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      2. Sobre o Aplicativo
+    </h3>
+
+    <p className="mb-3">
+      O <strong>TrainerX64</strong> é um aplicativo desenvolvido como um
+      MVP (Minimum Viable Product) com o objetivo de facilitar a comunicação
+      entre personal trainers e alunos, auxiliando na organização dos
+      treinamentos e no acompanhamento da evolução física.
+    </p>
+
+    <p className="mb-2">
+      O aplicativo oferece, entre outras, as seguintes funcionalidades:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Cadastro e autenticação de usuários;</li>
+      <li>Gerenciamento de perfis de alunos e personal trainers;</li>
+      <li>Criação, edição e consulta de fichas de treino;</li>
+      <li>Registro da execução dos treinos;</li>
+      <li>Acompanhamento da evolução do aluno;</li>
+      <li>Visualização de vídeos demonstrativos dos exercícios;</li>
+      <li>Histórico de atividades realizadas;</li>
+      <li>Sistema de notificações e lembretes;</li>
+      <li>Gerenciamento básico de pagamentos e consultorias.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      3. Perfis de Usuário
+    </h3>
+
+    <p className="mb-3">
+      O TrainerX64 disponibiliza dois perfis de acesso:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>
+        <strong>Aluno:</strong> pode visualizar fichas de treino, registrar
+        exercícios realizados, acompanhar sua evolução física, visualizar
+        vídeos demonstrativos e receber lembretes.
+      </li>
+
+      <li>
+        <strong>Personal Trainer:</strong> pode cadastrar e gerenciar alunos,
+        criar, editar e atualizar fichas de treino, além de acompanhar o
+        desempenho e evolução dos alunos.
+      </li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      4. Responsabilidades do Usuário
+    </h3>
+
+    <p className="mb-2">
+      Ao utilizar o TrainerX64, o usuário compromete-se a:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Fornecer informações verdadeiras e atualizadas;</li>
+      <li>Manter sua senha em sigilo;</li>
+      <li>Não compartilhar sua conta com terceiros;</li>
+      <li>Utilizar o aplicativo apenas para fins legais;</li>
+      <li>
+        Não realizar qualquer tentativa de comprometer a segurança do
+        sistema.
+      </li>
+    </ul>
+
+    <p className="mb-4">
+      O usuário é responsável por todas as ações realizadas utilizando sua
+      conta.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      5. Responsabilidade sobre os Treinos
+    </h3>
+
+    <p className="mb-3">
+      O TrainerX64 é uma ferramenta tecnológica de apoio ao gerenciamento
+      de treinos.
+    </p>
+
+    <p className="mb-3">
+      A elaboração, prescrição, intensidade e adequação dos exercícios são
+      de responsabilidade exclusiva do Personal Trainer responsável pelo
+      aluno.
+    </p>
+
+    <p className="mb-4">
+      O aplicativo não substitui acompanhamento médico, fisioterapêutico
+      ou qualquer outro acompanhamento profissional relacionado à saúde.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      6. Disponibilidade do Serviço
+    </h3>
+
+    <p className="mb-4">
+      Por se tratar de um projeto desenvolvido no formato MVP, o aplicativo
+      poderá passar por atualizações, melhorias, manutenções programadas e
+      eventuais indisponibilidades temporárias.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      7. Propriedade Intelectual
+    </h3>
+
+    <p className="mb-4">
+      Todo o conteúdo disponibilizado no TrainerX64, incluindo código-fonte,
+      identidade visual, logotipo, layout, banco de dados, imagens, textos,
+      vídeos e demais elementos do aplicativo são protegidos por direitos de
+      propriedade intelectual. É proibida sua reprodução, distribuição,
+      modificação ou utilização sem autorização da equipe desenvolvedora.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      8. Limitação de Responsabilidade
+    </h3>
+
+    <p className="mb-2">
+      A equipe do TrainerX64 não se responsabiliza por:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Problemas decorrentes de falhas na conexão com a internet;</li>
+      <li>Danos causados por uso inadequado do aplicativo;</li>
+      <li>Informações cadastradas incorretamente pelos usuários;</li>
+      <li>Falhas decorrentes de dispositivos incompatíveis;</li>
+      <li>Danos causados pela execução inadequada dos exercícios.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      9. Alterações dos Termos
+    </h3>
+
+    <p className="mb-4">
+      Estes Termos de Uso poderão ser atualizados sempre que necessário para
+      adequação do aplicativo, inclusão de novas funcionalidades ou
+      atendimento à legislação aplicável.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      10. Aceite dos Termos
+    </h3>
+
+    <p className="mb-4">
+      O aceite destes Termos ocorre durante o cadastro do usuário, mediante
+      a seleção da opção de concordância apresentada no aplicativo.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      11. Foro
+    </h3>
+
+    <p>
+      Fica eleito o Foro da Comarca de Manaus, Estado do Amazonas, para
+      dirimir quaisquer dúvidas ou controvérsias decorrentes da utilização
+      do TrainerX64, observada a legislação brasileira aplicável.
+    </p>
+  </>
+);
+const PRIV_MD = (
+  <>
+    <h2 className="text-2xl font-bold mb-4 text-foreground">
+      Política de Privacidade — Aplicativo TrainerX64
+    </h2>
+
+    <p className="mb-4">
+      <strong>Versão:</strong> 1.0<br />
+      <strong>Última Atualização:</strong> Versão 1.1<br />
+      <strong>Data de Publicação:</strong> 05 de julho de 2026
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      1. Introdução
+    </h3>
+
+    <p className="mb-4">
+      Esta Política de Privacidade descreve como o TrainerX64 coleta,
+      utiliza, armazena e protege os dados pessoais de seus usuários.
+      Ao utilizar o aplicativo, o usuário declara estar ciente das
+      práticas aqui descritas e concorda com o tratamento de seus dados
+      conforme esta Política e a Lei Geral de Proteção de Dados (LGPD –
+      Lei nº 13.709/2018).
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      2. Dados Coletados
+    </h3>
+
+    <p className="mb-2">
+      Durante a utilização do aplicativo poderão ser coletados:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Nome completo;</li>
+      <li>Endereço de e-mail;</li>
+      <li>Senha protegida por mecanismos de segurança;</li>
+      <li>Tipo de usuário (Aluno ou Personal Trainer);</li>
+      <li>Fichas de treino cadastradas;</li>
+      <li>Histórico de treinos realizados;</li>
+      <li>Evolução física registrada;</li>
+      <li>Feedbacks referentes aos exercícios;</li>
+      <li>Data e horário de acesso ao aplicativo;</li>
+      <li>Informações técnicas necessárias para o funcionamento da plataforma.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      3. Finalidade da Coleta
+    </h3>
+
+    <p className="mb-2">
+      Os dados coletados são utilizados para:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Permitir a criação e gerenciamento da conta;</li>
+      <li>Disponibilizar as funcionalidades do aplicativo;</li>
+      <li>Gerenciar fichas de treino;</li>
+      <li>Acompanhar a evolução dos alunos;</li>
+      <li>Facilitar a comunicação entre aluno e personal trainer;</li>
+      <li>Melhorar a experiência de utilização;</li>
+      <li>Garantir a segurança da plataforma;</li>
+      <li>Cumprir obrigações legais quando aplicável.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      4. Compartilhamento de Dados
+    </h3>
+
+    <p className="mb-3">
+      O TrainerX64 não comercializa dados pessoais dos usuários.
+    </p>
+
+    <p className="mb-2">
+      As informações poderão ser compartilhadas apenas:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Entre o aluno e o Personal Trainer responsável;</li>
+      <li>Quando houver obrigação legal;</li>
+      <li>Quando necessário para prevenção de fraudes e proteção do sistema.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      5. Armazenamento e Segurança
+    </h3>
+
+    <p className="mb-4">
+      O TrainerX64 adota medidas técnicas e administrativas destinadas à
+      proteção dos dados pessoais contra acessos não autorizados,
+      alterações, perda ou divulgação indevida.
+      Apesar dos esforços empregados, nenhum sistema pode garantir
+      segurança absoluta.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      6. Responsabilidades do Usuário
+    </h3>
+
+    <p className="mb-2">
+      O usuário compromete-se a:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Manter sua senha em sigilo;</li>
+      <li>Não compartilhar sua conta com terceiros;</li>
+      <li>Fornecer informações verdadeiras;</li>
+      <li>Manter seus dados sempre atualizados;</li>
+      <li>Utilizar o aplicativo de forma responsável.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      7. Direitos do Usuário
+    </h3>
+
+    <p className="mb-2">
+      Nos termos da LGPD, o usuário poderá solicitar:
+    </p>
+
+    <ul className="list-disc pl-6 mb-4 space-y-1">
+      <li>Confirmação da existência de tratamento dos dados;</li>
+      <li>Acesso às informações armazenadas;</li>
+      <li>Correção de dados incorretos;</li>
+      <li>Atualização cadastral;</li>
+      <li>Exclusão dos dados, quando legalmente possível;</li>
+      <li>Informações sobre o tratamento realizado.</li>
+    </ul>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      8. Retenção dos Dados
+    </h3>
+
+    <p className="mb-4">
+      Os dados serão armazenados apenas pelo período necessário ao
+      funcionamento do aplicativo ou conforme exigido pela legislação
+      vigente.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      9. Atualizações desta Política
+    </h3>
+
+    <p className="mb-4">
+      Esta Política de Privacidade poderá ser alterada sempre que houver
+      mudanças nas funcionalidades do aplicativo, na legislação aplicável
+      ou na forma de tratamento dos dados pessoais.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      10. Contato
+    </h3>
+
+    <p className="mb-4">
+      Em caso de dúvidas relacionadas à privacidade e ao tratamento de
+      dados pessoais, o usuário poderá entrar em contato pelos canais
+      oficiais disponibilizados pela equipe do TrainerX64.
+    </p>
+
+    <h3 className="text-lg font-semibold mt-5 mb-2">
+      11. Disposições Finais
+    </h3>
+
+    <p>
+      Ao utilizar o TrainerX64, o usuário declara que leu,
+      compreendeu e concorda com esta Política de Privacidade,
+      autorizando o tratamento de seus dados para as finalidades
+      descritas neste documento, em conformidade com a Lei Geral
+      de Proteção de Dados Pessoais (LGPD).
+    </p>
+  </>
+);
+
+
+function FinanceModal({
+  student,
+  alunosInadimplentes,
+  onClose,
+  onCadastrar,
+  onDarBaixa,
+  saving,
+}: {
+  student: Student;
+  alunosInadimplentes: any[];
+  onClose: () => void;
+  onCadastrar: (alunoId: string, valor: number, dataVencimento: string) => Promise<boolean>;
+  onDarBaixa: (id: string) => Promise<void>;
+  saving: boolean;
+}) {
+  const [valor, setValor] = useState("");
+  const [vencimento, setVencimento] = useState(new Date().toISOString().slice(0, 10));
+  const ac = AC("personal");
+
+  // Localiza as faturas pendentes desse aluno que vieram do banco de dados
+  const dadosInadimplente = alunosInadimplentes.find(a => a.id === student.id);
+  const faturasPendentes = dadosInadimplente?.mensalidades ?? [];
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!valor || Number(valor) <= 0) return;
+    const sucesso = await onCadastrar(student.id, Number(valor), vencimento);
+    if (sucesso) {
+      setValor("");
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center">
+      <div className="w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl bg-card border border-border p-6 pb-10">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-montserrat font-bold text-xl text-foreground">Financeiro: {student.name}</h2>
+            <p className="text-xs text-muted-foreground font-inter">Status cadastral: {student.status}</p>
+          </div>
+          <button onClick={onClose}><X size={24} className="text-muted-foreground" /></button>
+        </div>
+
+        {/* Formulário de Cobrança */}
+        <form onSubmit={handleSubmit} className="bg-background border border-border p-4 rounded-2xl mb-6 flex flex-col gap-3">
+          <p className="text-xs font-montserrat font-bold text-foreground uppercase tracking-wider">Gerar Nova Cobrança</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-inter text-muted-foreground">Valor (R$)</label>
+              <input type="number" value={valor} onChange={e => setValor(e.target.value)} placeholder="150.00" className="h-10 rounded-xl bg-card border border-border px-3 text-sm text-foreground outline-none focus:border-accent" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-inter text-muted-foreground">Vencimento</label>
+              <input type="date" value={vencimento} onChange={e => setVencimento(e.target.value)} className="h-10 rounded-xl bg-card border border-border px-3 text-sm text-foreground outline-none focus:border-accent" />
+            </div>
+          </div>
+          <button type="submit" disabled={saving || !valor} className="h-10 rounded-xl font-inter font-bold text-xs text-black flex items-center justify-center gap-1 disabled:opacity-40" style={{ background: ac }}>
+            {saving ? <RefreshCw size={14} className="animate-spin text-white" /> : <Plus size={14} />}
+            Lançar Mensalidade
+          </button>
+        </form>
+
+        {/* Listagem de Pendências financeiras */}
+        <div>
+          <p className="text-xs font-montserrat font-bold text-foreground uppercase tracking-wider mb-3">Mensalidades em Aberto</p>
+          {faturasPendentes.length === 0 ? (
+            <p className="text-sm text-muted-foreground font-inter italic bg-background p-4 rounded-2xl text-center border border-border">
+              Nenhuma mensalidade pendente encontrada para este aluno.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {faturasPendentes.map((fatura: any) => (
+                <div key={fatura.id} className="bg-background border border-border p-3 rounded-xl flex items-center justify-between">
+                  <div>
+                    <p className="font-montserrat font-bold text-sm text-destructive">R$ {fatura.valor.toFixed(2)}</p>
+                    <p className="text-xs font-inter text-muted-foreground">Vence em: {new Date(fatura.dataVencimento).toLocaleDateString('pt-BR')}</p>
+                  </div>
+                  <button onClick={() => onDarBaixa(fatura.id)} disabled={saving} className="h-8 px-3 rounded-lg text-xs font-inter font-semibold bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-black transition-colors flex items-center gap-1">
+                    {saving ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
+                    Recebido
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 
 // ─── App Root ─────────────────────────────────────────────────────────────────
 
 export default function App() {
   const [screen,setScreen]=useState<Screen>("welcome");
   const [user,setUser]=useState<AppUser|null>(null);
-  const [selW,setSelW]=useState<Workout|null>(null);
+  const [selW,setSelW]=useState<Treino|null>(null);
   const [selS,setSelS]=useState<Student|null>(null);
   const [modal,setModal]=useState<"terms"|"privacy"|null>(null);
   const [gToast,setGToast]=useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
 
-  // Telas focadas (internas) não exibem a barra inferior
+  const [students,setStudents]=useState<Student[]>(STUDENTS);
+  const [loadingStudents,setLoadingStudents]=useState(true);
+  const [savingStudent,setSavingStudent]=useState(false);
+  const [deletingStudent,setDeletingStudent]=useState(false);
+  const [studentFormMode,setStudentFormMode]=useState<"create"|"edit"|null>(null);
+
+  const [exercicios, setExercicios] = useState<Exercicio[]>([]);
+  const [loadingExercicios, setLoadingExercicios] = useState(true);
+  const [savingExercicio, setSavingExercicio] = useState(false);
+  const [deletingExercicio, setDeletingExercicio] = useState(false);
+
+  
+  const [treinos, setTreinos] = useState<Treino[]>([]);
+  const [loadingTreinos, setLoadingTreinos] = useState(true);
+  const [savingTreino, setSavingTreino] = useState(false);
+  const [deletingTreino, setDeletingTreino] = useState(false);
+
+  // ─── Estados do Vínculo Treino ↔ Exercício ──────────────────────────────
+  const [exerciciosDoTreino, setExerciciosDoTreino] = useState<TreinoExercicio[]>([]);
+  const [loadingExerciciosDoTreino, setLoadingExerciciosDoTreino] = useState(false);
+  const [savingExercicioTreino, setSavingExercicioTreino] = useState(false);
+
+
+  // ─── Estados do Módulo Financeiro ───────────────────────────────────────
+  const [alunosInadimplentes, setAlunosInadimplentes] = useState<any[]>([]);
+  const [loadingFinanceiro, setLoadingFinanceiro] = useState(false);
+  const [savingMensalidade, setSavingMensalidade] = useState(false);
+  const [financeStudent, setFinanceStudent] = useState<Student | null>(null);
+
+  useEffect(() => {
+    async function carregarExercicios() {
+      try {
+        setLoadingExercicios(true);
+        const data = await exercicioService.listarExercicios();
+        setExercicios(data);
+      } catch (error) {
+        setGToast({
+          msg: error instanceof Error ? error.message : "Erro ao carregar exercícios.",
+          type: "error",
+        });
+      } finally {
+        setLoadingExercicios(false);
+      }
+    }
+    carregarExercicios();
+  }, []);
+
+  useEffect(() => {
+    async function carregarTreinos() {
+      try {
+        setLoadingTreinos(true);
+        const data = await treinoService.listarTreinos();
+        setTreinos(data);
+      } catch (error) {
+        setGToast({
+          msg: error instanceof Error ? error.message : "Erro ao carregar treinos.",
+          type: "error",
+        });
+      } finally {
+        setLoadingTreinos(false);
+      }
+    }
+    carregarTreinos();
+  }, []);
+
+  useEffect(() => {
+    carregarAlunosInadimplentes();
+  }, []);
+
+  // ─── Ações de Exercícios ──────────────────────────────────────────────────
+  async function handleCreateExercicio(data: CriarExercicioDTO): Promise<boolean> {
+    try {
+      setSavingExercicio(true);
+      const novoExercicio = await exercicioService.criarExercicio(data);
+      setExercicios((prev) => [...prev, novoExercicio]);
+      setGToast({ msg: "Exercício criado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao criar exercício.", type: "error" });
+      return false;
+    } finally {
+      setSavingExercicio(false);
+    }
+  }
+
+  async function handleUpdateExercicio(exercicioId: string, data: AtualizarExercicioDTO): Promise<boolean> {
+    try {
+      setSavingExercicio(true);
+      const exercicioAtualizado = await exercicioService.atualizarExercicio(exercicioId, data);
+      setExercicios((prev) => prev.map((ex) => ex.id === exercicioId ? exercicioAtualizado : ex));
+      setGToast({ msg: "Exercício atualizado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao atualizar exercício.", type: "error" });
+      return false;
+    } finally {
+      setSavingExercicio(false);
+    }
+  }
+
+  async function handleDeleteExercicio(exercicioId: string): Promise<void> {
+    const confirmar = window.confirm("Deseja realmente excluir este exercício?");
+    if (!confirmar) return;
+    try {
+      setDeletingExercicio(true);
+      await exercicioService.excluirExercicio(exercicioId);
+      setExercicios((prev) => prev.filter((ex) => ex.id !== exercicioId));
+      setGToast({ msg: "Exercício excluído com sucesso.", type: "success" });
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao excluir exercício.", type: "error" });
+    } finally {
+      setDeletingExercicio(false);
+    }
+  }
+
+  // ─── Ações de Treinos ─────────────────────────────────────────────────────
+  async function handleCreateTreino(data: CriarTreinoDTO): Promise<boolean> {
+    try {
+      setSavingTreino(true);
+      const novoTreino = await treinoService.criarTreino(data);
+      setTreinos((prev) => [...prev, novoTreino]);
+      setGToast({ msg: "Treino criado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao criar treino.", type: "error" });
+      return false;
+    } finally {
+      setSavingTreino(false);
+    }
+  }
+
+  async function handleUpdateTreino(treinoId: string, data: AtualizarTreinoDTO): Promise<boolean> {
+    try {
+      setSavingTreino(true);
+      const treinoAtualizado = await treinoService.atualizarTreino(treinoId, data);
+      const treinoCompleto = await treinoService.buscarTreinoPorId(treinoId);
+      setTreinos((prev) => prev.map((t) => t.id === treinoId ? { ...treinoAtualizado, _count: { exercicios: treinoCompleto.exercicios?.length ?? 0 } } : t));
+      if (selW?.id === treinoId) setSelW(treinoCompleto);
+      setGToast({ msg: "Treino atualizado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao atualizar treino.", type: "error" });
+      return false;
+    } finally {
+      setSavingTreino(false);
+    }
+  }
+
+  async function handleDeleteTreino(treinoId: string): Promise<void> {
+    const confirmar = window.confirm("Deseja realmente excluir este treino?");
+    if (!confirmar) return;
+    try {
+      setDeletingTreino(true);
+      await treinoService.excluirTreino(treinoId);
+      setTreinos((prev) => prev.filter((t) => t.id !== treinoId));
+      if (selW?.id === treinoId) {
+        setSelW(null);
+        setScreen("workouts");
+      }
+      setGToast({ msg: "Treino excluído com sucesso.", type: "success" });
+    } catch (error) {
+      setGToast({ msg: error instanceof Error ? error.message : "Erro ao excluir treino.", type: "error" });
+    } finally {
+      setDeletingTreino(false);
+    }
+  }
+
+  // Coloque perto das outras funções "handle..." do App.tsx
+  async function handleSelectTreino(treinoId: string) {
+    try {
+      setLoadingTreinos(true);
+      // Busca o treino atualizado direto da API (com os exercícios inclusos)
+      const treinoCompleto = await treinoService.buscarTreinoPorId(treinoId);
+      setSelW(treinoCompleto); // Guarda o treino selecionado no estado
+      setScreen("workout-detail"); // Muda para a tela de detalhes do treino
+    } catch (error) {
+      setGToast({
+        msg: "Erro ao abrir detalhes do treino.",
+        type: "error",
+      });
+    } finally {
+      setLoadingTreinos(false);
+    }
+  }
+
+  // ─── Funções de Ação do Módulo Financeiro ─────────────────────────────────
+  async function carregarAlunosInadimplentes() {
+    try {
+      setLoadingFinanceiro(true);
+      const data = await mensalidadeService.listarPendentes();
+      setAlunosInadimplentes(data);
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao carregar pendências financeiras.",
+        type: "error",
+      });
+    } finally {
+      setLoadingFinanceiro(false);
+    }
+  }
+
+  async function handleCadastrarMensalidade(alunoId: string, valor: number, dataVencimento: string): Promise<boolean> {
+    try {
+      setSavingMensalidade(true);
+      await mensalidadeService.cadastrar({ alunoId, valor, dataVencimento });
+      setGToast({ msg: "Mensalidade gerada com sucesso!", type: "success" });
+      
+      // Atualiza as listas locais para refletir o novo status instantaneamente
+      await carregarAlunosInadimplentes();
+      const alunosAtualizados = await alunoService.listarAlunos();
+      setStudents(alunosAtualizados);
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao cadastrar mensalidade.",
+        type: "error",
+      });
+      return false;
+    } finally {
+      setSavingMensalidade(false);
+    }
+  }
+
+  async function handleDarBaixaMensalidade(mensalidadeId: string): Promise<void> {
+    try {
+      setSavingMensalidade(true);
+      await mensalidadeService.darBaixa(mensalidadeId);
+      setGToast({ msg: "Mensalidade marcada como recebida com sucesso!", type: "success" });
+      
+      // Atualiza o financeiro e o perfil dos alunos após o pagamento
+      await carregarAlunosInadimplentes();
+      const alunosAtualizados = await alunoService.listarAlunos();
+      setStudents(alunosAtualizados);
+      
+      // Se o aluno estiver selecionado na tela de detalhes, atualiza o status dele visualmente
+      if (selS) {
+        const alunoAtualizado = alunosAtualizados.find(a => a.id === selS.id);
+        if (alunoAtualizado) setSelS(alunoAtualizado);
+      }
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao registrar recebimento.",
+        type: "error",
+      });
+    } finally {
+      setSavingMensalidade(false);
+    }
+  }
+
+  async function atualizarTreinoSelecionado(treinoId: string): Promise<void> {
+    const treinoCompleto = await treinoService.buscarTreinoPorId(treinoId);
+    setSelW(treinoCompleto);
+    setTreinos((prev) =>
+      prev.map((treino) =>
+        treino.id === treinoId
+          ? { ...treino, _count: { exercicios: treinoCompleto.exercicios?.length ?? 0 } }
+          : treino,
+      ),
+    );
+  }
+
+  // ─── Funções de Ação do Vínculo ──────────────────────────────────────────
+  async function carregarExerciciosDoTreino(treinoId: string): Promise<void> {
+    try {
+      setLoadingExerciciosDoTreino(true);
+      const data = await treinoExercicioService.listarExerciciosDoTreino(treinoId);
+      setExerciciosDoTreino(data);
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao carregar exercícios do treino.",
+        type: "error",
+      });
+    } finally {
+      setLoadingExerciciosDoTreino(false);
+    }
+  }
+
+  async function handleAddExercicioTreino(treinoId: string, data: AdicionarExercicioTreinoDTO): Promise<boolean> {
+    try {
+      setSavingExercicioTreino(true);
+      const novoVinculo = await treinoExercicioService.adicionarExercicioAoTreino(treinoId, data);
+      
+      setExerciciosDoTreino((prev) =>
+        [...prev, novoVinculo].sort((a, b) => a.ordem - b.ordem)
+      );
+      await atualizarTreinoSelecionado(treinoId);
+
+      setGToast({ msg: "Exercício adicionado ao treino com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao adicionar exercício ao treino.",
+        type: "error",
+      });
+      return false;
+    } finally {
+      setSavingExercicioTreino(false);
+    }
+  }
+
+  async function handleUpdateExercicioTreino(treinoId: string, vinculoId: string, data: AtualizarExercicioTreinoDTO): Promise<boolean> {
+    try {
+      setSavingExercicioTreino(true);
+      const vinculoAtualizado = await treinoExercicioService.atualizarExercicioDoTreino(treinoId, vinculoId, data);
+
+      setExerciciosDoTreino((prev) =>
+        prev
+          .map((item) => item.id === vinculoId ? vinculoAtualizado : item)
+          .sort((a, b) => a.ordem - b.ordem)
+      );
+      await atualizarTreinoSelecionado(treinoId);
+
+      setGToast({ msg: "Exercício do treino atualizado com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao atualizar exercício do treino.",
+        type: "error",
+      });
+      return false;
+    } finally {
+      setSavingExercicioTreino(false);
+    }
+  }
+
+  async function handleRemoveExercicioTreino(treinoId: string, vinculoId: string): Promise<void> {
+    const confirmar = window.confirm("Deseja remover este exercício do treino?");
+    if (!confirmar) return;
+
+    try {
+      await treinoExercicioService.removerExercicioDoTreino(treinoId, vinculoId);
+      setExerciciosDoTreino((prev) => prev.filter((item) => item.id !== vinculoId));
+      await atualizarTreinoSelecionado(treinoId);
+      setGToast({ msg: "Exercício removido do treino com sucesso.", type: "success" });
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao remover exercício do treino.",
+        type: "error",
+      });
+    }
+  }
+
+  // ─── Fluxo completo: cria treino e vincula exercícios ─────────────────────
+  async function criarTreinoComExercicios(
+    treinoData: CriarTreinoDTO,
+    exerciciosSelecionados: AdicionarExercicioTreinoDTO[],
+  ): Promise<boolean> {
+    try {
+      setSavingTreino(true);
+      const treino = await treinoService.criarTreino(treinoData);
+
+      for (const exercicio of exerciciosSelecionados) {
+        await treinoExercicioService.adicionarExercicioAoTreino(treino.id, exercicio);
+      }
+
+      const treinoCompleto = await treinoService.buscarTreinoPorId(treino.id);
+      setTreinos((prev) => [treinoCompleto, ...prev.filter((item) => item.id !== treino.id)]);
+      setGToast({ msg: "Treino e exercícios cadastrados com sucesso.", type: "success" });
+      return true;
+    } catch (error) {
+      setGToast({
+        msg: error instanceof Error ? error.message : "Erro ao criar treino.",
+        type: "error",
+      });
+      return false;
+    } finally {
+      setSavingTreino(false);
+    }
+  }
+  
+  
+  useEffect(()=>{
+    async function carregarAlunos() {
+      try {
+        setLoadingStudents(true);
+        const alunos=await alunoService.listarAlunos();
+        setStudents(alunos);
+      } catch(error) {
+        console.error("Erro ao carregar alunos:",error);
+        setGToast({
+          msg:error instanceof Error?error.message:"Erro ao carregar alunos.",
+          type:"error",
+        });
+      } finally {
+        setLoadingStudents(false);
+      }
+    }
+
+    carregarAlunos();
+  },[]);
+
+  async function handleCreateStudent(data:CriarAlunoDTO):Promise<boolean> {
+    try {
+      setSavingStudent(true);
+      const novoAluno=await alunoService.criarAluno(data);
+      setStudents(prev=>[novoAluno,...prev]);
+      setGToast({msg:"Aluno cadastrado com sucesso.",type:"success"});
+      return true;
+    } catch(error) {
+      setGToast({
+        msg:error instanceof Error?error.message:"Erro ao cadastrar aluno.",
+        type:"error",
+      });
+      return false;
+    } finally {
+      setSavingStudent(false);
+    }
+  }
+
+  async function handleUpdateStudent(
+    studentId:string,
+    data:AtualizarAlunoDTO,
+  ):Promise<boolean> {
+    try {
+      setSavingStudent(true);
+      const alunoAtualizado=await alunoService.atualizarAluno(studentId,data);
+
+      setStudents(prev=>
+        prev.map(student=>
+          student.id===studentId?alunoAtualizado:student
+        )
+      );
+
+      setSelS(alunoAtualizado);
+      setGToast({msg:"Aluno atualizado com sucesso.",type:"success"});
+      return true;
+    } catch(error) {
+      setGToast({
+        msg:error instanceof Error?error.message:"Erro ao atualizar aluno.",
+        type:"error",
+      });
+      return false;
+    } finally {
+      setSavingStudent(false);
+    }
+  }
+
+  async function handleDeleteStudent(studentId:string):Promise<void> {
+    const confirmar=window.confirm("Deseja realmente excluir este aluno?");
+
+    if(!confirmar) return;
+
+    try {
+      setDeletingStudent(true);
+      await alunoService.excluirAluno(studentId);
+
+      setStudents(prev=>prev.filter(student=>student.id!==studentId));
+      setSelS(null);
+      setStudentFormMode(null);
+      setScreen("alunos");
+
+      setGToast({msg:"Aluno excluído com sucesso.",type:"success"});
+    } catch(error) {
+      setGToast({
+        msg:error instanceof Error?error.message:"Erro ao excluir aluno.",
+        type:"error",
+      });
+    } finally {
+      setDeletingStudent(false);
+    }
+  }
+
   const navScreens:Screen[]=["dashboard","alunos","workouts","evolution","notifications","chat","profile"];
   const ut=user?.type??"personal";
   const nav=(s:Screen)=>setScreen(s);
@@ -1913,16 +4166,17 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background" style={{fontFamily:"'Inter',sans-serif",maxWidth:"430px",margin:"0 auto",position:"relative"}}>
       {gToast&&<Toast message={gToast.msg} type={gToast.type} onClose={()=>setGToast(null)}/>}
-      {modal==="terms"  &&<Modal title="Termos de Uso"          onClose={()=>setModal(null)}>{TERMS_MD}</Modal>}
+      {modal==="terms"&&<Modal title="Termos de Uso" onClose={()=>setModal(null)}>{TERMS_MD}</Modal>}
       {modal==="privacy"&&<Modal title="Política de Privacidade" onClose={()=>setModal(null)}>{PRIV_MD}</Modal>}
 
-      {screen==="welcome" && (
+      {screen==="welcome"&&(
         <Welcome
           onContinue={()=>setScreen("login")}
           onLogin={()=>setScreen("login")}
         />
       )}
-      {screen==="login" && (
+
+      {screen==="login"&&(
         <Login
           onLogin={u=>{setUser(u);setScreen("dashboard");}}
           onRegister={()=>setScreen("register")}
@@ -1930,30 +4184,151 @@ export default function App() {
           onBack={()=>setScreen("welcome")}
         />
       )}
-      {screen==="register" &&<Register onDone={()=>setScreen("login")} onLogin={()=>setScreen("login")} onShowModal={setModal}/>}
 
-      {screen==="dashboard"&&user&&(ut==="personal"?<PersonalDash user={user} onNav={nav}/>:<AlunoDash user={user} onNav={nav}/>)}
+      {screen==="register"&&(
+        <Register
+          onDone={()=>setScreen("login")}
+          onLogin={()=>setScreen("login")}
+          onShowModal={setModal}
+        />
+      )}
 
-      {screen==="alunos"      &&ut==="personal"&&<AlunosList onSelect={s=>{setSelS(s);setScreen("aluno-detail");}}/>}
-      {screen==="aluno-detail"&&selS           &&<AlunoDetail student={selS} onBack={()=>setScreen("alunos")} onNav={nav}/>}
-      {screen==="criar-treino"                 &&<CriarTreino onBack={()=>setScreen(ut==="personal"?"workouts":"dashboard")}/>}
+      {screen==="dashboard"&&user&&(
+        ut==="personal"
+          ? <PersonalDash user={user} onNav={nav} students={students}/>
+          : <AlunoDash user={user} onNav={nav}/>
+      )}
 
-      {screen==="workouts"      &&<Workouts onSelect={w=>{setSelW(w);setScreen("workout-detail");}} ut={ut}/>}
-      {screen==="workout-detail"&&selW&&<WorkoutDetail workout={selW} onBack={()=>setScreen("workouts")} onToast={(m,t)=>setGToast({msg:m,type:t})} ut={ut}/>}
+      {screen==="alunos"&&ut==="personal"&&(
+        <AlunosList
+          students={students}
+          loading={loadingStudents}
+          onCreateStudent={()=>setStudentFormMode("create")}
+          onSelect={student=>{
+            setSelS(student);
+            setScreen("aluno-detail");
+          }}
+        />
+      )}
 
-      {screen==="evolution"    &&<Evolution ut={ut}/>}
+      {screen==="aluno-detail"&&selS&&(
+        <AlunoDetail
+          student={selS}
+          onBack={()=>setScreen("alunos")}
+          onNav={nav}
+          onEdit={()=>setStudentFormMode("edit")}
+          onDelete={()=>handleDeleteStudent(selS.id)}
+          onOpenEvaluations={()=>setScreen("evolution")}
+          onOpenFinance={() => setFinanceStudent(selS)}
+          deleting={deletingStudent}
+        />
+      )}
+
+      {screen==="criar-treino"&&(
+        <CriarTreino
+          onBack={()=>setScreen(ut==="personal"?"workouts":"dashboard")}
+          exercicios={exercicios}
+          loadingExercicios={loadingExercicios}
+          saving={savingTreino}
+          onSubmit={criarTreinoComExercicios}
+        />
+      )}
+
+      {screen==="workouts"&&(
+        <Workouts
+          treinos={treinos}
+          loading={loadingTreinos}
+          exercicios={exercicios}
+          savingExercicio={savingExercicio}
+          deletingExercicio={deletingExercicio}
+          onSelect={handleSelectTreino}
+          onCreateWorkout={()=>setScreen("criar-treino")}
+          onCreateExercicio={handleCreateExercicio}
+          onUpdateExercicio={handleUpdateExercicio}
+          onDeleteExercicio={handleDeleteExercicio}
+          ut={ut}
+        />
+      )}
+
+      {screen==="workout-detail"&&selW&&(
+        <WorkoutDetail
+          workout={selW}
+          exercicios={exercicios}
+          loadingExercicios={loadingExercicios}
+          savingTreino={savingTreino}
+          deletingTreino={deletingTreino}
+          savingVinculo={savingExercicioTreino}
+          onBack={()=>setScreen("workouts")}
+          onUpdateTreino={handleUpdateTreino}
+          onDeleteTreino={handleDeleteTreino}
+          onAddExercicio={handleAddExercicioTreino}
+          onUpdateExercicio={handleUpdateExercicioTreino}
+          onRemoveExercicio={handleRemoveExercicioTreino}
+          onToast={(m,t)=>setGToast({msg:m,type:t})}
+          ut={ut}
+        />
+      )}
+
+      {screen==="evolution"&&(
+        <Evolution
+          ut={ut}
+          student={ut==="personal"?selS:null}
+          onBack={ut==="personal"&&selS?()=>setScreen("aluno-detail"):undefined}
+        />
+      )}
       {screen==="notifications"&&<Notifications ut={ut}/>}
 
-      {screen==="chat" && user && (
+      {screen==="chat"&&user&&(
         <ChatPage
           user={user}
           ut={ut}
-          onBack={() => setScreen("dashboard")}
+          onBack={()=>setScreen("dashboard")}
         />
       )}
-      {screen==="profile"      &&user&&<Profile user={user} onLogout={()=>{setUser(null);setScreen("welcome");}}/>}
 
-      {navScreens.includes(screen)&&user&&<BottomNav active={screen} onNav={nav} ut={ut}/>}
+      {screen==="profile"&&user&&(
+        <Profile
+          user={user}
+          onLogout={()=>{setUser(null);setScreen("welcome");}}
+        />
+      )}
+
+      {studentFormMode==="create"&&(
+        <StudentForm
+          saving={savingStudent}
+          onCancel={()=>setStudentFormMode(null)}
+          onSubmit={data=>handleCreateStudent(data as CriarAlunoDTO)}
+        />
+      )}
+
+      {studentFormMode==="edit"&&selS&&(
+        <StudentForm
+          student={selS}
+          saving={savingStudent}
+          onCancel={()=>setStudentFormMode(null)}
+          onSubmit={data=>
+            handleUpdateStudent(selS.id,data as AtualizarAlunoDTO)
+          }
+        />
+      )}
+
+      {navScreens.includes(screen)&&user&&(
+        <BottomNav active={screen} onNav={nav} ut={ut}/>
+      )}
+
+
+      {/* Modal de Gestão Financeira */}
+      {financeStudent && (
+        <FinanceModal
+          student={financeStudent}
+          alunosInadimplentes={alunosInadimplentes}
+          onClose={() => setFinanceStudent(null)}
+          onCadastrar={handleCadastrarMensalidade}
+          onDarBaixa={handleDarBaixaMensalidade}
+          saving={savingMensalidade}
+        />
+      )}
+      
     </div>
   );
 }
