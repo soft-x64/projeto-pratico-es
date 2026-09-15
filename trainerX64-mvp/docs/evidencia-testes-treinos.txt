@@ -1,0 +1,34 @@
+TrainerX64 — Etapa 7: testes da refatoracao do modulo de Treinos (Facade)
+Integrante: Julio Augusto | branch: refactor/treinos
+Comando: cd trainerX64-mvp/backend && npm test
+
+tests/equivalencia.antes-depois.test.ts
+  equivalência de comportamento antes x depois
+    [PASS] adicionar exercício: 56 combinações com o mesmo comportamento
+    [PASS] atualizar exercício: 24 combinações com o mesmo comportamento
+
+tests/fichaDeTreino.facade.test.ts
+  FichaDeTreinoFacade — adicionar exercício ao treino
+    [PASS] adiciona o exercício quando todos os dados são válidos
+    [PASS] rejeita quando faltam campos obrigatórios
+    [PASS] rejeita ordem menor que 1
+    [PASS] rejeita séries menores que 1 devolvendo a chave 'mensagem'
+    [PASS] rejeita repetições menores que 1
+    [PASS] rejeita carga negativa
+    [PASS] aceita carga igual a zero e carga ausente
+    [PASS] devolve 404 quando o treino não existe
+    [PASS] devolve 404 quando o exercício não existe
+    [PASS] impede o mesmo exercício duas vezes na mesma ficha
+    [PASS] valida os campos antes de consultar o banco
+  FichaDeTreinoFacade — atualizar exercício da ficha
+    [PASS] atualiza apenas os campos enviados
+    [PASS] devolve 404 quando o vínculo não existe
+    [PASS] aplica as mesmas regras numéricas da criação
+    [PASS] permite limpar a carga enviando null
+  FichaDeTreinoFacade — remover e listar
+    [PASS] remove o vínculo existente
+    [PASS] devolve 404 ao remover vínculo inexistente
+    [PASS] lista os exercícios do treino na ordem da ficha
+
+Test Suites: 2 passed, 2 total
+Tests:       20 passed, 20 total
